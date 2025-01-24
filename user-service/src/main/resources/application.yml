@@ -1,0 +1,77 @@
+server:
+   servlet:
+      #contextPath: /user-service
+      contextPath: /
+   port: 8085
+
+#DB Config
+spring:
+   application:
+      name: user-service
+   main:
+      allow-bean-definition-overriding: true
+      allow-circular-references: true
+   datasource:
+      url: ${DATABASE_URL}
+      username : ${DATABASE_USERNAME}
+      password : ${DATABASE_PASSWORD}
+      hikari:
+        maximum-pool-size : ${DB_MAX_POOL_SIZE:10}
+   flyway:
+      locations: classpath:db/migration
+      url: ${DATABASE_URL}
+      user : ${DATABASE_USERNAME}
+      password : ${DATABASE_PASSWORD}
+      baseline-on-migrate: true
+      out-of-order: true
+      ignore-missing-migrations: true
+      ignore-migration-patterns:
+        - "*:missing"
+        - "*:future"
+   redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+      # password: ${REDIS_PASSWORD}
+            
+springdoc:
+  packagesToScan: com.mdtlabs.coreplatform.userservice
+  swagger-ui:
+    enabled: ${SWAGGER_ENABLED:false}
+    configUrl: /user/swagger-ui/v3/api-docs/swagger-config
+    url: /user/swagger-ui/v3/api-docs
+  api-docs:
+    enabled: ${SWAGGER_ENABLED:false}
+    path: /user/swagger-ui/v3/api-docs
+
+app:
+   url: http://localhost
+   connectionTimeOut: 300000
+   readTimeOut: 300000
+   mail-user: ${MAIL_USER:apikey}
+   page-count: ${PAGE_COUNT:10}
+   login-time-limit-in-hour: ${LOGIN_TIME_LIMIT_IN_HOUR:1}
+   login-count-limit: ${LOGIN_COUNT_LIMIT:5}
+   forgot-password-time-limit-in-minutes: ${FORGOT_PASSWORD_TIME_LIMIT_IN_MINUTES:60}
+   forget-password-count-limit: ${FORGET_PASSWORD_COUNT_LIMIT:5}
+   reset-password-count-limit: ${RESET_PASSWORD_COUNT_LIMIT:5}
+   reset-password-time-limit-in-minutes: ${RESET_PASSWORD_TIME_LIMIT_IN_MINUTES:60}
+   email-app-url: ${EMAIL_APP_URL:http://localhost}
+   shorten-app-url: ${SHORTEN_URL_DOMAIN}
+   shorten-app: ${SHORTEN_APP}
+   cfr-email-app-url: ${CFR_EMAIL_APP_URL:http://localhost}
+   admin-service: ${ADMIN_SERVICE}
+   auth-service: ${AUTH_SERVICE}
+   fhir-service: ${FHIR_SERVICE}
+   notification-service: ${NOTIFICATION_SERVICE}
+   sms-reset-url: ${SMS_RESET_PASSWORD_URL}
+   domain-name: ${DOMAIN_NAME}
+   environment: ${ENVIRONMENT}
+   allowed-origins: ${ALLOWED_ORIGINS:*}
+
+spicelog:
+  fileName: './log/SpiceApplicationLog.log'
+  fileNamePattern: './log/SpiceApplicationLog.%d{yyyy-MM-dd}.log.gz'
+  consolePattern: '%white(%d{ISO8601}) %highlight(%-5level) [%yellow(%t)] :  %msg%n%throwable'
+  filePattern: ' %d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n'
+  maxHistory: 30
+  totalSizeCap: 3GB

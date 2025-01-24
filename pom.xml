@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.mdtlabs.coreplatform</groupId>
+    <artifactId>opensource</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>opensource-2.0</name>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.2.0</version>
+        <relativePath/>
+    </parent>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <project.version>0.0.1-SNAPSHOT</project.version>
+    </properties>
+
+    <modules>
+        <module>common-service</module>
+        <module>auth-service</module>
+        <module>user-service</module>
+        <module>offline-service</module>
+        <module>cql-service</module>
+        <module>admin-service</module>
+        <module>spice-service</module>
+		<module>fhir-mapper</module>
+        <module>notification-service</module>
+        <module>shorturl-service</module>
+    </modules>
+
+</project>

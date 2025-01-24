@@ -1,0 +1,68 @@
+server:
+   servlet:
+      contextPath: /
+   port: 8086
+
+#DB Config
+spring:
+   application:
+      name: admin-service
+   main:
+      allow-bean-definition-overriding: true
+   datasource:
+      driver-class-name: org.postgresql.Driver
+      url: ${DATABASE_URL}
+      username : ${DATABASE_USERNAME}
+      password : ${DATABASE_PASSWORD}
+   servlet:
+      multipart:
+         max-file-size: 15MB
+         max-request-size: 15MB
+   jackson:
+      serialization:
+         FAIL_ON_EMPTY_BEANS: false
+   redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+#      password: ${REDIS_PASSWORD}
+   jpa:
+      properties:
+         hibernate:
+            dialect: org.hibernate.dialect.PostgreSQLDialect
+            enable_lazy_load_no_trans: true
+     
+springdoc:
+  packagesToScan: com.mdtlabs.coreplatform.adminservice
+  swagger-ui:
+    enabled: ${SWAGGER_ENABLED:false}
+    configUrl: /admin/swagger-ui/v3/api-docs/swagger-config
+    url: /admin/swagger-ui/v3/api-docs
+  api-docs:
+    enabled: ${SWAGGER_ENABLED:false}
+    path: /admin/swagger-ui/v3/api-docs
+  
+app:
+   url: http://localhost
+   connectionTimeOut: 300000
+   readTimeOut: 300000
+   user-service: ${USER_SERVICE}
+   auth-service: ${AUTH_SERVICE}
+   fhir-service: ${FHIR_SERVICE}
+   domain-name: ${DOMAIN_NAME}
+   environment: ${ENVIRONMENT}
+   allowed-origins: ${ALLOWED_ORIGINS:*}
+   isCloud: ${IS_CLOUD:false}
+
+cloud:
+   aws:
+     environment: ${AWS_ENVIRONMENT}
+     region:
+       static: ${SERVER_REGION}
+
+spicelog:
+  fileName: './log/SpiceApplicationLog.log'
+  fileNamePattern: './log/SpiceApplicationLog.%d{yyyy-MM-dd}.log.gz'
+  consolePattern: '%white(%d{ISO8601}) %highlight(%-5level) [%yellow(%t)] :  %msg%n%throwable'
+  filePattern: ' %d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n'
+  maxHistory: 30
+  totalSizeCap: 3GB

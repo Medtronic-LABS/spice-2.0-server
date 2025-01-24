@@ -1,0 +1,49 @@
+server:
+  servlet:
+    #contextPath: /auth-service
+    contextPath: /
+  port: 8089
+
+#DB Config
+spring:
+   application:
+      name: auth-service
+   main:
+      allow-bean-definition-overriding: true
+      allow-circular-references: true
+   datasource:
+      url: ${DATABASE_URL}
+      username : ${DATABASE_USERNAME}
+      password : ${DATABASE_PASSWORD}
+      hikari:
+        maximum-pool-size : ${DB_MAX_POOL_SIZE:10}
+   
+   redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+   jpa:
+      properties:
+         hibernate:
+            dialect: org.hibernate.dialect.PostgreSQLDialect
+            enable_lazy_load_no_trans: true
+          
+springdoc:
+  packagesToScan: com.mdtlabs.coreplatform.authenticationserver
+
+app:
+   public-key: public_key.der
+   private-key: private_key.der
+   login-time-limit-in-minutes: ${LOGIN_TIME_LIMIT_IN_MINUTES:5}
+   login-count-limit: ${LOGIN_COUNT_LIMIT:5}
+   auth-service: ${AUTH_SERVICE}
+   domain-name: ${DOMAIN_NAME}
+   environment: ${ENVIRONMENT}
+   allowed-origins: ${ALLOWED_ORIGINS:*}
+
+spicelog: 
+   fileName: './log/SpiceApplicationLog.log'
+   fileNamePattern: './log/SpiceApplicationLog.%d{yyyy-MM-dd}.log.gz'
+   consolePattern: '%white(%d{ISO8601}) %highlight(%-5level) [%yellow(%t)] :  %msg%n%throwable'
+   filePattern: ' %d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n'
+   maxHistory: 30
+   totalSizeCap: 3GB
