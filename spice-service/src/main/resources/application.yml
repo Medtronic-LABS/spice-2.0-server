@@ -1,0 +1,115 @@
+server:
+   servlet:
+      #contextPath: /spice-service
+      contextPath: /
+   port: 8087
+
+#DB Config
+spring:
+   application:
+      name: spice-service
+   main:
+      allow-bean-definition-overriding: true
+   datasource:
+      driver-class-name: org.postgresql.Driver
+      url: ${DATABASE_URL}
+      username : ${DATABASE_USERNAME}
+      password : ${DATABASE_PASSWORD}
+   servlet:
+      multipart:
+         max-file-size: 15MB
+         max-request-size: 15MB
+   jackson:
+      serialization:
+         FAIL_ON_EMPTY_BEANS: false
+   redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+#      password: ${REDIS_PASSWORD}
+   jpa:
+     properties:
+       hibernate:
+         order_by:
+           default_null_ordering: last
+      
+springdoc:
+  packagesToScan: com.mdtlabs.coreplatform.spiceservice
+  swagger-ui:
+    enabled: ${SWAGGER_ENABLED:false}
+    configUrl: /spice/swagger-ui/v3/api-docs/swagger-config
+    url: /spice/swagger-ui/v3/api-docs
+  api-docs:
+    enabled: ${SWAGGER_ENABLED:false}
+    path: /spice/swagger-ui/v3/api-docs
+  
+app:
+   url: http://localhost
+   fhir-service: ${FHIR_SERVICE}
+   connectionTimeOut: 300000
+   readTimeOut: 300000
+   shedlock:
+      outbound:
+         start: ${SHEDLOCK_OUTBOUND_START}
+         stop: ${SHEDLOCK_OUTBOUND_STOP}
+   auth-service: ${AUTH_SERVICE}
+   admin-service: ${ADMIN_SERVICE}
+   user-service: ${USER_SERVICE}
+   successful-call-attempts: ${SUCCESSFUL_CALL_ATTEMPTS:3}
+   unsuccessful-call-attempts: ${UNSUCCESSFUL_CALL_ATTEMPTS:5}
+   followup-malaria-in-days: ${FOLLOWUP_MALARIA_IN_DAYS:3}
+   followup-pneumonia-in-days: ${FOLLOWUP_PNEUMONIA_IN_DAYS:5}
+   followup-diarrhea-in-days: ${FOLLOWUP_DIARRHEA_IN_DAYS:3}
+   followup-muac-in-days: ${FOLLOWUP_MUAC_IN_DAYS:7}
+   followup-escalation-limit-in-days: ${FOLLOWUP_ESCALATION_LIMIT_IN_DAYS:7}
+   followup-referral-in-days: ${FOLLOWUP_REFERRAL_IN_DAYS:2}
+   followup-anc-visit-in-days: ${FOLLOWUP_ANC_VISIT_IN_DAYS:2}
+   followup-pnc-visit-in-days: ${FOLLOWUP_PNC_VISIT_IN_DAYS:2}
+   followup-child-visit-in-days: ${FOLLOWUP_CHILD_VISIT_IN_DAYS:2}
+   smart-anc: ${SMART_ANC_ENABLED}
+   jobUserName: ${JOB_USER_NAME}
+   app-version: ${APP_VERSION}
+   retry-call-attempts: ${RETRY_CALL_ATTEMPTS:5}
+   notification-service: ${NOTIFICATION_SERVICE}
+   enable-red-risk-notification: ${ENABLE_RED_RISK_NOTIFICATION:true}
+   allowed-origins: ${ALLOWED_ORIGINS:*}
+   domain-name: ${DOMAIN_NAME}
+   environment: ${ENVIRONMENT}
+    # Follow up criteria for africa
+   followup-call-attempts: ${FOLLOWUP_CALL_ATTEMPTS}
+   screening-followup-remaining-days: ${SCREENING_FOLLOWUP_REMAINING_DAYS}
+   assessment-followup-remaining-days: ${ASSESSMENT_FOLLOWUP_REMAINING_DAYS}
+   medical-review-followup-remaining-days: ${MEDICAL_REVIEW_FOLLOWUP_REMAINING_DAYS}
+   lost-to-followup-remaining-days: ${LOST_TO_FOLLOWUP_REMAINING_DAYS}
+   version-check-exempt-users: ${VERSION_CHECK_EXEMPT_USERS}
+   is-minio-server-enable: ${IS_MINIO_SERVER_ENABLE}
+
+cloud:
+  aws:
+    region:
+      static: ${SERVER_REGION}
+    stack:
+      auto: false
+    environment: ${AWS_ENVIRONMENT}
+  minio:
+    credentials:
+      url: ${MINIO_URL}
+      console-url: ${MINIO_CONSOLE_URL}
+      access-name: ${MINIO_ACCESS_NAME}
+      access-secret: ${MINO_SECRET_KEY}
+application:
+  bucket:
+    name: ${BUCKET_NAME}
+    signature-folder: ${SIGNATURE_BUCKET_FOLDER}
+    in-app-analytics-folder: ${IN_APP_ANALYTICS_BUCKET_FOLDER}
+
+scheduler:
+   cron:
+     sms: '0 0 1 * * ?'
+    
+spicelog:
+  fileName: './log/SpiceApplicationLog.log'
+  fileNamePattern: './log/SpiceApplicationLog.%d{yyyy-MM-dd}.log.gz'
+  consolePattern: '%white(%d{ISO8601}) %highlight(%-5level) [%yellow(%t)] :  %msg%n%throwable'
+  filePattern: ' %d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n'
+  maxHistory: 30
+  totalSizeCap: 3GB

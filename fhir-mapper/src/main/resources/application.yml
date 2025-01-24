@@ -1,0 +1,51 @@
+server:
+  servlet:
+    contextPath: /
+    session:
+      persistent: true
+  port: 8092
+
+spring:
+  application:
+    name: fhir-mapper
+  main:
+    allow-bean-definition-overriding: true
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: ${DATABASE_URL}
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
+  redis:
+    host: ${REDIS_HOST}
+    port: ${REDIS_PORT}
+
+springdoc:
+  packagesToScan: com.mdtlabs.coreplatform.fhirmapper
+  swagger-ui:
+    enabled: ${SWAGGER_ENABLED:false}
+    configUrl: /fhir/swagger-ui/v3/api-docs/swagger-config
+    url: /fhir/swagger-ui/v3/api-docs
+  api-docs:
+    enabled: ${SWAGGER_ENABLED:false}
+    path: /fhir/swagger-ui/v3/api-docs
+  
+app:
+  connectionTimeOut: 300000
+  readTimeOut: 300000
+  fhir-server-url: ${HAPI_SERVER_URL}
+  fhir-identifier-url: ${HAPI_IDENTIFIER_URL}
+  auth-service: ${AUTH_SERVICE}
+  admin-service: ${ADMIN_SERVICE}
+  spice-service: ${SPICE_SERVICE}
+  cql-service: ${CQL_SERVICE}
+  smart-anc: ${SMART_ANC_ENABLED}
+  labTestIntensificationList: ${LAB_TEST_INTENSIFICATION_LIST}
+  prescriptionPredictionDays: ${PRESCRIPTION_PREDICTION_DAYS}
+
+spicelog:
+  fileName: './log/SpiceApplicationLog.log'
+  fileNamePattern: './log/SpiceApplicationLog.%d{yyyy-MM-dd}.log.gz'
+  consolePattern: '%white(%d{ISO8601}) %highlight(%-5level) [%yellow(%t)] :  %msg%n%throwable'
+  filePattern: ' %d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n'
+  maxHistory: 30
+  totalSizeCap: 3GB

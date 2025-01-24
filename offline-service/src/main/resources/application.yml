@@ -1,0 +1,119 @@
+server:
+  servlet:
+    #contextPath: /offline-service
+    contextPath: /
+  port: 8093
+
+#DB Config
+spring:
+  application:
+    name: offline-service
+  main:
+    allow-bean-definition-overriding: true
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: ${DATABASE_URL}
+    username : ${DATABASE_USERNAME}
+    password : ${DATABASE_PASSWORD}
+  servlet:
+    multipart:
+      max-file-size: 15MB
+      max-request-size: 150MB
+  jackson:
+    serialization:
+      FAIL_ON_EMPTY_BEANS: false
+  redis:
+    host: ${REDIS_HOST}
+    port: ${REDIS_PORT}
+  #      password: ${REDIS_PASSWORD}
+  jpa:
+    properties:
+      hibernate:
+        order_by:
+          default_null_ordering: last
+
+  cloud:
+    stream:
+      bindings:
+        RabbitMQProducerService-out-0:
+          destination: ${RABBIT_MQ_EXCHANGE_NAME}
+          producer:
+            required-groups: ${RABBIT_MQ_GROUP}
+        RabbitMQConsumerService-in-0:
+          destination: ${RABBIT_MQ_EXCHANGE_NAME}
+          content-type: application/json
+          group: ${RABBIT_MQ_GROUP}
+  rabbitmq:
+    host: ${RABBIT_MQ_HOST}                           # RabbitMQ host
+    port: ${RABBIT_MQ_PORT}                           # RabbitMQ port
+    username: ${RABBIT_MQ_USERNAME}                   # RabbitMQ username
+    password: ${RABBIT_MQ_PASSWORD}                   # RabbitMQ password
+
+
+springdoc:
+  packagesToScan: com.mdtlabs.coreplatform.offlineservice
+  swagger-ui:
+    enabled: ${SWAGGER_ENABLED:false}
+  api-docs:
+    enabled: ${SWAGGER_ENABLED:false}
+
+app:
+  url: http://localhost
+  connectionTimeOut: 300000
+  readTimeOut: 300000
+  shedlock:
+    outbound:
+      start: ${SHEDLOCK_OUTBOUND_START}
+      stop: ${SHEDLOCK_OUTBOUND_STOP}
+  auth-service: ${AUTH_SERVICE}
+  spice-service: ${SPICE_SERVICE}
+  cql-service: ${CQL_SERVICE}
+  admin-service: ${ADMIN_SERVICE}
+  jobUserPassword: ${JOB_USER_PASSWORD}
+  jobUserName: ${JOB_USER_NAME}
+  smart-anc: ${SMART_ANC_ENABLED}
+  is-aws-sqs-enabled: ${IS_AWS_SQS_ENABLED}
+  is-rabbitmq-sqs-enabled: ${IS_RABBITMQ_SQS_ENABLED}
+  mq-producer-channnel: ${RABBIT_PRODUCER_CHANNEL}
+  mq-consumer-channnel: ${RABBIT_CONSUMER_CHANNEL}
+  is-minio-server-enable: ${IS_MINIO_SERVER_ENABLE}
+
+cloud:
+  aws:
+    credentials:
+      access-key: ${AWS_ACCESS_KEY}
+      secret-key: ${AWS_SECRET_KEY}
+    region:
+      static: ${AWS_REGION}
+    stack:
+      auto: false
+    sqs:
+      url:
+        requestQueue: ${SQS_REQUEST_QUEUE_URL}
+        responseQueue: ${SQS_RESPONSE_QUEUE_URL}
+      name:
+        requestQueue: ${SQS_REQUEST_QUEUE_NAME}
+        responseQueue: ${SQS_RESPONSE_QUEUE_NAME}
+    s3:
+      bucket:
+        name: ${S3_BUCKET_NAME}
+        consent-form-folder: ${CONSENT_FORM_BUCKET_FOLDER}
+    environment: ${AWS_ENVIRONMENT}
+  minio:
+    credentials:
+      url: ${MINIO_URL}
+      console-url: ${MINIO_CONSOLE_URL}
+      access-name: ${MINIO_ACCESS_NAME}
+      access-secret: ${MINO_SECRET_KEY}
+
+application:
+  minio-bucket:
+    name: ${BUCKET_NAME}
+
+spicelog:
+  fileName: './log/SpiceApplicationLog.log'
+  fileNamePattern: './log/SpiceApplicationLog.%d{yyyy-MM-dd}.log.gz'
+  consolePattern: '%white(%d{ISO8601}) %highlight(%-5level) [%yellow(%t)] :  %msg%n%throwable'
+  filePattern: ' %d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n'
+  maxHistory: 30
+  totalSizeCap: 3GB
