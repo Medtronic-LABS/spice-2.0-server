@@ -1,10 +1,5 @@
 package com.mdtlabs.coreplatform.spiceservice.registration.service.impl;
 
-import com.mdtlabs.coreplatform.commonservice.common.exception.SpiceValidation;
-import com.mdtlabs.coreplatform.commonservice.common.logger.Logger;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.FollowUpDTO;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.PatientValidationResponseDTO;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -12,8 +7,6 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
-
-import javax.sql.DataSource;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.PutObjectRequest;
@@ -24,19 +17,15 @@ import org.springframework.web.multipart.MultipartFile;
 import com.mdtlabs.coreplatform.commonservice.common.CommonUtil;
 import com.mdtlabs.coreplatform.commonservice.common.contexts.UserSelectedTenantContextHolder;
 import com.mdtlabs.coreplatform.commonservice.common.exception.DataNotFoundException;
-import com.mdtlabs.coreplatform.commonservice.common.exception.Validation;
+import com.mdtlabs.coreplatform.commonservice.common.exception.SpiceValidation;
+import com.mdtlabs.coreplatform.commonservice.common.logger.Logger;
 import com.mdtlabs.coreplatform.commonservice.common.model.entity.HealthFacility;
-import com.mdtlabs.coreplatform.commonservice.common.model.entity.Organization;
-import com.mdtlabs.coreplatform.commonservice.common.repository.OrganizationRepository;
 import com.mdtlabs.coreplatform.spiceservice.apiinterface.AdminServiceApiInterface;
 import com.mdtlabs.coreplatform.spiceservice.apiinterface.FhirServiceApiInterface;
 import com.mdtlabs.coreplatform.spiceservice.common.Constants;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.BioDataDTO;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.EnrollmentRequestDTO;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.EnrollmentResponseDTO;
+import com.mdtlabs.coreplatform.spiceservice.common.dto.*;
 import com.mdtlabs.coreplatform.spiceservice.common.enumeration.AppointmentType;
 import com.mdtlabs.coreplatform.spiceservice.customizedmodules.service.CustomizedModulesService;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.RequestDTO;
 import com.mdtlabs.coreplatform.spiceservice.followup.service.FollowUpService;
 import com.mdtlabs.coreplatform.spiceservice.registration.service.RegistrationService;
 
@@ -53,9 +42,6 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Value("${application.bucket.name}")
     private String bucketName;
 
-    private final OrganizationRepository organizationRepository;
-
-    private final DataSource dataSource;
 
     private final FhirServiceApiInterface fhirServiceApiInterface;
 
@@ -65,12 +51,10 @@ public class RegistrationServiceImpl implements RegistrationService {
     private final FollowUpService followUpService;
 
 
-    public RegistrationServiceImpl(OrganizationRepository organizationRepository,
-                                   DataSource dataSource, FhirServiceApiInterface fhirServiceApiInterface,
+    public RegistrationServiceImpl(FhirServiceApiInterface fhirServiceApiInterface,
                                    AdminServiceApiInterface adminServiceApiInterface, CustomizedModulesService customizedModulesService, AmazonS3 s3Client,
                                    FollowUpService followUpService) {
-        this.organizationRepository = organizationRepository;
-        this.dataSource = dataSource;
+
         this.fhirServiceApiInterface = fhirServiceApiInterface;
         this.adminServiceApiInterface = adminServiceApiInterface;
         this.customizedModulesService = customizedModulesService;

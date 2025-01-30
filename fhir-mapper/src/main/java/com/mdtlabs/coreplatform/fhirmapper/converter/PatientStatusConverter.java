@@ -90,12 +90,16 @@ public class PatientStatusConverter {
      * @param condition - Patient condition resource
      * @param patientId - Reference id for patient
      */
-    public void setReference(Condition condition, String patientId, String patientVisitId) {
+    public void setReference(Condition condition, String patientId, String patientVisitId, String memberReference) {
         if (Objects.nonNull(patientId)) {
             condition.setSubject(new Reference(
                     String.format(FhirConstants.PATIENT_ID, patientId)));
         } else {
             condition.setSubject(new Reference(FhirConstants.PATIENT_IDENTIFIER_URL));
+        }
+        if (Objects.nonNull(memberReference)) {
+            condition.setAsserter(new Reference(
+                    String.format(FhirConstants.RELATED_PERSON_ID, memberReference)));
         }
         if (Objects.nonNull(patientVisitId)) {
             condition.setEncounter(new Reference(

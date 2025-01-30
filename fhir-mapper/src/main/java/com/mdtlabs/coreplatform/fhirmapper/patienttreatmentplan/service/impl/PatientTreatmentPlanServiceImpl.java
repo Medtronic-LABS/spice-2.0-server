@@ -2,6 +2,7 @@ package com.mdtlabs.coreplatform.fhirmapper.patienttreatmentplan.service.impl;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -40,6 +41,7 @@ import com.mdtlabs.coreplatform.fhirmapper.common.dto.ProvenanceDTO;
 import com.mdtlabs.coreplatform.fhirmapper.common.dto.RequestDTO;
 import com.mdtlabs.coreplatform.fhirmapper.common.dto.TreatmentPlanDTO;
 import com.mdtlabs.coreplatform.fhirmapper.common.dto.TreatmentPlanResponseDTO;
+import com.mdtlabs.coreplatform.fhirmapper.common.dto.pregnancy.PregnancySymptomDTO;
 import com.mdtlabs.coreplatform.fhirmapper.common.utils.FhirUtils;
 import com.mdtlabs.coreplatform.fhirmapper.common.utils.RestApiUtil;
 import com.mdtlabs.coreplatform.fhirmapper.converter.SpiceConverter;
@@ -68,23 +70,32 @@ public class PatientTreatmentPlanServiceImpl implements PatientTreatmentPlanServ
         this.spiceConverter = spiceConverter;
     }
 
-    private static final String GET_CARE_PLAN_PLAN_MEMBER_QUERY = "CarePlan?status=active&contributor=RelatedPerson/%s&_sort=-_lastUpdated";
-    private static final String GET_CARE_PLAN_BY_ID_QUERY = "CarePlan?_id=%s";
-    private static final String GET_APPOINTMENT_BY_IDS_QUERY =
+    private final String GET_CAREPLAN_PLAN_MEMBER = "CarePlan?contributor=RelatedPerson/%s&_sort=-_lastUpdated";
+    private final String GET_CAREPLAN_BY_ID = "CarePlan?_id=%s";
+    private final String GET_APPOINTMENT_BY_IDS = "Appointment?_id=%s";
+    private final String GET_APPOINTMENT_BY_RELATED_PERSON_ID =
             "Appointment?identifier=" + FhirIdentifierConstants.APPOINTMENT_TYPE_SYSTEM_URL + Constants.VERTICAL_BAR + Constants.STRING_FORMAT_SPECIFIER + "&related-person=%s";
-    private static final String GET_PREGNANCY_DETAILS_QUERY = "Observation?performer=RelatedPerson/%s&code:text=%s&_sort=-_lastUpdated&_count=1";
+    private final String GET_PREGNANCY_DETAILS = "Observation?performer=RelatedPerson/%s&code:text=%s&_sort=-_lastUpdated&_count=1";
 
     /**
      * {@inheritDoc}
      */
-    public TreatmentPlanResponseDTO createProvisionalPlan(TreatmentPlanDTO treatmentplan, Bundle transactioBundle) {
+    public TreatmentPlanResponseDTO createProvisionalPlan(TreatmentPlanDTO treatmentplan, Bundle transactioBundle,
+                                                          CarePlan existingCarePlan, List<String> details) {
         if (Objects.isNull(transactioBundle)) { 
             transactioBundle = new Bundle().setType(BundleType.TRANSACTION);
         }
         List<FrequencyDTO> frequenciesByRisk = getFrequencies(treatmentplan);
-        CarePlan carePlan = createCarePlan(frequenciesByRisk, transactioBundle, treatmentplan, true);
+        CarePlan carePlan;
+        if (Objects.isNull(existingCarePlan)) {
+            carePlan = createCarePlan(frequenciesByRisk, transactioBundle, treatmentplan, true);
+        } else {
+            carePlan = updateCarePlan(frequenciesByRisk, transactioBundle, treatmentplan,details, existingCarePlan);
+        }
         TreatmentPlanResponseDTO response = constructTreatmentPlanRespose(carePlan);
-        restApiUtil.postBatchRequest(fhirUtils.getFhirBaseUrl(), restApiUtil.constructRequestEntity(transactioBundle));
+        if (carePlan.hasActivity()) {
+            restApiUtil.postBatchRequest(fhirUtils.getFhirBaseUrl(), restApiUtil.constructRequestEntity(transactioBundle));
+        }
         return response;
     }
 
@@ -103,7 +114,7 @@ public class PatientTreatmentPlanServiceImpl implements PatientTreatmentPlanServ
 
         CarePlan carePlan = new CarePlan();
         carePlan.addIdentifier().setSystem(FhirIdentifierConstants.CARE_PLAN_SYSTEM_URL).setValue(Constants.PATIENT_TREATMENT_PLAN);
-        carePlan.setStatus(CarePlanStatus.ACTIVE);
+        carePlan.setStatus(isProvisonal ? CarePlanStatus.DRAFT : CarePlanStatus.COMPLETED);
         carePlan.setIntent(isProvisonal ? CarePlanIntent.PROPOSAL: CarePlanIntent.PLAN);
         carePlan.setTitle(Constants.PATIENT_TREATMENT_PLAN_TITLE);
         carePlan.setCreated(new Date());
@@ -130,11 +141,12 @@ public class PatientTreatmentPlanServiceImpl implements PatientTreatmentPlanServ
         CarePlanActivityComponent activityComponent = new CarePlanActivityComponent().setDetail(mapActivityDetailComponent(new CarePlanActivityDetailComponent(), frequency));
 
         if (isProvisonal) {
-            if (Objects.nonNull(frequency) && Objects.nonNull(frequency.getType()) && Constants.FREQUENCY_MEDICAL_REVIEW.equals(frequency.getType())) {
+            if (Objects.nonNull(frequency) && Objects.nonNull(frequency.getType()) &&
+                    Constants.FREQUENCY_MEDICAL_REVIEW.equals(frequency.getType())) {
                 Date date = DateUtil.getTreatmentPlanFollowupDate(frequency.getPeriod(), frequency.getDuration(), null);
-                treatmentplan.setNextMedicalReviewDate(date);
-                createOrUpdateAppointment(frequency.getType(), date, treatmentplan.getMemberReference(), treatmentplan.getPatientReference(),
-                    transactionBundle, treatmentplan.getProvenance(), Boolean.TRUE);
+                treatmentplan.setNextMedicalReviewDate(createOrUpdateAppointment(frequency.getType(), date, treatmentplan.getMemberReference(),
+                        treatmentplan.getPatientReference(),
+                    transactionBundle, treatmentplan.getProvenance(), Boolean.TRUE));
             } else if (Objects.nonNull(frequency) && !Objects.isNull(frequency.getPeriod()) && !Objects.isNull(frequency.getDuration())){
                 Date date = DateUtil.getTreatmentPlanFollowupDate(frequency.getPeriod(), frequency.getDuration(), null);
                 if (Constants.FREQUENCY_BP_CHECK.equals(frequency.getType())) {
@@ -238,21 +250,23 @@ public class PatientTreatmentPlanServiceImpl implements PatientTreatmentPlanServ
     /**
      * Gets frequency for patient based on cvd risk level.
      * 
-     * @param treatmentPlan .
+     * @param treatmentPlan
      * @return List<FrequencyDTO> list of frequency
      */
     private List<FrequencyDTO> getFrequencies(TreatmentPlanDTO treatmentPlan) {        
         List<FrequencyDTO> frequencyByRiskLevel = new ArrayList<>();
-        treatmentPlan.getFrequencies().forEach(frequency -> {
-            if (treatmentPlan.getCvdRiskLevel().equals(frequency.getRiskLevel())) {    
-                frequencyByRiskLevel.add(frequency);
-            }
-        });
+        if (Objects.nonNull(treatmentPlan.getCvdRiskLevel())) {
+            treatmentPlan.getFrequencies().forEach(frequency -> {
+                if (treatmentPlan.getCvdRiskLevel().equals(frequency.getRiskLevel())) {
+                    frequencyByRiskLevel.add(frequency);
+                }
+            });
+        }
         if (treatmentPlan.isHba1c()) {
             FrequencyDTO hba1cFrequency = treatmentPlan.getFrequencies().stream().filter(frequency ->
                     Constants.HBA1C_DEFAULT_FREQUENCY.equals(frequency.getName()) && Constants.FREQUENCY_HBA1C_CHECK.equals(frequency.getType())).findAny().orElse(null);
             frequencyByRiskLevel.add(hba1cFrequency);
-        } else {
+        } else if (!treatmentPlan.isPregnancyAnc() && Objects.nonNull(treatmentPlan.getCvdRiskLevel())){
             FrequencyDTO frequency = new FrequencyDTO();
             frequency.setType(Constants.FREQUENCY_HBA1C_CHECK);
             frequencyByRiskLevel.add(frequency);
@@ -265,7 +279,7 @@ public class PatientTreatmentPlanServiceImpl implements PatientTreatmentPlanServ
             frequency.setPeriod(Constants.BG_DEFAULT_FREQUENCY_PERIOD);
             frequency.setName(Constants.BG_DEFAULT_FREQUENCY);
             frequencyByRiskLevel.add(frequency);
-        } else {
+        } else if (!treatmentPlan.isPregnancyAnc() && Objects.nonNull(treatmentPlan.getCvdRiskLevel())){
             frequencyByRiskLevel.removeIf(frequency -> Constants.FREQUENCY_BG_CHECK.equals(frequency.getType()));
             FrequencyDTO frequency = new FrequencyDTO();
             frequency.setType(Constants.FREQUENCY_BG_CHECK);
@@ -286,7 +300,7 @@ public class PatientTreatmentPlanServiceImpl implements PatientTreatmentPlanServ
      * @param frequencyByRisk
      */
     private void createPregnancyFrequecy(TreatmentPlanDTO treatmentPlan, List<FrequencyDTO> frequencyByRisk) {
-        Bundle bundle = restApiUtil.getBatchRequest(String.format(GET_PREGNANCY_DETAILS_QUERY,
+        Bundle bundle = restApiUtil.getBatchRequest(String.format(GET_PREGNANCY_DETAILS,
                 treatmentPlan.getMemberReference(), FhirConstants.PREGNANCY));
 
         if (!bundle.getEntry().isEmpty()) {
@@ -295,7 +309,11 @@ public class PatientTreatmentPlanServiceImpl implements PatientTreatmentPlanServ
             PregnancyDetailsDTO pregnancyAncDTO = new PregnancyDetailsDTO();
             spiceConverter.setPregnancySymptomDetails(pregancyObservation, pregnancyAncDTO);
             lastMenstrualDate = pregnancyAncDTO.getLastMenstrualPeriod();
-            boolean isDangerSymptom = !pregnancyAncDTO.getPregnancySymptoms().isEmpty();
+            List<PregnancySymptomDTO> dangerSymptoms = pregnancyAncDTO.getPregnancySymptoms();
+
+            boolean isDangerSymptom = !Objects.isNull(dangerSymptoms) && !dangerSymptoms.isEmpty()
+                    && (!(dangerSymptoms.size() == 1 && dangerSymptoms.getFirst().getName().equals(Constants.NO_SYMPTOMS)))
+            ? Boolean.TRUE: Boolean.FALSE;
 
             if (Objects.nonNull(lastMenstrualDate)) {
                 int gestationalWeeks = DateUtil.getWeeks(lastMenstrualDate);
@@ -312,8 +330,10 @@ public class PatientTreatmentPlanServiceImpl implements PatientTreatmentPlanServ
                             .toList();
                     frequencyByRisk.removeIf(
                             frequency -> frequency.getType().equalsIgnoreCase(Constants.FREQUENCY_MEDICAL_REVIEW));
-                    medicalReviewFrequencies.get(0).setType(Constants.FREQUENCY_MEDICAL_REVIEW);
-                    frequencyByRisk.add(medicalReviewFrequencies.get(0));
+                    FrequencyDTO clonedFrequency = medicalReviewFrequencies.getFirst();
+                    FrequencyDTO medicalReviewFrequency = clonedFrequency.clone();
+                    medicalReviewFrequency.setType(Constants.FREQUENCY_MEDICAL_REVIEW);
+                    frequencyByRisk.add(medicalReviewFrequency);
                     ModelMapper mapper = new ModelMapper();
                     List<FrequencyDTO> choFrequencies = defaultFrequencies.stream()
                             .filter(frequency -> frequency.getName().equals(Constants.EVERY_ONE_MONTH)).toList();
@@ -331,9 +351,10 @@ public class PatientTreatmentPlanServiceImpl implements PatientTreatmentPlanServ
     public void updateTreatmentPlanData(TreatmentPlanDTO treatmentplan) {
         Bundle transactionBundle = new Bundle().setType(BundleType.TRANSACTION);
         
-        Bundle bundle = restApiUtil.getBatchRequest(String.format(GET_CARE_PLAN_BY_ID_QUERY, treatmentplan.getCarePlanId()));
+        Bundle bundle = restApiUtil.getBatchRequest(String.format(GET_CAREPLAN_BY_ID, treatmentplan.getCarePlanId()));
         if (!bundle.getEntry().isEmpty()) {
             CarePlan carePlan = (CarePlan) bundle.getEntry().getFirst().getResource();
+            carePlan.setStatus(CarePlanStatus.COMPLETED);
 
             for (CarePlanActivityComponent carePlanActivityComponent : carePlan.getActivity()) {
                 CarePlanActivityDetailComponent detailComponent = carePlanActivityComponent.getDetail();
@@ -371,20 +392,22 @@ public class PatientTreatmentPlanServiceImpl implements PatientTreatmentPlanServ
     /**
      * {@inheritDoc}
      */
-    public void createOrUpdateAppointment(String assessmentType,
+    public Date createOrUpdateAppointment(String assessmentType,
                                           Date nextVisitDate,
                                           String memberRef,
                                           String patientRef,
                                           Bundle transactionBundle,
                                           ProvenanceDTO provenance, boolean isProvisional) {
-        boolean isBundleSave = false;        
+        boolean isBundleSave = false;
+        Date appointmentDate = null;
         if (Objects.isNull(transactionBundle)) {
             transactionBundle = new Bundle().setType(BundleType.TRANSACTION);
             isBundleSave = true;
         }
-        Bundle bundle = restApiUtil.getBatchRequest(String.format(GET_APPOINTMENT_BY_IDS_QUERY,
+        Bundle bundle = restApiUtil.getBatchRequest(String.format(GET_APPOINTMENT_BY_RELATED_PERSON_ID,
                 Constants.FREQUNCY_TYPE_VALUE_MAP.get(assessmentType), memberRef));
         if (Objects.isNull(bundle) || bundle.getEntry().isEmpty()) {
+            appointmentDate = nextVisitDate;
             createAppointment(Constants.FREQUNCY_TYPE_VALUE_MAP.get(assessmentType), nextVisitDate, memberRef, patientRef, transactionBundle, provenance);
         } else if (!isProvisional) {
             Appointment appointment = null;
@@ -400,6 +423,7 @@ public class PatientTreatmentPlanServiceImpl implements PatientTreatmentPlanServ
         if (isBundleSave) {
             restApiUtil.postBatchRequest(fhirUtils.getFhirBaseUrl(), restApiUtil.constructRequestEntity(transactionBundle));
         }
+        return appointmentDate;
     }
 
     /**
@@ -457,7 +481,7 @@ public class PatientTreatmentPlanServiceImpl implements PatientTreatmentPlanServ
      */
     public CarePlan getCarePlanForPatient(String memeberReference) {
         CarePlan carePlan = null;
-        Bundle bundle = restApiUtil.getBatchRequest(String.format(GET_CARE_PLAN_PLAN_MEMBER_QUERY, memeberReference));
+        Bundle bundle = restApiUtil.getBatchRequest(String.format(GET_CAREPLAN_PLAN_MEMBER, memeberReference));
         if (!bundle.getEntry().isEmpty()) {
             carePlan = (CarePlan) bundle.getEntry().getFirst().getResource();
         }
@@ -486,5 +510,33 @@ public class PatientTreatmentPlanServiceImpl implements PatientTreatmentPlanServ
             createOrUpdateAppointment(assessmentType, visitDate, memberReference, patientReference, null, provenance, Boolean.FALSE);
         }
         return visitDate;
+    }
+
+    /**
+     * <p>
+     * The function updates a care plan by adding activities based on provided frequencies
+     * and setting its status to completed or draft.
+     * </p>
+     *
+     * @param frequencies       A list of FrequencyDTO objects containing information about the frequencies.
+     * @param transactionBundle The bundle to be saved
+     * @param treatmentplan     TreatmentPlanDTO treatmentplan to be constructed,
+     * @param details           It contains information about the details of the care plan activities.
+     * @param carePlan          It represents the care plan that needs to be updated based on the provided
+     *                          frequencies, treatment plan, transaction bundle, and details.
+     * @return The updated care plan is returned.
+     */
+    private CarePlan updateCarePlan(List<FrequencyDTO> frequencies, Bundle transactionBundle, TreatmentPlanDTO treatmentplan, List<String> details, CarePlan carePlan) {
+        for (FrequencyDTO frequency : frequencies) {
+            if (!details.contains(frequency.getType())) {
+                carePlan.addActivity(createCarePlanActivity(frequency, treatmentplan, transactionBundle, Boolean.TRUE));
+                details.add(frequency.getType());
+            }
+        }
+        carePlan.setStatus(new HashSet<>(details).containsAll(Constants.FREQUENCIES) ? CarePlanStatus.COMPLETED : CarePlanStatus.DRAFT);
+        fhirUtils.setBundle(StringUtil.concatString(ResourceType.CarePlan.toString(), Constants.FORWARD_SLASH, carePlan.getIdPart()),
+                Constants.EMPTY_SPACE,
+                HTTPVerb.PUT, carePlan, transactionBundle, treatmentplan.getProvenance());
+        return carePlan;
     }
 }

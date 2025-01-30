@@ -12,7 +12,7 @@ import lombok.Data;
 @Data
 public class FhirCodeDTO {
 
-    private String System;
+    private String system;
 
     private String code;
 
@@ -20,7 +20,7 @@ public class FhirCodeDTO {
 
     public FhirCodeDTO(String system, String code, String display) {
 
-        this.System = system;
+        this.system = system;
         this.code = code;
         this.display = display;
 

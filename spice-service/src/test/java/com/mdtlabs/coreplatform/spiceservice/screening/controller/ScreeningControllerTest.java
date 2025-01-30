@@ -1,10 +1,5 @@
 package com.mdtlabs.coreplatform.spiceservice.screening.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.*;
-import com.mdtlabs.coreplatform.spiceservice.message.SuccessResponse;
-import com.mdtlabs.coreplatform.spiceservice.screening.service.ScreeningService;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -19,6 +14,13 @@ import org.springframework.mock.web.MockMultipartFile;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+
+import com.mdtlabs.coreplatform.spiceservice.common.dto.BioDataDTO;
+import com.mdtlabs.coreplatform.spiceservice.common.dto.DashboardDetails;
+import com.mdtlabs.coreplatform.spiceservice.common.dto.DashboardDetailsRequestDTO;
+import com.mdtlabs.coreplatform.spiceservice.common.dto.ScreeningLogRequestDTO;
+import com.mdtlabs.coreplatform.spiceservice.message.SuccessResponse;
+import com.mdtlabs.coreplatform.spiceservice.screening.service.ScreeningService;
 
 /**
  * <p>

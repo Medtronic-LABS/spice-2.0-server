@@ -1,15 +1,14 @@
 package com.mdtlabs.coreplatform.spiceservice.patienttreatmentplan.controller;
 
-import org.modelmapper.ModelMapper;
+import jakarta.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.mdtlabs.coreplatform.commonservice.common.annotations.TenantValidation;
 import com.mdtlabs.coreplatform.commonservice.common.logger.Logger;
 import com.mdtlabs.coreplatform.spiceservice.common.dto.RequestDTO;
 import com.mdtlabs.coreplatform.spiceservice.common.dto.TreatmentPlanDTO;
@@ -17,8 +16,6 @@ import com.mdtlabs.coreplatform.spiceservice.common.dto.TreatmentPlanResponseDTO
 import com.mdtlabs.coreplatform.spiceservice.message.SuccessCode;
 import com.mdtlabs.coreplatform.spiceservice.message.SuccessResponse;
 import com.mdtlabs.coreplatform.spiceservice.patienttreatmentplan.service.PatientTreatmentPlanService;
-
-import jakarta.validation.Valid;
 
 /**
  * <p>
@@ -32,12 +29,10 @@ import jakarta.validation.Valid;
 public class PatientTreatmentPlanController {
 
     private final PatientTreatmentPlanService treatmentPlanService;
-	private final ModelMapper modelMapper;
 
 	@Autowired
-	public PatientTreatmentPlanController(PatientTreatmentPlanService treatmentPlanService, ModelMapper modelMapper) {
+	public PatientTreatmentPlanController(PatientTreatmentPlanService treatmentPlanService) {
 		this.treatmentPlanService = treatmentPlanService;
-		this.modelMapper = modelMapper;
 	}
 
     /**

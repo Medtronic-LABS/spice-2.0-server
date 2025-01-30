@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 
 import org.junit.jupiter.api.Assertions;
@@ -57,7 +56,6 @@ import com.mdtlabs.coreplatform.commonservice.common.model.dto.UserResponseDTO;
 import com.mdtlabs.coreplatform.commonservice.common.model.dto.VillageDTO;
 import com.mdtlabs.coreplatform.commonservice.common.model.entity.ClinicalWorkflow;
 import com.mdtlabs.coreplatform.commonservice.common.model.entity.HealthFacility;
-import com.mdtlabs.coreplatform.commonservice.common.model.entity.Organization;
 import com.mdtlabs.coreplatform.commonservice.common.model.entity.Village;
 
 @ExtendWith(MockitoExtension.class)
@@ -155,7 +153,6 @@ class HealthFacilityServiceTest {
     void testupdateHealthFacility() {
         ResponseEntity<Boolean> responseEntity = new ResponseEntity<>(Boolean.TRUE, HttpStatus.CREATED);
         HealthFacilityRequestDTO requestDTO = TestDataProvider.getHealthFacilityRequestDTO();
-        Optional<Organization> organization = Optional.of(TestDataProvider.getOrganization());
         when(healthFacilityRepository.findByIdAndTenantIdAndIsDeletedAndIsActive(requestDTO.getId(), requestDTO.getTenantId(), false, true)).thenReturn(null);
         assertThrows(DataNotFoundException.class, () -> healthFacilityService.updateHealthFacility(requestDTO));
         TestDataProvider.init();
@@ -547,7 +544,9 @@ class HealthFacilityServiceTest {
         when(healthFacilityRepository.findHealthFacilityDistrict(countryId, districtId, chiefdomId, !isActive)).thenReturn(healthFacilities);
         when(healthFacilityRepository.saveAll(healthFacilities)).thenReturn(healthFacilities);
         //then
-        healthFacilityService.activateOrDeactivateHealthFacility(countryId, districtId, chiefdomId, isActive);
+        List<HealthFacility> response = healthFacilityService.activateOrDeactivateHealthFacility(countryId, districtId, chiefdomId, isActive);
+        assertNotNull(response);
+
     }
 
     @Test
@@ -557,5 +556,6 @@ class HealthFacilityServiceTest {
         when(healthFacilityRepository.getCountByDistrictIds(countyIds)).thenReturn(any());
         //then
         healthFacilityService.getCountByDistrictIds(countyIds);
+        verify(healthFacilityRepository, atLeastOnce()).getCountByDistrictIds(countyIds);
     }
 }

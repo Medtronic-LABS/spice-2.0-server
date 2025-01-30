@@ -659,4 +659,18 @@ public class UserController {
         List<User> response = userService.getUserListByRole(requestDTO);
         return new SuccessResponse<>(SuccessCode.GET_USERS, response, (long) response.size() , HttpStatus.OK);
     }
+
+    /**
+     * <p>
+     * Update Culture of the User
+     * </p>
+     *
+     * @param requestDto - user to be updated
+     * @return a SuccessResponse containing a success code, and the HTTP status.
+     */
+    @PostMapping("/update-culture")
+    public SuccessResponse<String> updateCulture(@RequestBody UserDTO requestDto) {
+        userService.updateCulture(requestDto);
+        return new SuccessResponse<>(SuccessCode.USER_UPDATE, HttpStatus.OK);
+    }
 }

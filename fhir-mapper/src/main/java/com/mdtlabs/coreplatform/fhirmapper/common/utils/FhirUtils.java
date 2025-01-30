@@ -27,17 +27,19 @@ import org.hl7.fhir.r4.model.Provenance;
 import org.hl7.fhir.r4.model.Reference;
 import org.hl7.fhir.r4.model.Resource;
 import org.hl7.fhir.r4.model.ResourceType;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import static java.util.Objects.nonNull;
 
+import com.mdtlabs.coreplatform.commonservice.common.CommonUtil;
 import com.mdtlabs.coreplatform.commonservice.common.logger.Logger;
+import com.mdtlabs.coreplatform.commonservice.common.model.dto.MetaDataDTO;
 import com.mdtlabs.coreplatform.commonservice.common.model.entity.MetaCodeDetails;
 import com.mdtlabs.coreplatform.commonservice.common.util.DateUtil;
 import com.mdtlabs.coreplatform.commonservice.common.util.StringUtil;
+import com.mdtlabs.coreplatform.fhirmapper.apiinterface.SpiceServiceApiInterface;
 import com.mdtlabs.coreplatform.fhirmapper.common.Constants;
 import com.mdtlabs.coreplatform.fhirmapper.common.dto.FhirResponseDTO;
 import com.mdtlabs.coreplatform.fhirmapper.common.dto.ProvenanceDTO;
@@ -60,7 +62,11 @@ public class FhirUtils {
 
     private final RedisTemplate<String, Map<String, MetaCodeDetails>> redisTemplate;
 
+    private final RedisTemplate<String, Map<String, List<MetaDataDTO>>> metaRedisTemplate;
+
     private Map<String, MetaCodeDetails> codeDetails = new HashMap<>();
+
+    private final SpiceServiceApiInterface spiceServiceApiInterface;
 
     @Getter
     private static String fhirIdentifierUrl;
@@ -76,10 +82,13 @@ public class FhirUtils {
     @Value("${app.fhir-server-url}")
     private String fhirServerUrl;
 
-    public FhirUtils(MetaCodeDetailsRepository metaCodeDetailsRepository,
-                     RedisTemplate<String, Map<String, MetaCodeDetails>> redisTemplate) {
+    public FhirUtils(MetaCodeDetailsRepository metaCodeDetailsRepository, RedisTemplate<String, Map<String,
+            MetaCodeDetails>> redisTemplate, RedisTemplate<String, Map<String, List<MetaDataDTO>>> metaRedisTemplate,
+                     SpiceServiceApiInterface spiceServiceApiInterface) {
         this.metaCodeDetailsRepository = metaCodeDetailsRepository;
         this.redisTemplate = redisTemplate;
+        this.metaRedisTemplate = metaRedisTemplate;
+        this.spiceServiceApiInterface = spiceServiceApiInterface;
     }
 
     /**
@@ -221,8 +230,8 @@ public class FhirUtils {
         versionId = Objects.isNull(versionId) ? Constants.ZERO_STRING : versionId;
         List<Coding> coding = new ArrayList<>();
         if (!Objects.isNull(codes.get(verb.toString()))) {
-            codes.get(verb.toString()).getCodes().forEach(code -> coding.add(new Coding()
-                        .setCode(code.getCode()).setDisplay(code.getDisplay()).setSystem(code.getSystem()))
+            codes.get(verb.toString()).getCodes().forEach(code ->
+                coding.add(new Coding().setCode(code.getCode()).setDisplay(code.getDisplay()).setSystem(code.getSystem()))
             );
         }
         provenance.getActivity().setText(versionId);
@@ -317,11 +326,11 @@ public class FhirUtils {
     public Map<String, List<MetaCodeDetails>> getFhirCodes() {
         List<MetaCodeDetails> codes = metaCodeDetailsRepository.findAllByIsActiveTrueAndIsDeletedFalse();
         Map<String, List<MetaCodeDetails>> codesMap = new HashMap<>();
-        for (MetaCodeDetails code : codes) {
-            if (!codesMap.containsKey(code.getName())) {
-                codesMap.put(code.getName(), new ArrayList<>());
+        for (MetaCodeDetails codeDetails : codes) {
+            if (!codesMap.containsKey(codeDetails.getName())) {
+                codesMap.put(codeDetails.getName(), new ArrayList<>());
             }
-            codesMap.get(code.getName()).add(code);
+            codesMap.get(codeDetails.getName()).add(codeDetails);
         }
         return codesMap;
     }
@@ -394,8 +403,8 @@ public class FhirUtils {
     public Map<String, MetaCodeDetails> initiateMap() {
         List<MetaCodeDetails> codes = metaCodeDetailsRepository.findAllByIsActiveTrueAndIsDeletedFalse();
         Map<String, MetaCodeDetails> codesMap = new HashMap<>();
-        for (MetaCodeDetails code : codes) {
-            codesMap.put(code.getName(), code);
+        for (MetaCodeDetails codeDetails : codes) {
+            codesMap.put(codeDetails.getName(), codeDetails);
         }
         return codesMap;
     }
@@ -441,10 +450,10 @@ public class FhirUtils {
      * @return A {@link CodeableConcept} object populated with {@link Coding} objects.
      */
     public CodeableConcept setCodes(String key) {
-        MetaCodeDetails metaCodeDetails = getCodeDetails().get(key);
+        MetaCodeDetails codeDetails = getCodeDetails().get(key);
         CodeableConcept codeableConcept = new CodeableConcept();
-        if (!Objects.isNull(metaCodeDetails) && !Objects.isNull(metaCodeDetails.getCodes())) {
-            metaCodeDetails.getCodes().forEach(code -> {
+        if (!Objects.isNull(codeDetails) && !Objects.isNull(codeDetails.getCodes())) {
+            codeDetails.getCodes().forEach(code -> {
                 Coding coding = new Coding();
                 coding.setSystem(code.getSystem());
                 coding.setCode(code.getCode());
@@ -468,8 +477,26 @@ public class FhirUtils {
      * @return The display text associated with the key, or null if not found.
      */
     public String getText(String key) {
-        MetaCodeDetails metaCodeDetails = getCodeDetails().get(key);
-        return !Objects.isNull(metaCodeDetails) ? metaCodeDetails.getText() : key;
+        MetaCodeDetails codeDetails = getCodeDetails().get(key);
+        Map<String, List<MetaDataDTO>> valuesMap = metaRedisTemplate.opsForValue().get(Constants.META);
+        if (Objects.isNull(valuesMap) || valuesMap.isEmpty()) {
+            spiceServiceApiInterface.setMetaData(CommonUtil.getAuthToken(), CommonUtil.getClient());
+        }
+        if (Objects.nonNull(valuesMap) && !valuesMap.isEmpty()) {
+            if (Objects.isNull(codeDetails)
+                    || Objects.isNull(codeDetails.getFormName())
+                    || !valuesMap.containsKey(codeDetails.getFormName())) {
+                codeDetails = new MetaCodeDetails();
+                codeDetails.setFormName(Constants.META);
+            }
+            for (MetaDataDTO metaDataDTO : valuesMap.get(codeDetails.getFormName())) {
+                if (key.equals(metaDataDTO.getValue())) {
+                    codeDetails.setText(metaDataDTO.getDisplayValue());
+                    break;
+                }
+            }
+        }
+        return Objects.nonNull(codeDetails) ? codeDetails.getText() : key;
     }
 
     /**
@@ -537,8 +564,7 @@ public class FhirUtils {
     public String convertPregnancyType(Boolean status) {
         if (Boolean.TRUE.equals(status)) {
             return Constants.YES;
-        }
-        if (Boolean.FALSE.equals(status)) {
+        } else if (Boolean.FALSE.equals(status)) {
             return Constants.NO;
         }
         return Constants.NA;
@@ -553,7 +579,7 @@ public class FhirUtils {
      * <p>
      * This method retrieves the earliest Encounter resource from the provided bundle by examining the Encounter periods
      * and selecting the one with the earliest start date. It assumes that the bundle contains a collection of Encounter
-     * resources and compares each Encounter’s period.start to determine which one occurred first. The method returns
+     * resources and compares each Encounterâ€™s period.start to determine which one occurred first. The method returns
      * this Encounter resource as the earliest documented encounter from the bundle.
      * </p>
      *
@@ -572,7 +598,7 @@ public class FhirUtils {
      * Gets a Related person's ID from Encounter resource.
      * <p>
      * This method extracts the ID of a RelatedPerson associated with a specific Encounter resource. It navigates
-     * through the Encounter resource’s participant or subject fields, depending on how the RelatedPerson is linked
+     * through the Encounter resourceâ€™s participant or subject fields, depending on how the RelatedPerson is linked
      * within the Encounter, to locate the reference to the RelatedPerson resource. Once the reference is found, it
      * parses the ID from the reference URL, isolating the unique identifier of the RelatedPerson associated with the
      * Encounter.

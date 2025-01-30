@@ -19,7 +19,7 @@ class CategoryServiceImplTest {
     private CategoryServiceImpl categoryService;
 
     @Test
-    public void testGetCategories() {
+    void testGetCategories() {
         categoryService.getCategories();
         verify(categoryRepository).findByIsDeletedFalseAndIsActiveTrueOrderByDisplayOrder();
     }

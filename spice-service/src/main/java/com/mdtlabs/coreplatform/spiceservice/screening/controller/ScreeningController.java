@@ -1,5 +1,6 @@
 package com.mdtlabs.coreplatform.spiceservice.screening.controller;
 
+import com.mdtlabs.coreplatform.commonservice.common.exception.DataNotFoundException;
 import com.mdtlabs.coreplatform.spiceservice.common.dto.DashboardDetails;
 import com.mdtlabs.coreplatform.spiceservice.common.dto.DashboardDetailsRequestDTO;
 import com.mdtlabs.coreplatform.commonservice.common.exception.SpiceValidation;
@@ -52,7 +53,7 @@ public class ScreeningController {
      */
     @PostMapping("/create")
     public SuccessResponse<Boolean> processScreeningLog(@RequestParam(Constants.SCREENING_REQUEST) String screeningRequest,
-                                                        @RequestParam(required = false, name = Constants.SIGNATURE_FILE) MultipartFile signatureFile) throws Exception {
+                                                        @RequestParam(required = false, name = Constants.SIGNATURE_FILE) MultipartFile signatureFile) {
         try {
             ObjectMapper mapper = new ObjectMapper();
             ScreeningLogRequestDTO request = mapper.readValue(screeningRequest,
@@ -74,7 +75,7 @@ public class ScreeningController {
      * @return Patient dashboard count information.
      */
     @PostMapping("/dashboard-count")
-    public SuccessResponse<DashboardDetails> getCountOfUser(@RequestBody DashboardDetailsRequestDTO request) throws RuntimeException{
+    public SuccessResponse<DashboardDetails> getCountOfUser(@RequestBody DashboardDetailsRequestDTO request) throws DataNotFoundException {
         return new SuccessResponse<>(SuccessCode.PATIENTS_COUNT_FETCHED, screeningService.getPatientCountOfUsers(request), HttpStatus.OK);
     }
 }

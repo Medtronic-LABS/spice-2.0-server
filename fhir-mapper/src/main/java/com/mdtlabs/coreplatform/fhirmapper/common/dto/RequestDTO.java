@@ -46,6 +46,8 @@ public class RequestDTO {
 
     private String reason;
 
+    private String otherReason;
+
     private String closedReason;
 
     private String closedEncounterType;

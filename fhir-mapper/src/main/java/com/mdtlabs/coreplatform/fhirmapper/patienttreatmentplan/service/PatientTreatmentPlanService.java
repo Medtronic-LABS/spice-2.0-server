@@ -1,6 +1,7 @@
 package com.mdtlabs.coreplatform.fhirmapper.patienttreatmentplan.service;
 
 import java.util.Date;
+import java.util.List;
 
 import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.CarePlan;
@@ -25,7 +26,7 @@ public interface PatientTreatmentPlanService {
 	 * @param treatmentplan request
 	 * @return TreatmentPlanResponseDTO 
 	 */
-    TreatmentPlanResponseDTO createProvisionalPlan(TreatmentPlanDTO treatmentplan, Bundle bundle);
+    TreatmentPlanResponseDTO createProvisionalPlan(TreatmentPlanDTO treatmentplan, Bundle bundle, CarePlan carePlan, List<String> details);
 
     /**
 	 * This method is used to get patient treatment plan details.
@@ -55,7 +56,7 @@ public interface PatientTreatmentPlanService {
 	 * @param transactionBundle The transaction bundle containing the appointment details.
 	 * @param provenance The provenance information for the appointment.
 	 */
-	void createOrUpdateAppointment(String assessmentType, Date nextVisitDate, String memberRef, String patientRef,
+	Date createOrUpdateAppointment(String assessmentType, Date nextVisitDate, String memberRef, String patientRef,
 			Bundle transactionBundle, ProvenanceDTO provenance, boolean isProvisional);
 
 

@@ -1,5 +1,19 @@
 package com.mdtlabs.coreplatform.spiceservice.householdmemberlink.service;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
+
+import static org.mockito.Mockito.*;
+
 import com.mdtlabs.coreplatform.spiceservice.common.Constants;
 import com.mdtlabs.coreplatform.spiceservice.common.TestConstants;
 import com.mdtlabs.coreplatform.spiceservice.common.TestDataProvider;
@@ -15,25 +29,10 @@ import com.mdtlabs.coreplatform.spiceservice.followup.repository.CallRegisterDet
 import com.mdtlabs.coreplatform.spiceservice.followup.repository.CallRegisterRepository;
 import com.mdtlabs.coreplatform.spiceservice.householdmemberlink.respository.HouseholdMemberLinkRepository;
 import com.mdtlabs.coreplatform.spiceservice.householdmemberlink.service.impl.HouseholdMemberLinkServiceImpl;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.junit.jupiter.MockitoSettings;
-import org.mockito.quality.Strictness;
-import org.modelmapper.ModelMapper;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class HouseHoldMemberLinkServiceTest {
+class HouseHoldMemberLinkServiceTest {
 
     @InjectMocks
     private HouseholdMemberLinkServiceImpl householdMemberLinkService;
@@ -58,6 +57,7 @@ public class HouseHoldMemberLinkServiceTest {
         householdMemberLink.setName(householdMemberDTO.getName());
         when(householdMemberLinkRepository.save(householdMemberLink)).thenReturn(householdMemberLink);
         householdMemberLinkService.createHouseholdMemberLink(householdMemberDTO);
+        verify(householdMemberLinkRepository).save(householdMemberLink);
     }
 
     @Test
@@ -68,6 +68,7 @@ public class HouseHoldMemberLinkServiceTest {
         when(householdMemberLinkRepository.findByVillageIds(villageIds, Constants.UNASSIGNED, requestDTO.getLastSyncTime(),
                 requestDTO.getCurrentSyncTime())).thenReturn(householdMemberLinks);
         householdMemberLinkService.getHouseholdMemberLinkList(requestDTO);
+        verify(householdMemberLinkRepository,atLeastOnce()).findByVillageIds(villageIds, Constants.UNASSIGNED, requestDTO.getLastSyncTime(),requestDTO.getCurrentSyncTime());
     }
 
     @Test
@@ -100,6 +101,7 @@ public class HouseHoldMemberLinkServiceTest {
         when(callRegisterRepository.save(callRegister)).thenReturn(existingCallRegister);
         when(callRegisterDetailRepository.save(callRegisterDetail)).thenReturn(callRegisterDetail);
         householdMemberLinkService.updateHouseholdMemberLink(householdMemberLinkDTO);
+        verify(callRegisterRepository, atLeastOnce()).findByMemberIdAndTypeAndIsDeletedFalse(householdMemberLinkDTO.getMemberId(), AppointmentType.HH_MAPPING);
     }
 
     @Test
@@ -119,5 +121,6 @@ public class HouseHoldMemberLinkServiceTest {
         when(householdMemberLinkRepository.findByMemberIdInAndIsDeletedFalseAndIsActiveTrue(memberIds)).thenReturn(householdMemberLinks);
         when(householdMemberLinkRepository.saveAll(householdMemberLinkResponse)).thenReturn(householdMemberLinks);
         householdMemberLinkService.updateMemberLink(householdMemberDto);
+        verify(householdMemberLinkRepository, atLeastOnce()).findByMemberIdInAndIsDeletedFalseAndIsActiveTrue(memberIds);
     }
 }

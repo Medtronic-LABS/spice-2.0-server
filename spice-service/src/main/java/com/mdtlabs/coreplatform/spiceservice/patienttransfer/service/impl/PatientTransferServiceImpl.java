@@ -279,9 +279,8 @@ public class PatientTransferServiceImpl implements PatientTransferService {
             List<String> diagnosisList = new ArrayList<>();
             if (Objects.nonNull(patientDetailsDTO.getConfirmDiagnosis())
                     && !CollectionUtils.isEmpty(patientDetailsDTO.getConfirmDiagnosis().getDiagnosis())) {
-                patientDetailsDTO.getConfirmDiagnosis().getDiagnosis().forEach(diagnosis -> {
-                    diagnosisList.add(diagnosis.get(Constants.NAME));
-                });
+                patientDetailsDTO.getConfirmDiagnosis().getDiagnosis().forEach(diagnosis ->
+                    diagnosisList.add(diagnosis.get(Constants.NAME)));
             }
             data.put(Constants.PATIENT, this.getPopulatedPatientData(patientTransfer, patientDetailsDTO, diagnosisList));
 
@@ -339,7 +338,6 @@ public class PatientTransferServiceImpl implements PatientTransferService {
      */
     private Map<String, Object> getPopulatedPatientData(PatientTransfer patientTransfer, PatientDetailsDTO patientDetailsDTO, List<String> diagnosisList) {
         Map<String, Object> data = new HashMap<>();
-        Map<String, Object> pregnancyData = new HashMap<>();
         RequestDTO requestDTO = new RequestDTO();
         requestDTO.setPatientId(patientTransfer.getPatientFhirId());
         PatientDTO patientDTO = fhirServiceApiInterface.getPatientById(CommonUtil.getAuthToken(), CommonUtil.getClient(), requestDTO);

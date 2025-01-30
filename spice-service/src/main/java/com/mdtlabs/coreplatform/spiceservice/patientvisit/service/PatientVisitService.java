@@ -1,6 +1,5 @@
 package com.mdtlabs.coreplatform.spiceservice.patientvisit.service;
 
-import java.util.List;
 import java.util.Map;
 
 import com.mdtlabs.coreplatform.spiceservice.common.dto.PatientVisitDTO;

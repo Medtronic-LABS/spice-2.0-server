@@ -1,6 +1,5 @@
 package com.mdtlabs.coreplatform.spiceservice.patienttreatmentplan.service.impl;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,8 +9,6 @@ import com.mdtlabs.coreplatform.spiceservice.common.dto.RequestDTO;
 import com.mdtlabs.coreplatform.spiceservice.common.dto.TreatmentPlanDTO;
 import com.mdtlabs.coreplatform.spiceservice.common.dto.TreatmentPlanResponseDTO;
 import com.mdtlabs.coreplatform.spiceservice.patienttreatmentplan.service.PatientTreatmentPlanService;
-import com.mdtlabs.coreplatform.spiceservice.staticdata.repository.FrequencyRepository;
-import com.mdtlabs.coreplatform.spiceservice.staticdata.repository.FrequencyTypeRepository;
 
 /**
  * <p>
@@ -23,16 +20,11 @@ import com.mdtlabs.coreplatform.spiceservice.staticdata.repository.FrequencyType
 @Service
 public class PatientTreatmentPlanServiceImpl implements PatientTreatmentPlanService {
 
-    private final FrequencyRepository frequencyRepository;
-    private final FrequencyTypeRepository frequencyTypeRepository;
+
     private final FhirServiceApiInterface fhirServiceApiInterface;
 
     @Autowired
-    public PatientTreatmentPlanServiceImpl(FrequencyRepository frequencyRepository,
-                FrequencyTypeRepository frequencyTypeRepository,
-                FhirServiceApiInterface fhirServiceApiInterface) {
-        this.frequencyRepository = frequencyRepository;
-        this.frequencyTypeRepository = frequencyTypeRepository;
+    public PatientTreatmentPlanServiceImpl(FhirServiceApiInterface fhirServiceApiInterface) {
         this.fhirServiceApiInterface = fhirServiceApiInterface;
     }
 

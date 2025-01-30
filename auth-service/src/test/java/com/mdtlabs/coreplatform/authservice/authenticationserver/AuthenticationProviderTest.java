@@ -20,7 +20,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
-import org.modelmapper.ModelMapper;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -73,8 +72,6 @@ class AuthenticationProviderTest {
         user.setBlockedDate(null);
         Set<GrantedAuthority> authorityList = user.getAuthorities();
         Authentication expectedAuthentication = new UsernamePasswordAuthenticationToken(user, user.getPassword(), authorityList);
-        ModelMapper modelMapper = new ModelMapper();
-        TimezoneDTO convertedTimeZone = modelMapper.map(user.getTimezone(), TimezoneDTO.class);
 
         //when
         when(userRepository.getUserByUsername("superuser@test.com")).thenReturn(user);

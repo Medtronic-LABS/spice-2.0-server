@@ -28,7 +28,7 @@ public interface ScreeningService {
      *
      * @return A String containing the created screening log fhir details.
      */
-    BioDataDTO processScreeningLog(ScreeningLogRequestDTO request, MultipartFile file) throws Exception;
+    BioDataDTO processScreeningLog(ScreeningLogRequestDTO request, MultipartFile file);
 
     /**
      * <p>

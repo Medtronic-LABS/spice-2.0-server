@@ -5,6 +5,8 @@ import com.mdtlabs.coreplatform.spiceservice.apiinterface.FhirServiceApiInterfac
 import com.mdtlabs.coreplatform.spiceservice.common.TestDataProvider;
 import com.mdtlabs.coreplatform.spiceservice.common.dto.PsychologyDTO;
 import com.mdtlabs.coreplatform.spiceservice.patientpsychology.service.impl.PatientPsychologyServiceImpl;
+
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -19,7 +21,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class PatientPsychologyServiceImplTest {
+class PatientPsychologyServiceImplTest {
     @InjectMocks
     private PatientPsychologyServiceImpl patientPsychologyService;
 
@@ -31,7 +33,8 @@ public class PatientPsychologyServiceImplTest {
         TestDataProvider.init();
         PsychologyDTO request = new PsychologyDTO();
         when(fhirServiceApiInterface.removePsychologyData(CommonUtil.getAuthToken(), CommonUtil.getClient(), request)).thenReturn(request);
-        patientPsychologyService.removePsychologyDataById(request);
+        PsychologyDTO response = patientPsychologyService.removePsychologyDataById(request);
+        Assertions.assertNotNull(response);
         TestDataProvider.cleanUp();
     }
 
@@ -40,7 +43,8 @@ public class PatientPsychologyServiceImplTest {
         TestDataProvider.init();
         PsychologyDTO request = new PsychologyDTO();
         when(fhirServiceApiInterface.updatePsychology(CommonUtil.getAuthToken(), CommonUtil.getClient(), request)).thenReturn(request);
-        patientPsychologyService.updatePsychologyData(request);
+        PsychologyDTO response = patientPsychologyService.updatePsychologyData(request);
+        Assertions.assertNotNull(response);
         TestDataProvider.cleanUp();
     }
 
@@ -49,7 +53,8 @@ public class PatientPsychologyServiceImplTest {
         TestDataProvider.init();
         PsychologyDTO request = new PsychologyDTO();
         when(fhirServiceApiInterface.savePatientPsychology(CommonUtil.getAuthToken(), CommonUtil.getClient(), request)).thenReturn(request);
-        patientPsychologyService.savePsychologyData(request);
+        PsychologyDTO response = patientPsychologyService.savePsychologyData(request);
+        Assertions.assertNotNull(response);
         TestDataProvider.cleanUp();
     }
 
@@ -58,7 +63,8 @@ public class PatientPsychologyServiceImplTest {
         TestDataProvider.init();
         PsychologyDTO request = new PsychologyDTO();
         when(fhirServiceApiInterface.getPatientPsychology(CommonUtil.getAuthToken(), CommonUtil.getClient(), request)).thenReturn(List.of(request));
-        patientPsychologyService.getPsychologyDataByUserIdAndRelatedPersonId(request);
+        List<PsychologyDTO> response = patientPsychologyService.getPsychologyDataByUserIdAndRelatedPersonId(request);
+        Assertions.assertNotNull(response);
         TestDataProvider.cleanUp();
     }
 }

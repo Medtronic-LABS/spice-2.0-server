@@ -94,9 +94,7 @@ public class RequestDTO {
     private String encounterType;
 
     private boolean isLatestRequired;
-
-    public List<String> diagnosisType;
-
+    
     private String comments;
 
     private String roleName;
@@ -118,6 +116,8 @@ public class RequestDTO {
     private String signatureUrl;
 
     private Integer sortOrder;
+
+    private String otherReason;
 
     public RequestDTO(ProvenanceDTO provenance, String memberId, String signatureUrl) {
         this.provenance = provenance;

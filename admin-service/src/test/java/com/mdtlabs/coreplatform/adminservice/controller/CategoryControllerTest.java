@@ -19,7 +19,7 @@ class CategoryControllerTest {
     private CategoryController categoryController;
 
     @Test
-    public void testGetCategories() {
+    void testGetCategories() {
         categoryController.getCategories();
         verify(categoryService).getCategories();
     }

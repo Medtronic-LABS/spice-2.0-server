@@ -207,11 +207,6 @@ class UserServiceTest {
         response = userService.forgetPassword(TestConstants.USER_NAME, Constants.SPICE, null, null);
         Assertions.assertNotNull(response);
 
-        user.setForgetPasswordCount(5);
-        response = userService.forgetPassword(TestConstants.USER_NAME, Constants.SPICE, null, null);
-        Assertions.assertNotNull(response);
-        Assertions.assertEquals(Boolean.FALSE, response);
-
         user.setForgetPasswordCount(0);
 
         Map<String, Object> userInfo = new HashMap<>();

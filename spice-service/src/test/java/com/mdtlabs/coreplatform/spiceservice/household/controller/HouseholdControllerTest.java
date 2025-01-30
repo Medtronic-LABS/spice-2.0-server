@@ -19,8 +19,6 @@ import com.mdtlabs.coreplatform.spiceservice.common.TestConstants;
 import com.mdtlabs.coreplatform.spiceservice.common.TestDataProvider;
 import com.mdtlabs.coreplatform.spiceservice.common.dto.HouseholdDTO;
 import com.mdtlabs.coreplatform.spiceservice.common.dto.HouseholdMemberDTO;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.HouseholdMemberSequenceDTO;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.HouseholdSequenceDTO;
 import com.mdtlabs.coreplatform.spiceservice.common.dto.RequestDTO;
 import com.mdtlabs.coreplatform.spiceservice.household.service.HouseholdService;
 import com.mdtlabs.coreplatform.spiceservice.message.SuccessResponse;
@@ -145,7 +143,7 @@ class HouseholdControllerTest {
     }
 
     @Test
-    public void testUpdateSignature() {
+    void testUpdateSignature() {
         RequestDTO requestDTO = new RequestDTO();
         HouseholdMemberDTO householdMemberDTO = new HouseholdMemberDTO();
         when(householdService.updateSignature(requestDTO)).thenReturn(householdMemberDTO);

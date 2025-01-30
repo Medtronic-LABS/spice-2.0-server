@@ -103,7 +103,7 @@ public class MentalHealthServiceImpl implements MentalHealthService {
             Map<String, QuestionnaireResponse> questionnaireResponses = createQuestionnaireResponse(mentalHealth,
                     patient, relatedPerson, encounter, bundle, mentalHealth.getEncounter().getProvenance());
             Observation mentalHealthObservation = createMentalHealthObservation(mentalHealth, relatedPerson,
-                    questionnaireResponses);
+                    questionnaireResponses, encounter);
             setObservationDetails(bundle, patient, null, mentalHealthObservation,
                     FhirConstants.MENTAL_HEALTH_OBSERVATION_IDENTIFIER_URL, mentalHealth.getEncounter().getProvenance());
             setVitalSigns(patient, relatedPerson, bundle, mentalHealthObservation, mentalHealth.getEncounter().getProvenance());
@@ -193,7 +193,7 @@ public class MentalHealthServiceImpl implements MentalHealthService {
      * @return A {@link Observation} Entity with Risk details.
      */
     private Observation createMentalHealthObservation(AssessmentDTO assessmentDTO, RelatedPerson relatedPerson,
-                                                     Map<String, QuestionnaireResponse> questionnaireResponses) {
+                                                     Map<String, QuestionnaireResponse> questionnaireResponses, Encounter encounter) {
         MentalHealthObservationDTO mentalHealthObservationDTO = new MentalHealthObservationDTO();
         mentalHealthObservationDTO.setRelatedPersonId(relatedPerson.getIdPart());
         mentalHealthObservationDTO.setQuestionnaireResponses(questionnaireResponses);
@@ -221,7 +221,7 @@ public class MentalHealthServiceImpl implements MentalHealthService {
         if (!mentalRiskDetails.isEmpty()) {
             mentalHealthObservationDTO.setMentalRiskDetails(mentalRiskDetails);
             mentalHealthObservation = questionnaireResponseConverter
-                    .processMentalHealthDetails(mentalHealthObservationDTO);
+                    .processMentalHealthDetails(mentalHealthObservationDTO, encounter, null);
         }
         return mentalHealthObservation;
     }
@@ -298,6 +298,8 @@ public class MentalHealthServiceImpl implements MentalHealthService {
             } else {
                 encounter = encounterConverter.createEncounter(patient, relatedPerson, null, null,
                         mentalHealth.getAssessmentTakenOn());
+                encounter.addIdentifier().setSystem(FhirIdentifierConstants.ENCOUNTER_TYPE_SYSTEM_URL)
+                        .setValue(Constants.ENCOUNTER_TYPE_MENTAL_HEALTH);
                 commonConverter.setEncounterDetailsInBundle(bundle, encounter, FhirConstants.ENCOUNTER_IDENTIFIER_URL, mentalHealth.getEncounter().getProvenance());
             }
             Observation substanceAbuse = assessmentService.createSubstanceAbuseObservation(mentalHealth, encounter);

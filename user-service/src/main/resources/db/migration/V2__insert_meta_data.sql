@@ -438,408 +438,15 @@ INSERT INTO public.classification ("name",display_order,is_active,is_deleted,cre
 	 ('ACE inhibitor','1',true,false,0,0),
 	 ('Diuretic','109',true,false,0,0);
 
-INSERT INTO public.country_customization (form_input,"type",category,is_default,tenant_id,country_id,created_by,updated_by,is_deleted,is_active,culture_id,clinical_workflow_id) VALUES
-	 ('<!DOCTYPE html>
-<html>
-  <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <style>
-      html,
-      body {
-        max-width: 100%;
-        overflow-x: hidden;
-      }
-      .requlartext {
-        font-size: 16px;
-        font-family: "Inter";
-        font-weight: 400;
-        line-height: 1.6;
-      }
-      .boldtext {
-        font-size: 16px;
-        font-family: "Inter";
-        font-weight: 700;
-        line-height: 1.6;
-      }
-      a {
-        word-wrap: break-word;
-      }
-      .bold-text {
-        font-weight: bold;
-        padding-bottom: 10px;
-      }
-      ul {
-        margin: 0px;
-      } /* Extra small devices (phones, 600px and down) */
-      @media only screen and (max-width: 600px) {
-        .requlartext {
-          font-size: 16px;
-          font-family: "Inter";
-          font-weight: 400;
-          line-height: 1.6;
-        }
-        .boldtext {
-          font-size: 16px;
-          font-family: "Inter";
-          font-weight: 700;
-          line-height: 1.6;
-        }
-      } /* Small devices (portrait tablets and large phones, 600px and up) */
-      @media only screen and (min-width: 600px) {
-        .requlartext {
-          font-size: 20px;
-          font-family: "Inter";
-          font-weight: 400;
-          line-height: 1.6;
-        }
-        .boldtext {
-          font-size: 20px;
-          font-family: "Inter";
-          font-weight: 700;
-          line-height: 1.6;
-        }
-      } /* Medium devices (landscape tablets, 768px and up) */
-      @media only screen and (min-width: 768px) {
-        .requlartext {
-          font-size: 20px;
-          font-family: "Inter";
-          font-weight: 400;
-          line-height: 1.6;
-        }
-        .boldtext {
-          font-size: 20px;
-          font-family: "Inter";
-          font-weight: 700;
-          line-height: 1.6;
-        }
-      } /* Large devices (laptops/desktops, 992px and up) */
-      @media only screen and (min-width: 992px) {
-        .requlartext {
-          font-size: 20px;
-          font-family: "Inter";
-          font-weight: 400;
-          line-height: 1.6;
-        }
-        .boldtext {
-          font-size: 20px;
-          font-family: "Inter";
-          font-weight: 700;
-          line-height: 1.6;
-        }
-      } /* Extra large devices (large laptops and desktops, 1200px and up) */
-      @media only screen and (min-width: 1200px) {
-        .requlartext {
-          font-size: 20px;
-          font-family: "Inter";
-          font-weight: 400;
-          line-height: 1.6;
-        }
-        .boldtext {
-          font-size: 20px;
-          font-family: "Inter";
-          font-weight: 700;
-          line-height: 1.6;
-        }
-      }
-    </style>
-  </head>
-  <body
-    contenteditable="true"
-    spellcheck="false"
-    style="min-height: 233px"
-    data-new-gr-c-s-loaded="14.1154.0"
-    data-new-gr-c-s-check-loaded="14.1154.0"
-    data-gr-ext-installed=""
-  >
-    <div class="requlartext">
-      The healthcare worker will be accepting the terms &amp; conditions on
-      behalf of the screening participant.
-    </div>
-    <div class="boldtext">
-      <div class="bold-text">
-        The SMART Health Project SPICE™ Patient Consent and Notification
-        Background:
-      </div>
-    </div>
-    <div class="requlartext">
-      <div>
-        Sierra Leone is heavily impacted by primary care conditions such as
-        malaria, maternal and child mortality, TB, HIV, and non-communicable
-        diseases (NCDs), which are significant health concerns in Sub-Saharan
-        Africa. You are invited to join the Smart Health SPICE™ program, which
-        integrates community and primary care to manage the leading causes of
-        death in Sierra Leone.
-      </div>
-      <div>
-        Managing your health condition, attending clinic appointments, getting
-        prescriptions, and adhering to your treatment plan can be challenging.
-        It can also be difficult for healthcare providers, including doctors,
-        Community Health Officers (CHOs), and midwife nurses, to monitor your
-        health status and medication information over time. The Smart Health
-        program introduces a new method to enhance clinical care for patients
-        with TB, lower respiratory infections, malaria, diabetes, hypertension,
-        and antenatal care. This program aims to track your health data over
-        time, present it clearly to your healthcare provider, and empower you
-        with more information about your health status, ultimately improving
-        care and reducing related complications and challenges.
-      </div>
-      <div>
-        <br />
-        <span class="boldtext">Program Procedures</span>
-        <div>
-          As a participant in this program, you will:
-          <ul>
-            <li>
-              Be requested to visit the PHU/hospital for enrolment into the
-              program. You will be informed about the program and if you agree
-              to participate, will be enrolled into the Smart Health SPICE
-              system.
-            </li>
-            <li>Receive educational information about Health Status.</li>
-            <li>
-              Be asked to comply with the follow-up plan your health care
-              provider provides you to the best of your ability.
-            </li>
-            <li>Regularly have follow up visit, per your follow-up plan.</li>
-            <li>
-              Attend hospital/PHU medical reviews to see your health care
-              provider, per your follow-up plan.
-            </li>
-            <li>
-              Receive and review short message service (SMS) messages with
-              information from your health care provider.
-            </li>
-          </ul>
-        </div>
-      </div>
-      <div>
-        <br />
-        <span class="boldtext">Risk(s):</span>
-        <div>
-          The program may face delays or inaccuracies in information reaching
-          your Healthcare provider potentially affecting your care. To reduce
-          this risk, the software has been thoroughly tested for accuracy and
-          functionality, with system checks to ensure your information is sent
-          correctly. If you need to visit the PHU/hospital, your healthcare
-          provider will be notified via SPICE and will follow up with you. It''s
-          important to provide accurate contact information (i.e. telephone
-          number) and update it if it changes.
-        </div>
-      </div>
-      <div>
-        <br />
-        <span class="boldtext">Benefit(s):</span>
+INSERT INTO public.country_classification (country_id, classification_id) VALUES
+     (1,1),
+     (1,2);
 
-        <div>
-          <ul>
-            <li>
-              You may gain better understanding of your condition and how to
-              improve your health.
-            </li>
-            <li>
-              You will receive follow-ups and clear, actionable information to
-              help manage your health condition.
-            </li>
-            <li>
-              Data collected from the program can benefit future patients or
-              family members with similar health conditions.
-            </li>
-          </ul>
-        </div>
-      </div>
-      <div>
-        <br />
-        <span class="boldtext"
-          >Confidentiality/ Use of Personal Information:</span
-        >
-
-        <div>
-          While participating in this program the following information will be
-          collected:
-          <ul>
-            <li>
-              Identifying information (age, gender, phone number) and medical
-              data and health information from you and from your medical records
-              as prepared by your healthcare provider including treatment and
-              examination notes and other health related information.
-            </li>
-            <li>
-              You will be assigned to a program ID that will be used for unique
-              identification and to protect data privacy.
-            </li>
-            <li>
-              Your doctor, CHO, Midwife, nurse, pharmacist, may have direct
-              access to your personal information.
-            </li>
-            <li>
-              As an enrolled participant in the program, your personal
-              information will be transferred to the United States as part of
-              processing, with computing support from the software team in
-              India. The program team will have your personal SPICE information
-              processed manually or by computer including the use of internet or
-              of cloud computing. By enrolling in the program, you agree to the
-              said transfer, storage and processing of your personal
-              information. Data results from the program may be published but
-              will not disclose your name or any other identifying
-              characteristics. No personal information will be used to market to
-              you without your consent.
-            </li>
-            <li>
-              Your de-identified medical information may also be used for
-              additional research, educational purpose, publications, population
-              health review, future health studies, development of new medical
-              products or procedures, or for obtaining future approvals for
-              health systems. In addition, the program team may also be required
-              by law or by a court order. There is no patient portal to access
-              your personal information collected as part of this program, but
-              this information can be requested directly Ministry of Health The
-              program will handle your personal information in accordance with
-              appropriate confidentiality standards and all applicable data
-              protection and privacy laws.
-            </li>
-          </ul>
-        </div>
-        <div>
-          <br />
-          <span class="boldtext">Participation:</span>
-
-          <div>
-            Whether you take part in this program is upto you. IF you choose to
-            join the program, you may stop at any time, and this will not affect
-            your current medical care.
-          </div>
-          <div>
-            Please notify your Healthcare provider if you would like to
-            withdraw.
-          </div>
-          <div>
-            You may also choose not to answer any question you find
-            uncomfortable or private during the program. There will be no
-            consequence, loss of benefit or care to you if you choose to leave
-            the program. Your collected data may be used as part of the program,
-            unless you request otherwise. Program team members from may reach
-            out to you via SMS or calls to ask about your experience or in
-            follow-up to missed assessment or medical reviews as part of
-            tele-counseling services. You may notify them if you wish to not
-            receive any calls or SMS.
-          </div>
-        </div>
-        <div>
-          <br />
-          <span class="boldtext">Compensation:</span>
-
-          <div style="text-decoration: underline">
-            You will not receive any compensation for participating in this
-            program.
-          </div>
-        </div>
-        <div>
-          <br />
-          <span class="boldtext">SMS and Calls:</span>
-
-          <div>
-            By signing up for the program, you are accepting to receive SMS
-            messages and calls used for communication of messages from your
-            healthcare provider, or instructions to pick up filled
-            prescriptions, visit the facility for further assessment. SMS
-            messages from the software application will not be used for
-            marketing purposes. If you wish to stop receiving the SMS messages,
-            kindly inform your doctor or nurse.
-          </div>
-        </div>
-        <div>
-          <br />
-          <span class="boldtext">Secondary use of data:</span>
-
-          <div>
-            Your de-identified medical information may be combined with data
-            from other program participants and used by the program team for
-            research, marketing, or publication purposes, or to inform on the
-            performance of the SPICE system. Additionally, your de-identified
-            medical information along with other patients may also be used by
-            program stakeholders such as the Ministry of Health and
-            County/Regional health teams, as part of their assessment of overall
-            patient population health and to evaluate trends.
-          </div>
-          <div>
-            Identifying information will be removed from individual patient
-            records before sharing with program stakeholders to protect patient
-            privacy.
-          </div>
-          <div>
-            Consent for the secondary uses of program data is separate from your
-            medical treatment and does not affect your care.
-          </div>
-        </div>
-        <div>
-          <br />
-          <span class="boldtext">Contacts:</span>
-
-          <div>
-            If you have any questions concerning this program, please do not
-            hesitate to contact your healthcare provider or
-            <a href="mailto:support@medtroniclabs.org"
-              >support@medtroniclabs.org</a
-            >
-          </div>
-          <div>
-            If you have any question concerning your personal data, please do
-            not hesitate to contact your healthcare provider or
-            <a href="mailto:data.protection@medtroniclabs.org"
-              >data.protection@medtroniclabs.org</a
-            >
-          </div>
-        </div>
-        <div>
-          <br />
-          <span class="boldtext">Statement of the person giving consent:</span>
-          <ul>
-            <li>
-              I have read the information on this program or have had it
-              translated into a language I understand. I have also talked it
-              over to my satisfaction.
-            </li>
-            <li>I understand that my participation is voluntary.</li>
-            <li>
-              I know enough about the purpose, methods, risks and benefits of
-              the program to decide that I want to take part in it.
-            </li>
-            <li>
-              I understand that I may freely stop being part of this program at
-              any time without having to explain myself.
-            </li>
-            <li>
-              I understand and agree that, as part of the program, the program
-              team shall collect my personal information which may be disclosed
-              to doctors, nurses, pharmacists, and BP/Glucose checkers, and
-              other parties that are involved in the program as well as other
-              third parties.
-            </li>
-            <li>
-              I understand that the program may be modified, ammended or
-              terminated at any time with or without notice.
-            </li>
-            <li>
-              I understand and agree that the program team will store my
-              personal information for a period of up to ten (10) years after
-              the conclusion of the program.
-            </li>
-            <li>
-              If I request a copy of this consent and notification form to keep
-              for myself, I shall provide an email address to receive it.
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
-    <p>
-      <grammarly-desktop-integration
-        data-grammarly-shadow-root="true"
-      ></grammarly-desktop-integration
-      ><br />
-    </p>
-  </body>
-</html>','household','Consent_form',true,NULL,1,1,1,false,true,1,NULL);
+INSERT INTO public.classification_brand (brand_id, classification_id) VALUES
+     (1,1),
+     (1,2),
+     (2,1),
+     (2,2);
 
 -- clinical_workflow
 INSERT INTO public.clinical_workflow ("name",module_type,workflow_name,display_order,conditions,country_id,created_by,updated_by,group_name,app_types,is_default,view_screens) VALUES
@@ -860,6 +467,140 @@ INSERT INTO public.dosage_form ("name",display_order,is_active,is_deleted,create
 	 ('Tablet','1',true,false,0,0,'{COMMUNITY}',NULL),
 	 ('Liquid','102',true,false,0,0,'{COMMUNITY}',NULL);
 
+-- disease_category
+INSERT INTO public.disease_category (id, "name", display_order, value, "type", created_by, updated_by)
+VALUES
+(1, 'Severe Malnutrition', 7, 'severeMalnutrition', 'UNDER_FIVE_YEARS', 1, 1),
+(2, 'Moderate Malnutrition', 8, 'moderateMalnutrition', 'UNDER_FIVE_YEARS', 1, 1),
+(3, 'Fever', 9, 'fever', 'UNDER_FIVE_YEARS', 1, 1),
+(4, 'Other', 11, 'other', 'UNDER_FIVE_YEARS', 1, 1),
+(5, 'Severe Malaria', 1, 'severeMalaria', 'UNDER_TWO_MONTHS', 1, 1),
+(6, 'Jaundice', 2, 'jaundice', 'UNDER_TWO_MONTHS', 1, 1),
+(7, 'Diarrhoea', 3, 'diarrhoea', 'UNDER_TWO_MONTHS', 1, 1),
+(8, 'Pneumonia', 4, 'pneumonia', 'UNDER_TWO_MONTHS', 1, 1),
+(9, 'HIV Infection', 5, 'hivInfection', 'UNDER_TWO_MONTHS', 1, 1),
+(10, 'Anemia', 6, 'anemia', 'UNDER_TWO_MONTHS', 1, 1),
+(11, 'Severe Malnutrition', 7, 'severeMalnutrition', 'UNDER_TWO_MONTHS', 1, 1),
+(12, 'Moderate Malnutrition', 8, 'moderateMalnutrition', 'UNDER_TWO_MONTHS', 1, 1),
+(13, 'Fever', 9, 'fever', 'UNDER_TWO_MONTHS', 1, 1),
+(14, 'Other', 11, 'other', 'UNDER_TWO_MONTHS', 1, 1),
+(15, 'Pre eclampsia', 1, 'preEclampsia', 'ANC_REVIEW', 1, 1),
+(16, 'Eclampsia', 2, 'eclampsia', 'ANC_REVIEW', 1, 1),
+(17, 'Gestational diabetes', 3, 'gestationalDiabetes', 'ANC_REVIEW', 1, 1),
+(18, 'Anemia', 4, 'anemia', 'ANC_REVIEW', 1, 1),
+(19, 'HIV', 5, 'hiv', 'ANC_REVIEW', 1, 1),
+(20, 'Syphilis', 6, 'syphilis', 'ANC_REVIEW', 1, 1),
+(21, 'Severe Malaria', 7, 'severeMalaria', 'ANC_REVIEW', 1, 1),
+(22, 'Diabetes mellitus type 2', 8, 'diabetesMellitusType2', 'ANC_REVIEW', 1, 1),
+(23, 'Diabetes mellitus type 1', 9, 'diabetesMellitusType1', 'ANC_REVIEW', 1, 1),
+(24, 'Pre-Diabetes', 10, 'preDiabetes', 'ANC_REVIEW', 1, 1),
+(25, 'Hypertension', 11, 'hypertension', 'ANC_REVIEW', 1, 1),
+(26, 'Pre-Hypertension', 12, 'preHypertension', 'ANC_REVIEW', 1, 1),
+(27, 'Albuminuria', 13, 'albuminuria', 'ANC_REVIEW', 1, 1),
+(28, 'Other', 14, 'other', 'ANC_REVIEW', 1, 1),
+(29, 'Ear Problem', 10, 'earProblem', 'UNDER_FIVE_YEARS', 1, 1),
+(30, 'Ear Problem', 10, 'earProblem', 'UNDER_TWO_MONTHS', 1, 1),
+(31, 'Malaria', 1, 'malaria', 'ABOVE_FIVE_YEARS', 1, 1),
+(32, 'Eye', 2, 'eye', 'ABOVE_FIVE_YEARS', 1, 1),
+(33, 'Infectious', 3, 'infectious', 'ABOVE_FIVE_YEARS', 1, 1),
+(34, 'Neonatal', 5, 'neonatal', 'ABOVE_FIVE_YEARS', 1, 1),
+(35, 'Surgical', 6, 'surgical', 'ABOVE_FIVE_YEARS', 1, 1),
+(36, 'Other', 7, 'other', 'ABOVE_FIVE_YEARS', 1, 1),
+(37, 'Severe Malaria', 1, 'severeMalaria', 'UNDER_FIVE_YEARS', 1, 1),
+(38, 'Jaundice', 2, 'jaundice', 'UNDER_FIVE_YEARS', 1, 1),
+(39, 'Diarrhoea', 3, 'diarrhoea', 'UNDER_FIVE_YEARS', 1, 1),
+(40, 'Pneumonia', 4, 'pneumonia', 'UNDER_FIVE_YEARS', 1, 1),
+(41, 'HIV/AIDS', 5, 'hivAids', 'UNDER_FIVE_YEARS', 1, 1),
+(42, 'Anemia', 6, 'anemia', 'UNDER_FIVE_YEARS', 1, 1),
+(43, 'Pre eclampsia', 1, 'preEclampsia', 'PNC_MOTHER_REVIEW', 1, 1),
+(44, 'Eclampsia', 2, 'eclampsia', 'PNC_MOTHER_REVIEW', 1, 1),
+(45, 'Gestational diabetes', 3, 'gestationalDiabetes', 'PNC_MOTHER_REVIEW', 1, 1),
+(46, 'Anemia', 4, 'anemia', 'PNC_MOTHER_REVIEW', 1, 1),
+(47, 'HIV', 5, 'hiv', 'PNC_MOTHER_REVIEW', 1, 1),
+(48, 'Syphilis', 6, 'syphilis', 'PNC_MOTHER_REVIEW', 1, 1),
+(49, 'Severe Malaria', 7, 'severeMalaria', 'PNC_MOTHER_REVIEW', 1, 1),
+(50, 'Diabetes mellitus type 2', 8, 'diabetesMellitusType2', 'PNC_MOTHER_REVIEW', 1, 1),
+(51, 'Diabetes mellitus type 1', 9, 'diabetesMellitusType1', 'PNC_MOTHER_REVIEW', 1, 1),
+(52, 'Pre-Diabetes', 10, 'preDiabetes', 'PNC_MOTHER_REVIEW', 1, 1),
+(53, 'Hypertension', 11, 'hypertension', 'PNC_MOTHER_REVIEW', 1, 1),
+(54, 'Pre-Hypertension', 12, 'preHypertension', 'PNC_MOTHER_REVIEW', 1, 1),
+(55, 'Albuminuria', 13, 'albuminuria', 'PNC_MOTHER_REVIEW', 1, 1),
+(56, 'Other', 14, 'other', 'PNC_MOTHER_REVIEW', 1, 1),
+(57, 'Internal medicine, NCD & Mental health', 4, 'internalMedicineAndNCDAndMentalHealth', 'ABOVE_FIVE_YEARS', 1, 1),
+(58, 'Uncomplicated Malaria', 7, 'uncomplicatedMalaria', 'ANC_REVIEW', 1, 1),
+(59, 'Uncomplicated Malaria', 1, 'uncomplicatedMalaria', 'UNDER_TWO_MONTHS', 1, 1),
+(60, 'Uncomplicated Malaria', 1, 'uncomplicatedMalaria', 'UNDER_FIVE_YEARS', 1, 1),
+(61, 'Uncomplicated Malaria', 7, 'uncomplicatedMalaria', 'PNC_MOTHER_REVIEW', 1, 1);
+
+-- disease_condition
+INSERT INTO public.disease_condition (id, disease_id, name, display_order, value, created_by, updated_by)
+VALUES
+(1, 33, 'UTI (Urinary Tract Infection)', 32, 'urinaryTractInfection', 1, 1),
+(2, 33, 'AFP (Acute Flaccid Paralysis)', 2, 'acuteFlaccidParalysis', 1, 1),
+(3, 33, 'AIDS (Acquired Immune Deficiency Syndrome)', 14, 'acquiredImmuneDeficiencySyndrome', 1, 1),
+(4, 33, 'Hepatitis (all types)', 22, 'allTypesOfHepatitis', 1, 1),
+(5, 33, 'Animal bites (dogs and cats)', 12, 'animalBitesForDogsAndCats', 1, 1),
+(6, 57, 'Cancer (all types) Cervical Cancer to be specified', 4, 'allTypesOfCancerAndCervicalCancerToBeSpecified', 1, 1),
+(7, 57, 'Cardiovascular diseases (All types)', 5, 'allTypesOfCardiovascularDisease', 1, 1),
+(8, 57, 'Chronic Respiratory diseases (asthma, COPD, others)', 6, 'asthmaCOPDAndOtherChronicRespiratoryDiseases', 1, 1),
+(9, 57, 'Diabetes (Type 1 or Type 2)', 8, 'type1DiabetesOrType2Diabetes', 1, 1),
+(10, 33, 'Diarrhoea, watery - treated at facility with ORS and Zinc', 20, 'diarrhoeaAndWateryTreatedAtFacilityWithOrsAndZinc', 1, 1),
+(11, 31, 'Severe Malaria', 1, 'severeMalaria', 1, 1),
+(12, 32, 'Eye infection', 1, 'eyeInfection', 1, 1),
+(13, 33, 'Severe Malnutrition', 1, 'severeMalnutrition', 1, 1),
+(14, 33, 'Acute viral haemorrhagic fever', 3, 'acuteViralHaemorragicFever', 1, 1),
+(15, 33, 'Cholera', 4, 'cholera', 1, 1),
+(16, 33, 'Measles', 5, 'measles', 1, 1),
+(17, 33, 'Rubella', 7, 'rubella', 1, 1),
+(18, 33, 'Buruli ulcer', 9, 'buruliUlcer', 1, 1),
+(19, 33, 'Yellow fever', 10, 'yellowFever', 1, 1),
+(20, 33, 'Typhoid fever', 11, 'typhoidFever', 1, 1),
+(21, 33, 'Snake bites', 13, 'snakeBites', 1, 1),
+(22, 33, 'ARI treated in Facility with Antibiotic', 15, 'ariTreatedInFacilityWithAntibiotic', 1, 1),
+(23, 33, 'ARI treated in Facility without Antibiotic', 16, 'ariTreatedInFacilityWithoutAntibiotic', 1, 1),
+(24, 33, 'Chicken Pox', 17, 'chickenPox', 1, 1),
+(25, 33, 'Pneumonia treated in Facility without Antibiotic', 18, 'pneumoniaTreatedInFacilityWithoutAntibiotic', 1, 1),
+(26, 33, 'Pneumonia treated in Facility with Antibiotic', 19, 'pneumoniaTreatedInFacilityWithAntibiotic', 1, 1),
+(27, 33, 'Leprosy', 23, 'leprosy', 1, 1),
+(28, 33, 'Mumps', 24, 'mumps', 1, 1),
+(29, 33, 'Sepsis', 26, 'sepsis', 1, 1),
+(30, 33, 'Skin Infection', 27, 'skinInfection', 1, 1),
+(31, 33, 'STI-Genital Discharge', 28, 'stiGenitalDischarge', 1, 1),
+(32, 33, 'STI-Genital Ulcer', 29, 'stiGenitalUlcer', 1, 1),
+(33, 33, 'Tetanus', 30, 'tetanus', 1, 1),
+(34, 33, 'Worm infestation', 33, 'wormInfestation', 1, 1),
+(35, 33, 'Yaws', 34, 'yaws', 1, 1),
+(36, 33, 'Onchocerciasis', 35, 'onchocerciasis', 1, 1),
+(37, 33, 'Schistosomiasis', 36, 'schistosomiasis', 1, 1),
+(38, 33, 'Trachoma', 37, 'trachoma', 1, 1),
+(39, 33, 'Other infectious conditions', 38, 'otherInfectiousConditions', 1, 1),
+(40, 57, 'Adverse drug reaction', 1, 'adverseDrugReaction', 1, 1),
+(41, 57, 'Anemia', 2, 'anaemia', 1, 1),
+(42, 57, 'Sickle cell disease', 3, 'sickleCellDisease', 1, 1),
+(43, 57, 'Epilepsy', 7, 'epilepsy', 1, 1),
+(44, 57, 'Hypertension', 9, 'hypertension', 1, 1),
+(45, 57, 'Kidney disorders', 10, 'kidneyDisorders', 1, 1),
+(46, 33, 'Diarrhoea, watery - treated at facility with ORS only', 21, 'diarrhoeaAndWateryTreatedAtFacilityWithOrsOnly', 1, 1),
+(47, 33, 'Dysentry (Bloody Diarrhoea)', 6, 'dysentryForBloodyDiarrhoea', 1, 1),
+(48, 32, 'Eye condition (all types, except for eye infection)', 2, 'eyeConditionForAllTypesExceptEyeInfection', 1, 1),
+(49, 33, 'Meningitis/Encephalitis', 8, 'meningitisOrEncephalitis', 1, 1),
+(50, 33, 'Pelvic inflammatory disease (PID)', 25, 'pelvicInflammatoryDisease', 1, 1),
+(51, 33, 'Tuberculosis (TB)', 31, 'tuberculosis', 1, 1),
+(52, 57, 'Other NCD conditions', 12, 'otherNcdConditions', 1, 1),
+(53, 34, 'Asphyxia', 1, 'asphyxia', 1, 1),
+(54, 34, 'Congenital abnormality', 2, 'congenitalAbnormality', 1, 1),
+(55, 34, 'Prematurity', 3, 'prematurity', 1, 1),
+(56, 34, 'Hypothermia', 4, 'hypothermia', 1, 1),
+(57, 34, 'Respiratory distress syndrome', 5, 'respiratoryDistressSyndrome', 1, 1),
+(58, 34, 'Other', 6, 'other', 1, 1),
+(59, 35, 'Acute Abdomen', 1, 'acuteAbdomen', 1, 1),
+(60, 35, 'Appendicitis', 2, 'appendicitis', 1, 1),
+(61, 35, 'Hernia', 4, 'hernia', 1, 1),
+(62, 35, 'Hydrocele', 5, 'hydrocele', 1, 1),
+(63, 35, 'Lymphedema', 6, 'lymphodema', 1, 1),
+(64, 35, 'Oral and dental conditions', 7, 'oralAndDentalConditions', 1, 1),
+(65, 57, 'Mental disorder (all types)', 11, 'allTypesOfMentalDisorder', 1, 1);
+
 -- email_template
 INSERT INTO public.email_template ("type",vm_content,body,title,app_url,app_type,subject,created_by,updated_by) VALUES
 	 ('Forgot_Password','vmContent','<div style="word-wrap: break-word; font-family: calibri; font-size: 12pt" >    <p><img src="https://mdt-shruti.s3.ap-south-1.amazonaws.com/logo/logo1.png" style="height:100%;width:10%;"><p>Hi <strong>{{name}}</strong>,<br><br>    <p>We have received a request to reset your SPICE account password. If you requested this
@@ -878,14 +619,6 @@ INSERT INTO public.health_facility_type (name,created_by,updated_by,app_types) V
 	 ('Community Health Post',0,0,'{COMMUNITY}'),
 	 ('Community Health Centre',0,0,'{COMMUNITY}'),
 	 ('Maternity and Child Health Post',0,0,'{COMMUNITY}');
-
-INSERT INTO public.lab_test_customization (test_name,unique_name,form_input,country_id,tenant_id,created_by,updated_by,codes) VALUES
-	 ('Blood Pressures','bloodPressures1732873890146','{"time":1732874250298,"formLayout":[{"id":"bloodPressures1732873890327","viewType":"CardView","title":"Blood Pressures","familyOrder":0},{"id":"TestedOn","viewType":"DatePicker","title":"Tested On","fieldName":"TestedOn","family":"bloodPressures1732873890327","isMandatory":true,"isEnabled":true,"visibility":"visible","isDefault":false,"disableFutureDate":true,"minDays":"2","maxDays":null,"isDeletable":false,"orderId":0},{"id":"BP Value","viewType":"EditText","title":"Enter the value","fieldName":"BP Value","family":"bloodPressures1732873890327","isMandatory":true,"isEnabled":true,"isResult":true,"visibility":"visible","hint":"Enter the value","errorMessage":"","inputType":2,"isDefault":false,"orderId":1,"code":"13253","url":"243254","resource":"Quantity","condition":null,"minValue":80,"maxValue":130,"unitList":[{"name":"mg/dL","id":"mg/dL"},{"name":"mmol/L","id":"mmol/L"}],"ranges":[{"unitType":"mg/dL","gender":"Male","minRange":80,"maxRange":150,"displayRange":"80-120"}]},{"id":"BP","viewType":"Spinner","title":"Enter BP","fieldName":"BP","family":"bloodPressures1732873890327","isMandatory":true,"isEnabled":true,"visibility":"visible","hint":"","optionsList":[{"name":"High","id":"High"},{"name":"Low","id":"Low"}],"errorMessage":"","isDefault":false,"isResult":true,"orderId":2,"code":"1324","url":"243532","resource":"String","condition":null}]}',1,NULL,0,0,'{"code": "1325346", "system": "131243", "display": "Blood Pressures"}'),
-	 ('Test HIV','testHiv1736247523022','{"time":1736247759139,"formLayout":[{"id":"testHiv1736247524141","viewType":"CardView","title":"Test HIV","familyOrder":0},{"id":"TestedOn","viewType":"DatePicker","title":"Tested On","fieldName":"TestedOn","family":"testHiv1736247524141","isMandatory":true,"isEnabled":true,"visibility":"visible","isDefault":false,"disableFutureDate":true,"minDays":null,"maxDays":null,"isDeletable":false,"orderId":1},{"id":"Test T","viewType":"EditText","title":"Test T","fieldName":"Test T","family":"testHiv1736247524141","isMandatory":true,"isEnabled":true,"isResult":true,"visibility":"visible","hint":"","errorMessage":"","inputType":-1,"isDefault":false,"minLength":"1","maxLength":"50","orderId":3,"code":"1211","url":"testurl","resource":"String","condition":null}]}',1,NULL,0,0,'{"code": "100", "system": "test", "display": "Test HIV"}');
-
--- medication
-INSERT INTO public.medication ("name",classification_id,brand_id,dosage_form_id,brand_name,classification_name,dosage_form_name,country_id,is_active,is_deleted,created_by,updated_by,codes,category) VALUES
-	 ('Test another med',1,2,2,'Biomet','ACE inhibitor','Liquid',1,true,false,0,0,'[{"code": "100", "system": "testmed", "display": "Test another med"}]',NULL);
 
 -- menu
 INSERT INTO public.menu (role_name,menu,meta,meta_forms,created_by,updated_by,country_id,app_types,json_display_values) VALUES
@@ -1470,32 +1203,130 @@ INSERT INTO public.meta_code_details ("name",codes,"text",created_by,updated_by)
 	 ('uncomplicatedMalaria','[{"code": "772168000", "system": "http://snomed.info/sct", "display": "Malaria suspected"}]','Uncomplicated Malaria',0,0);
 
 -- obstetric_examination
-INSERT INTO public.obstetric_examination (id,"name",display_order,"type",created_by,updated_by,value,display_values) VALUES
-	 (16,'General',1,'PNC_CHILD_REVIEW',0,0,'general',NULL),
-	 (19,'Cardiovascular',4,'PNC_CHILD_REVIEW',0,0,'cardiovascular',NULL),
-	 (17,'Eye exam',2,'PNC_CHILD_REVIEW',0,0,'eyeExam',NULL),
-	 (18,'Oral exam',3,'PNC_CHILD_REVIEW',0,0,'oralExam',NULL),
-	 (20,'Respiratory system',5,'PNC_CHILD_REVIEW',0,0,'respiratorySystem',NULL),
-	 (21,'Abdominal pelvic',6,'PNC_CHILD_REVIEW',0,0,'abdominalPelvic',NULL),
-	 (22,'Foot exam',7,'PNC_CHILD_REVIEW',0,0,'footExam',NULL),
-	 (23,'Neurological exam',8,'PNC_CHILD_REVIEW',0,0,'neurologicalExam',NULL),
-	 (24,'Mental health',9,'PNC_CHILD_REVIEW',0,0,'mentalHealth',NULL),
-	 (2,'Oral exam',2,'ANC_REVIEW',0,0,'oralExam',NULL);
-INSERT INTO public.obstetric_examination (id,"name",display_order,"type",created_by,updated_by,value,display_values) VALUES
-	 (3,'Cardiovascular',3,'ANC_REVIEW',0,0,'cardiovascular',NULL),
-	 (4,'Respiratory system',4,'ANC_REVIEW',0,0,'respiratorySystem',NULL),
-	 (5,'Foot exam',5,'ANC_REVIEW',0,0,'footExam',NULL),
-	 (7,'Pallor',7,'ANC_REVIEW',0,0,'pallor',NULL),
-	 (8,'Pitting edema',8,'ANC_REVIEW',0,0,'pittingEdema',NULL),
-	 (9,'Unusually thin',9,'ANC_REVIEW',0,0,'unusuallyThin',NULL),
-	 (10,'Unusually large abdomen',10,'ANC_REVIEW',0,0,'unusuallyLargeAbdomen',NULL),
-	 (12,'Breach presentation',12,'ANC_REVIEW',0,0,'breachPresentation',NULL),
-	 (13,'Fetal movements present',13,'ANC_REVIEW',0,0,'fetalMovementsPresent',NULL),
-	 (14,'Other',14,'ANC_REVIEW',0,0,'other',NULL);
-INSERT INTO public.obstetric_examination (id,"name",display_order,"type",created_by,updated_by,value,display_values) VALUES
-	 (1,'Eye exam',1,'ANC_REVIEW',0,0,'eyeExam',NULL),
-	 (6,'Neurological exam',6,'ANC_REVIEW',0,0,'neurologicalExam',NULL),
-	 (11,'Transverse/oblique lie',11,'ANC_REVIEW',0,0,'transverseOrObliqueLie',NULL);
+INSERT INTO public.obstetric_examination (id, name, display_order, type, value, created_by, updated_by) VALUES
+(1, 'General', 1, 'PNC_CHILD_REVIEW', 'general', 1, 1),
+(2, 'Cardiovascular', 4, 'PNC_CHILD_REVIEW', 'cardiovascular', 1, 1),
+(3, 'Eye exam', 2, 'PNC_CHILD_REVIEW', 'eyeExam', 1, 1),
+(4, 'Oral exam', 3, 'PNC_CHILD_REVIEW', 'oralExam', 1, 1),
+(5, 'Respiratory system', 5, 'PNC_CHILD_REVIEW', 'respiratorySystem', 1, 1),
+(6, 'Abdominal pelvic', 6, 'PNC_CHILD_REVIEW', 'abdominalPelvic', 1, 1),
+(7, 'Foot exam', 7, 'PNC_CHILD_REVIEW', 'footExam', 1, 1),
+(8, 'Neurological exam', 8, 'PNC_CHILD_REVIEW', 'neurologicalExam', 1, 1),
+(9, 'Mental health', 9, 'PNC_CHILD_REVIEW', 'mentalHealth', 1, 1),
+(10, 'Oral exam', 2, 'ANC_REVIEW', 'oralExam', 1, 1),
+(11, 'Cardiovascular', 3, 'ANC_REVIEW', 'cardiovascular', 1, 1),
+(12, 'Respiratory system', 4, 'ANC_REVIEW', 'respiratorySystem', 1, 1),
+(13, 'Foot exam', 5, 'ANC_REVIEW', 'footExam', 1, 1),
+(14, 'Pallor', 7, 'ANC_REVIEW', 'pallor', 1, 1),
+(15, 'Pitting edema', 8, 'ANC_REVIEW', 'pittingEdema', 1, 1),
+(16, 'Unusually thin', 9, 'ANC_REVIEW', 'unusuallyThin', 1, 1),
+(17, 'Unusually large abdomen', 10, 'ANC_REVIEW', 'unusuallyLargeAbdomen', 1, 1),
+(18, 'Fetal movements present', 13, 'ANC_REVIEW', 'fetalMovementsPresent', 1, 1),
+(19, 'Other', 14, 'ANC_REVIEW', 'other', 1, 1),
+(20, 'Eye exam', 1, 'ANC_REVIEW', 'eyeExam', 1, 1),
+(21, 'Neurological exam', 6, 'ANC_REVIEW', 'neurologicalExam', 1, 1),
+(22, 'Transverse/oblique lie', 11, 'ANC_REVIEW', 'transverseOrObliqueLie', 1, 1),
+(23, 'Breach presentation', 12, 'ANC_REVIEW', 'breachPresentation', 1, 1);
+
+-- presenting_complaints
+INSERT INTO public.presenting_complaints (id, name, display_order, age_condition, value, type, created_by, updated_by) VALUES
+(1, 'Injury / Cut / Bruise', 7, NULL, 'injuryOrCutOrBruise', 'ABOVE_FIVE_YEARS', 1, 1),
+(2, 'Joint / Back ache', 6, NULL, 'jointOrBackAche', 'ABOVE_FIVE_YEARS', 1, 1),
+(3, 'Skin rash / Itchiness', 9, NULL, 'skinRashOrItchiness', 'ABOVE_FIVE_YEARS', 1, 1),
+(4, 'Toothache / Gum swelling', 13, NULL, 'toothAcheOrGumSwelling', 'ABOVE_FIVE_YEARS', 1, 1),
+(5, 'Eye pain / Discharge / Itchiness / Difficulty seeing', 8, NULL, 'eyePainOrDischargeOrItchinessOrDifficultySeeing', 'ABOVE_FIVE_YEARS', 1, 1),
+(6, 'Difficulty in breathing', 3, NULL, 'difficultyInBreathing', 'ABOVE_FIVE_YEARS', 1, 1),
+(7, 'Abdominal pain', 2, NULL, 'abdominalPain', 'ABOVE_FIVE_YEARS', 1, 1),
+(8, 'Headache', 1, NULL, 'headache', 'ABOVE_FIVE_YEARS', 1, 1),
+(9, 'Chest pain', 4, NULL, 'chestPain', 'ABOVE_FIVE_YEARS', 1, 1),
+(10, 'Body swelling', 5, NULL, 'bodySwelling', 'ABOVE_FIVE_YEARS', 1, 1),
+(11, 'Burns', 10, NULL, 'burns', 'ABOVE_FIVE_YEARS', 1, 1),
+(12, 'Other', 15, NULL, 'other', 'ABOVE_FIVE_YEARS', 1, 1),
+(13, 'Pain on passing urine', 12, NULL, 'painOnPassingUrine', 'ABOVE_FIVE_YEARS', 1, 1),
+(14, 'Other', 6, NULL, 'other', 'PNC_CHILD_REVIEW', 1, 1),
+(15, 'Fever', 1, NULL, 'fever', 'PNC_CHILD_REVIEW', 1, 1),
+(16, 'Diarrhoea', 2, NULL, 'diarrhoea', 'PNC_CHILD_REVIEW', 1, 1),
+(17, 'Convulsions', 3, NULL, 'convulsions', 'PNC_CHILD_REVIEW', 1, 1),
+(18, 'Vomiting', 4, NULL, 'vomiting', 'PNC_CHILD_REVIEW', 1, 1),
+(19, 'Jaundice', 5, NULL, 'jaundice', 'PNC_CHILD_REVIEW', 1, 1),
+(20, 'Focal weakness', 1, NULL, 'focalWeakness', 'ANC_REVIEW', 1, 1),
+(21, 'Shortness of breath on activity', 2, NULL, 'shortnessOfBreathOnActivity', 'ANC_REVIEW', 1, 1),
+(22, 'Difficulty in breathing', 3, NULL, 'difficultyInBreathing', 'ANC_REVIEW', 1, 1),
+(23, 'Cough', 4, NULL, 'cough', 'ANC_REVIEW', 1, 1),
+(24, 'Loss of consciousness', 5, NULL, 'lossOfConsciousness', 'ANC_REVIEW', 1, 1),
+(25, 'Foot complaints', 6, NULL, 'footComplaints', 'ANC_REVIEW', 1, 1),
+(26, 'Palpitations (heart racing)', 7, NULL, 'palpitationsHeartRacing', 'ANC_REVIEW', 1, 1),
+(27, 'Recurrent dizziness', 8, NULL, 'recurrentDizziness', 'ANC_REVIEW', 1, 1),
+(28, 'Fainting', 9, NULL, 'fainting', 'ANC_REVIEW', 1, 1),
+(29, 'Blurring of vision', 10, NULL, 'blurringOfVision', 'ANC_REVIEW', 1, 1),
+(30, 'Leg swelling', 11, NULL, 'legSwelling', 'ANC_REVIEW', 1, 1),
+(31, 'Nausea', 13, NULL, 'nausea', 'ANC_REVIEW', 1, 1),
+(32, 'Abdominal pain', 14, NULL, 'abdominalPain', 'ANC_REVIEW', 1, 1),
+(33, 'Vaginal bleeding', 15, NULL, 'vaginalBleeding', 'ANC_REVIEW', 1, 1),
+(34, 'Other', 16, NULL, 'other', 'ANC_REVIEW', 1, 1),
+(35, 'Difficulty in breathing', 2, NULL, 'difficultyInBreathing', 'PNC_MOTHER_REVIEW', 1, 1),
+(36, 'Cough', 1, NULL, 'cough', 'PNC_MOTHER_REVIEW', 1, 1),
+(37, 'Loss of consciousness', 11, NULL, 'lossOfConsciousness', 'PNC_MOTHER_REVIEW', 1, 1),
+(38, 'Palpitations (heart racing)', 12, NULL, 'palpitationsHeartRacing', 'PNC_MOTHER_REVIEW', 1, 1),
+(39, 'Nausea', 8, NULL, 'nausea', 'PNC_MOTHER_REVIEW', 1, 1),
+(40, 'Abdominal pain', 5, NULL, 'abdominalPain', 'PNC_MOTHER_REVIEW', 1, 1),
+(41, 'Vaginal bleeding', 7, NULL, 'vaginalBleeding', 'PNC_MOTHER_REVIEW', 1, 1),
+(42, 'Other', 13, NULL, 'other', 'PNC_MOTHER_REVIEW', 1, 1),
+(43, 'Fever', 3, NULL, 'fever', 'PNC_MOTHER_REVIEW', 1, 1),
+(44, 'Dizziness', 10, NULL, 'dizziness', 'PNC_MOTHER_REVIEW', 1, 1),
+(45, 'Abdominal swelling', 4, NULL, 'abdominalSwelling', 'PNC_MOTHER_REVIEW', 1, 1),
+(46, 'Swelling in hands/feet/face', 9, NULL, 'swellingInHandsOrFeetOrFace', 'PNC_MOTHER_REVIEW', 1, 1),
+(47, 'Swelling in hands/feet/face', 12, NULL, 'swellingInHandsOrFeetOrFace', 'ANC_REVIEW', 1, 1),
+(48, 'Abnormal vaginal discharge', 6, NULL, 'abnormalVaginalDischarge', 'PNC_MOTHER_REVIEW', 1, 1),
+(49, 'Genital pain / Swelling / Discharge / Bleeding', 11, NULL, 'genitalPainOrSwellingOrDischargeOrBleeding', 'ABOVE_FIVE_YEARS', 1, 1);
+
+-- systemic_examinations
+INSERT INTO public.systemic_examinations (name,display_order,age_condition,value,"type",display_values,created_by,updated_by,is_active,is_deleted) VALUES
+	 ('Eye exam',1,NULL,'eyeExam','ABOVE_FIVE_YEARS',NULL,1,1,true,false),
+	 ('Oral exam',2,NULL,'oralExam','ABOVE_FIVE_YEARS',NULL,1,1,true,false),
+	 ('Cardiovascular',3,NULL,'cardiovascular','ABOVE_FIVE_YEARS',NULL,1,1,true,false),
+	 ('Respiratory system',4,NULL,'respiratorySystem','ABOVE_FIVE_YEARS',NULL,1,1,true,false),
+	 ('Abdominal pelvic',5,NULL,'abdominalPelvic','ABOVE_FIVE_YEARS',NULL,1,1,true,false),
+	 ('Foot exam',6,NULL,'footExam','ABOVE_FIVE_YEARS',NULL,1,1,true,false),
+	 ('Neurological exam',7,NULL,'neurologicalExam','ABOVE_FIVE_YEARS',NULL,1,1,true,false),
+	 ('Eye exam',1,NULL,'eyeExam','UNDER_FIVE_YEARS',NULL,1,1,true,false),
+	 ('Oral exam',2,NULL,'oralExam','UNDER_FIVE_YEARS',NULL,1,1,true,false),
+	 ('Cardiovascular',3,NULL,'cardiovascular','UNDER_FIVE_YEARS',NULL,1,1,true,false);
+INSERT INTO public.systemic_examinations (name,display_order,age_condition,value,"type",display_values,created_by,updated_by,is_active,is_deleted) VALUES
+	 ('Respiratory system',4,NULL,'respiratorySystem','UNDER_FIVE_YEARS',NULL,1,1,true,false),
+	 ('Abdominal pelvic',5,NULL,'abdominalPelvic','UNDER_FIVE_YEARS',NULL,1,1,true,false),
+	 ('Foot exam',6,NULL,'footExam','UNDER_FIVE_YEARS',NULL,1,1,true,false),
+	 ('Neurological exam',7,NULL,'neurologicalExam','UNDER_FIVE_YEARS',NULL,1,1,true,false),
+	 ('General',1,NULL,'general','PNC_MOTHER_REVIEW',NULL,1,1,true,false),
+	 ('Eye exam',2,NULL,'eyeExam','PNC_MOTHER_REVIEW',NULL,1,1,true,false),
+	 ('Oral exam',3,NULL,'oralExam','PNC_MOTHER_REVIEW',NULL,1,1,true,false),
+	 ('Cardiovascular',4,NULL,'cardiovascular','PNC_MOTHER_REVIEW',NULL,1,1,true,false),
+	 ('Respiratory system',5,NULL,'respiratorySystem','PNC_MOTHER_REVIEW',NULL,1,1,true,false),
+	 ('Abdominal pelvic',6,NULL,'abdominalPelvic','PNC_MOTHER_REVIEW',NULL,1,1,true,false);
+INSERT INTO public.systemic_examinations (name,display_order,age_condition,value,"type",display_values,created_by,updated_by,is_active,is_deleted) VALUES
+	 ('Foot exam',7,NULL,'footExam','PNC_MOTHER_REVIEW',NULL,1,1,true,false),
+	 ('Neurological exam',8,NULL,'neurologicalExam','PNC_MOTHER_REVIEW',NULL,1,1,true,false),
+	 ('Mental health',9,NULL,'mentalHealth','PNC_MOTHER_REVIEW',NULL,1,1,true,false),
+	 ('Pallor',10,NULL,'pallor','PNC_MOTHER_REVIEW',NULL,1,1,true,false),
+	 ('General',1,NULL,'general','PNC_CHILD_REVIEW',NULL,1,1,true,false),
+	 ('Eye exam',2,NULL,'eyeExam','PNC_CHILD_REVIEW',NULL,1,1,true,false),
+	 ('Oral exam',3,NULL,'oralExam','PNC_CHILD_REVIEW',NULL,1,1,true,false),
+	 ('Cardiovascular',4,NULL,'cardiovascular','PNC_CHILD_REVIEW',NULL,1,1,true,false),
+	 ('Respiratory system',5,NULL,'respiratorySystem','PNC_CHILD_REVIEW',NULL,1,1,true,false),
+	 ('Abdominal pelvic',6,NULL,'abdominalPelvic','PNC_CHILD_REVIEW',NULL,1,1,true,false);
+INSERT INTO public.systemic_examinations (name,display_order,age_condition,value,"type",display_values,created_by,updated_by,is_active,is_deleted) VALUES
+	 ('Foot exam',7,NULL,'footExam','PNC_CHILD_REVIEW',NULL,1,1,true,false),
+	 ('Neurological exam',8,NULL,'neurologicalExam','PNC_CHILD_REVIEW',NULL,1,1,true,false),
+	 ('Mental health',9,NULL,'mentalHealth','PNC_CHILD_REVIEW',NULL,1,1,true,false),
+	 ('Ear',8,NULL,'ear','ABOVE_FIVE_YEARS',NULL,1,1,true,false),
+	 ('Skin',9,NULL,'skin','ABOVE_FIVE_YEARS',NULL,1,1,true,false),
+	 ('Ear',8,NULL,'ear','UNDER_FIVE_YEARS',NULL,1,1,true,false),
+	 ('Skin',9,NULL,'skin','UNDER_FIVE_YEARS',NULL,1,1,true,false),
+	 ('Ear',10,NULL,'ear','PNC_CHILD_REVIEW',NULL,1,1,true,false),
+	 ('Skin',11,NULL,'skin','PNC_CHILD_REVIEW',NULL,1,1,true,false),
+	 ('Ear',11,NULL,'ear','PNC_MOTHER_REVIEW',NULL,1,1,true,false);
+INSERT INTO public.systemic_examinations (name,display_order,age_condition,value,"type",display_values,created_by,updated_by,is_active,is_deleted) VALUES
+	 ('Skin',12,NULL,'skin','PNC_MOTHER_REVIEW',NULL,1,1,true,false);
 
 -- sms_template
 INSERT INTO public.sms_template (body,"type",created_by,updated_by) VALUES
@@ -1628,11 +1459,6 @@ INSERT INTO public.unit ("name","type",description,display_order,created_by,upda
 	 ('mg/dL','LABTEST','mg/dL',6,0,0,'{COMMUNITY}',NULL),
 	 ('µg','PRESCRIPTION','microgram',7,0,0,'{COMMUNITY}',NULL);
 
--- wgs_data
-INSERT INTO public.wgs_data (id,"indicator",sex,given,l,m,s,created_by,updated_by) VALUES
-	 (1,'wfh',1,45,-0.3521,2.441,0.09182,0,0),
-	 (2,'wfh',1,45.1,-0.3521,2.4577,0.09176,0,0);
-
 INSERT INTO public."user"(
     first_name, last_name, phone_number, username, password, is_blocked, country_code, forget_password_count, invalid_login_attempts, suite_access, is_password_reset_enabled, password_reset_attempts, country_id, timezone_id, created_by, updated_by)
     VALUES ('test', 'user', '8522432431', 'superuser@test.com', '', false, null, 0, 0, Array['admin'], false , 0, null, 1,0,0);
@@ -1656,3 +1482,8 @@ SELECT pg_catalog.setval(pg_get_serial_sequence('country', 'id'), MAX(id)) FROM 
 SELECT pg_catalog.setval(pg_get_serial_sequence('role', 'id'), MAX(id)) FROM role;
 SELECT pg_catalog.setval(pg_get_serial_sequence('timezone', 'id'), MAX(id)) FROM timezone;
 SELECT pg_catalog.setval(pg_get_serial_sequence('obstetric_examination', 'id'), MAX(id)) FROM obstetric_examination;
+SELECT pg_catalog.setval(pg_get_serial_sequence('classification', 'id'), MAX(id)) FROM classification;
+SELECT pg_catalog.setval(pg_get_serial_sequence('brand', 'id'), MAX(id)) FROM brand;
+SELECT pg_catalog.setval(pg_get_serial_sequence('disease_category', 'id'), MAX(id)) FROM public.disease_category;
+SELECT pg_catalog.setval(pg_get_serial_sequence('disease_condition', 'id'), MAX(id)) FROM public.disease_condition;
+SELECT pg_catalog.setval(pg_get_serial_sequence('presenting_complaints', 'id'), MAX(id)) FROM public.presenting_complaints;

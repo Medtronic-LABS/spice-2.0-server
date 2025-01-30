@@ -1,6 +1,5 @@
 package com.mdtlabs.coreplatform.spiceservice;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.modelmapper.ModelMapper;
 
 import org.springframework.boot.SpringApplication;

@@ -91,7 +91,7 @@ public class ScreeningServiceImpl implements ScreeningService {
     /**
      * {@inheritDoc}
      */
-    public BioDataDTO processScreeningLog(ScreeningLogRequestDTO request, MultipartFile file) throws Exception {
+    public BioDataDTO processScreeningLog(ScreeningLogRequestDTO request, MultipartFile file) {
         BioDataDTO response = fhirServiceApiInterface.screeningCreate(CommonUtil.getAuthToken(), CommonUtil.getClient(),
                 request);
         if (Boolean.TRUE.equals(request.getIsReferAssessment())
@@ -188,7 +188,7 @@ public class ScreeningServiceImpl implements ScreeningService {
      * {@inheritDoc}
      */
     @Override
-    public DashboardDetails getPatientCountOfUsers(DashboardDetailsRequestDTO request) throws RuntimeException {
+    public DashboardDetails getPatientCountOfUsers(DashboardDetailsRequestDTO request) throws DataNotFoundException {
         DashboardDetails response = fhirServiceApiInterface.getPatientCount(CommonUtil.getAuthToken()
                 , CommonUtil.getClient(), request);
         if (Objects.isNull(response)) {

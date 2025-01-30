@@ -2,7 +2,6 @@ package com.mdtlabs.coreplatform.spiceservice.common.dto;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.mdtlabs.coreplatform.commonservice.common.model.entity.ClinicalWorkflow;

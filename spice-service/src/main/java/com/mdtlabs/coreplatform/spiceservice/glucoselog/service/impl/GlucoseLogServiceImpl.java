@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import com.mdtlabs.coreplatform.spiceservice.common.dto.BioDataDTO;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.BpLogDTO;
 import com.mdtlabs.coreplatform.spiceservice.common.model.Symptom;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,7 +25,6 @@ import com.mdtlabs.coreplatform.spiceservice.common.enumeration.AppointmentType;
 import com.mdtlabs.coreplatform.spiceservice.common.model.CallRegister;
 import com.mdtlabs.coreplatform.spiceservice.followup.service.FollowUpService;
 import com.mdtlabs.coreplatform.spiceservice.glucoselog.service.GlucoseLogService;
-import com.mdtlabs.coreplatform.spiceservice.patienttreatmentplan.service.PatientTreatmentPlanService;
 import com.mdtlabs.coreplatform.spiceservice.staticdata.repository.SymptomRepository;
 
 /**
@@ -40,8 +37,6 @@ import com.mdtlabs.coreplatform.spiceservice.staticdata.repository.SymptomReposi
 @Service
 public class GlucoseLogServiceImpl implements GlucoseLogService {
 
-    private final PatientTreatmentPlanService patientTreatmentPlanService;
-
     private final SymptomRepository symptomRepository;
 
     private final FhirServiceApiInterface fhirServiceApiInterface;
@@ -49,10 +44,8 @@ public class GlucoseLogServiceImpl implements GlucoseLogService {
     private final FollowUpService followUpService;
 
     @Autowired
-    public GlucoseLogServiceImpl(PatientTreatmentPlanService patientTreatmentPlanService,
-                                 FhirServiceApiInterface fhirServiceApiInterface, SymptomRepository symptomRepository,
+    public GlucoseLogServiceImpl(FhirServiceApiInterface fhirServiceApiInterface, SymptomRepository symptomRepository,
                                  FollowUpService followUpService) {
-        this.patientTreatmentPlanService = patientTreatmentPlanService;
         this.fhirServiceApiInterface = fhirServiceApiInterface;
         this.symptomRepository = symptomRepository;
         this.followUpService = followUpService;
@@ -66,7 +59,6 @@ public class GlucoseLogServiceImpl implements GlucoseLogService {
         Logger.logInfo("In GlucoseLogServiceImpl, create new bg log information");
         AssessmentDTO patientAssessmentDTO = fhirServiceApiInterface.assessmentCreate(CommonUtil.getAuthToken(), CommonUtil.getClient(),
                 constructAssessmentDTO(glucoseLogDTO));
-        // TODO nextBpAssessmentDate calculation based on the treatment plan
         if (Objects.nonNull(patientAssessmentDTO.getNextBgAssessmentDate())) {
             createCallRegister(patientAssessmentDTO);
         }
@@ -108,19 +100,6 @@ public class GlucoseLogServiceImpl implements GlucoseLogService {
         return encounterDetailsDTO;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    private void validateGlucoseLog(GlucoseLogDTO glucoseLogDTO) {
-        if (Objects.isNull(glucoseLogDTO)) {
-            throw new BadRequestException(1000);
-        }
-        if (Objects.isNull(glucoseLogDTO.getGlucoseValue()) || Objects.isNull(glucoseLogDTO.getGlucoseType())
-                || Objects.isNull(glucoseLogDTO.getGlucoseDateTime()) || Objects.isNull(glucoseLogDTO.getGlucoseUnit())
-                || Objects.isNull(glucoseLogDTO.getLastMealTime())) {
-            throw new BadRequestException(7005);
-        }
-    }
 
     /**
      * {@inheritDoc}
@@ -134,10 +113,9 @@ public class GlucoseLogServiceImpl implements GlucoseLogService {
         List<String> symptoms = new ArrayList<>();
         if (Objects.nonNull(patientGlucoseLogDTO.getLatestGlucoseLog()) && Objects.nonNull(patientGlucoseLogDTO.getLatestGlucoseLog().getSymptoms())) {
             List<Symptom> bgSymptoms = symptomRepository.findByNameInAndType(patientGlucoseLogDTO.getLatestGlucoseLog().getSymptoms(), Constants.DIABETES);
-            bgSymptoms.forEach(symptom -> {
-                symptoms.add(symptom.getName());
-            });
-            patientGlucoseLogDTO.getLatestGlucoseLog().setSymptoms(symptoms);;
+            bgSymptoms.forEach(symptom ->
+                symptoms.add(symptom.getName()));
+            patientGlucoseLogDTO.getLatestGlucoseLog().setSymptoms(symptoms);
         }
         return patientGlucoseLogDTO;
     }

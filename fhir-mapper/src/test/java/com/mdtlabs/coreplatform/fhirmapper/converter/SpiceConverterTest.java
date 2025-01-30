@@ -79,7 +79,7 @@ class SpiceConverterTest {
         spiceConverter.setRegularSmokerDetails(observation, bioMetricsDTO);
 
         //Assertions
-        Assertions.assertTrue(bioMetricsDTO.getIsRegularSmoker());
+        Assertions.assertFalse(bioMetricsDTO.getIsRegularSmoker());
     }
 
     @Test

@@ -4,7 +4,6 @@ import com.mdtlabs.coreplatform.adminservice.model.entity.RegionCustomization;
 import com.mdtlabs.coreplatform.adminservice.repository.RegionCustomizationRepository;
 import com.mdtlabs.coreplatform.adminservice.service.RegionCustomizationService;
 import com.mdtlabs.coreplatform.commonservice.common.contexts.UserContextHolder;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

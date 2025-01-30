@@ -2,7 +2,6 @@ package com.mdtlabs.coreplatform.adminservice.service.impl;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mdtlabs.coreplatform.adminservice.model.entity.Unit;

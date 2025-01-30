@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
@@ -84,16 +85,12 @@ public class SecurityConfiguration {
     ) throws Exception {
         authenticationFilter.setServiceName(Constants.CQL_SERVICE);
         http.cors(Customizer.withDefaults())
-                .authorizeHttpRequests((requests) -> requests.anyRequest().authenticated())
+                .authorizeHttpRequests(requests -> requests.anyRequest().authenticated())
                 .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .exceptionHandling((exception) -> exception
+                .exceptionHandling(exception -> exception
                         .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
-                .sessionManagement((session) -> {
-                            session.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-                        }
-                ).csrf((csrf) -> {
-                    csrf.disable();
-                }).httpBasic(Customizer.withDefaults());
+                .sessionManagement(session ->
+                            session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)).csrf(AbstractHttpConfigurer::disable).httpBasic(Customizer.withDefaults()); //NOSONAR
         return http.build();
     }
 

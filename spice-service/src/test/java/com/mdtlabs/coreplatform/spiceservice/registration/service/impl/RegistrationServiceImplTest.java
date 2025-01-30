@@ -88,7 +88,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void testRegisterPatientAndMember_noFile() throws Exception {
+    void testRegisterPatientAndMember_noFile() {
         // Given
         EnrollmentRequestDTO request = new EnrollmentRequestDTO();
         request.setTenantId(1L);

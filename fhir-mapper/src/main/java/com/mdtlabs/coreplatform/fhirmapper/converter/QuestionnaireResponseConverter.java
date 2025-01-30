@@ -9,8 +9,10 @@ import java.util.Objects;
 import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.Coding;
 import org.hl7.fhir.r4.model.DateTimeType;
+import org.hl7.fhir.r4.model.Encounter;
 import org.hl7.fhir.r4.model.Identifier;
 import org.hl7.fhir.r4.model.Observation;
+import org.hl7.fhir.r4.model.Organization;
 import org.hl7.fhir.r4.model.Patient;
 import org.hl7.fhir.r4.model.QuestionnaireResponse;
 import org.hl7.fhir.r4.model.Reference;
@@ -66,7 +68,7 @@ public class QuestionnaireResponseConverter {
      *
      * @return {@link Observation} Created FHIR Observation entity.
      */
-    public Observation processMentalHealthDetails(MentalHealthObservationDTO mentalHealthObservationDTO) {
+    public Observation processMentalHealthDetails(MentalHealthObservationDTO mentalHealthObservationDTO, Encounter encounter, Organization organization) {
         String mentalHealthSearch = String.format(Constants.MENTAL_HEALTH_OBSERVATION_QUERY,
                 FhirIdentifierConstants.OBSERVATION_TYPE_SYSTEM_URL + Constants.VERTICAL_BAR + Constants.OBSERVATION_MENTAL_HEALTH,
                 FhirConstants.RELATED_PERSON + Constants.FORWARD_SLASH + mentalHealthObservationDTO.getRelatedPersonId());
@@ -75,10 +77,10 @@ public class QuestionnaireResponseConverter {
         Observation mentalHealthObservation = null;
 
         if (Objects.nonNull(bundle) && !bundle.getEntry().isEmpty()) {
-            mentalHealthObservation = setMentalHealthDetails(bundle, existingMentalHealthDetails);
+            mentalHealthObservation = setMentalHealthDetails(bundle, existingMentalHealthDetails, encounter, organization);
             mentalHealthObservationDTO.setExistingMentalHealthDetails(existingMentalHealthDetails);
         }
-        return createOrUpdateMentalHealthObservation(mentalHealthObservationDTO, mentalHealthObservation);
+        return createOrUpdateMentalHealthObservation(mentalHealthObservationDTO, mentalHealthObservation, encounter, organization);
     }
 
     /**
@@ -92,7 +94,7 @@ public class QuestionnaireResponseConverter {
      * @return {@link Observation} Created FHIR Observation entity.
      */
     private Observation createOrUpdateMentalHealthObservation(MentalHealthObservationDTO mentalHealthDTO,
-                                                              Observation observation) {
+                                                              Observation observation, Encounter encounter, Organization organization) {
         if (Objects.isNull(observation)) {
             observation = new Observation();
             observation.setStatus(Observation.ObservationStatus.FINAL);
@@ -117,6 +119,7 @@ public class QuestionnaireResponseConverter {
         }
         setMentalHealthRiskDetails(observation, existingMentalRiskDetails);
         commonConverter.setObservationText(observation, MetaCodeConstants.MENTAL_HEALTH_DETAILS);
+        commonConverter.setObservationEncounterAndOrganization(observation, organization, encounter);
         return observation;
     }
 
@@ -186,7 +189,7 @@ public class QuestionnaireResponseConverter {
      * @param mentalHealthDetails      Map of patient phq4, phq9 and gad7 details
      */
     private Observation setMentalHealthDetails(Bundle bundle,
-                                        Map<String, QuestionnaireResponse> mentalHealthDetails) {
+                                        Map<String, QuestionnaireResponse> mentalHealthDetails, Encounter encounter, Organization organization) {
         Observation mentalHealthObservation = null;
         for (Bundle.BundleEntryComponent entry : bundle.getEntry()) {
             if (entry.getResource() instanceof QuestionnaireResponse questionnaireResponse) {
@@ -198,6 +201,7 @@ public class QuestionnaireResponseConverter {
                     mentalHealthDetails.put(Constants.GAD7, questionnaireResponse);
                 }
             } else if (entry.getResource() instanceof Observation observation) {
+                commonConverter.setObservationEncounterAndOrganization(observation, organization, encounter);
                 mentalHealthObservation = observation;
             }
         }

@@ -1,10 +1,7 @@
 package com.mdtlabs.coreplatform.spiceservice.assessment.service;
 
 import java.util.List;
-import java.util.Objects;
 
-import com.mdtlabs.coreplatform.spiceservice.common.dto.GlucoseLogDTO;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.RequestDTO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,17 +11,16 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
-import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
 import com.mdtlabs.coreplatform.commonservice.common.CommonUtil;
 import com.mdtlabs.coreplatform.spiceservice.apiinterface.FhirServiceApiInterface;
 import com.mdtlabs.coreplatform.spiceservice.assessment.service.impl.AssessmentServiceImpl;
 import com.mdtlabs.coreplatform.spiceservice.common.Constants;
-import com.mdtlabs.coreplatform.spiceservice.common.TestConstants;
 import com.mdtlabs.coreplatform.spiceservice.common.TestDataProvider;
 import com.mdtlabs.coreplatform.spiceservice.common.dto.AssessmentDTO;
 import com.mdtlabs.coreplatform.spiceservice.common.dto.EncounterDetailsDTO;
+import com.mdtlabs.coreplatform.spiceservice.common.dto.RequestDTO;
 import com.mdtlabs.coreplatform.spiceservice.common.enumeration.AppointmentType;
 import com.mdtlabs.coreplatform.spiceservice.common.model.CallRegister;
 import com.mdtlabs.coreplatform.spiceservice.followup.repository.CallRegisterRepository;

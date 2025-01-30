@@ -20,7 +20,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class SymptomServiceImplTest {
+class SymptomServiceImplTest {
     @InjectMocks
     private SymptomServiceImpl symptomService;
 
@@ -29,7 +29,6 @@ public class SymptomServiceImplTest {
 
     @Test
     void getSymptoms() {
-        Symptom symptom = TestDataProvider.getSymptom();
         List<Symptom> symptoms = List.of(TestDataProvider.getSymptom());
         when(symptomRepository.findByIsDeletedFalseAndIsActiveTrue()).thenReturn(symptoms);
         List<Symptom> result = symptomService.getSymptoms();

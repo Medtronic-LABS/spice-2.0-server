@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * Configuration class for Feign client settings.
  *
@@ -26,6 +28,6 @@ public class FeignConfig {
      */
     @Bean
     public Request.Options requestOptions() {
-        return new Request.Options(connectionTimeOut, readTimeOut); // Connect and read timeout in milliseconds
+        return new Request.Options(connectionTimeOut, TimeUnit.MILLISECONDS, readTimeOut, TimeUnit.MILLISECONDS, true);
     }
 }

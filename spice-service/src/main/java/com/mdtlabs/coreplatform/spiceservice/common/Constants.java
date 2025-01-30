@@ -30,6 +30,7 @@ public class Constants {
     public static final String BROWSER = "browser";
 
     public Constants() {
+        //This method is intentionally left empty.
     }
 
     // form types.
@@ -320,7 +321,7 @@ public class Constants {
     public static final String RED_RISK = "RED_RISK";
     public static final String LOWER_MODERATE = "Lower Moderate";
     public static final String DIABETES = "Diabetes";
-    public static final List<String> RED_RISK_ORDER = new ArrayList<>();
+    protected static final List<String> RED_RISK_ORDER = new ArrayList<>();
     static {
         RED_RISK_ORDER.add(LOW);
         RED_RISK_ORDER.add(LOWER_MODERATE);
@@ -376,7 +377,7 @@ public class Constants {
     public static final String CALL_REGISTER_COUNT = "callRegisterCount";
     public static final String DATE_FORMAT_WITHOUT_MILLISECOND = "yyyy-MM-dd'T'HH:mm:ss";
     public static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
-    public static final String MEDICAL_REVIEW_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssX";
+    public static final String MEDICAL_REVIEW_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
     public static final String LOST_TO_FOLLOW_UP = "LOST_TO_FOLLOW_UP";
     public static final String ASSESSMENT_COMPLETED = "ASSESSMENT_COMPLETED";
     public static final String MINIMAL = "Minimal";
@@ -385,4 +386,6 @@ public class Constants {
     public static final String SEVERE = "Severe";
     public static final String NORMAL = "Normal";
     public static final String PREGNANCY = "pregnancy";
+    public static final String MEDICAL_REVIEW_CATEGORY = "Medical Review";
+
 }

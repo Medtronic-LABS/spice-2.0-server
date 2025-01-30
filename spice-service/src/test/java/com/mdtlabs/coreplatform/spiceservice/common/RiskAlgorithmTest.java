@@ -1,8 +1,7 @@
 package com.mdtlabs.coreplatform.spiceservice.common;
 
-import com.mdtlabs.coreplatform.spiceservice.common.dto.RiskAlgorithmDTO;
-import com.mdtlabs.coreplatform.spiceservice.common.model.Symptom;
-import com.mdtlabs.coreplatform.spiceservice.staticdata.service.StaticDataService;
+import java.util.*;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,11 +10,14 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
-import org.apache.commons.lang3.StringUtils;
-import static org.mockito.Mockito.when;
-import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.when;
+
+import com.mdtlabs.coreplatform.spiceservice.common.dto.RiskAlgorithmDTO;
+import com.mdtlabs.coreplatform.spiceservice.common.model.Symptom;
+import com.mdtlabs.coreplatform.spiceservice.staticdata.service.StaticDataService;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -207,7 +209,6 @@ class RiskAlgorithmTest {
     @Test
     void testGetPatientSymptomsCategoriesCount() {
         // Given
-        Set<Long> symptoms = Set.of(1L, 2L);
         Symptom symptom1 = new Symptom();
         symptom1.setId(1L);
         symptom1.setName("Symptom1");

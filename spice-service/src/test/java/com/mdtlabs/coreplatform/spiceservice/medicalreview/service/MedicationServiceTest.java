@@ -2,10 +2,6 @@ package com.mdtlabs.coreplatform.spiceservice.medicalreview.service;
 
 import java.util.*;
 
-import com.mdtlabs.coreplatform.commonservice.common.model.dto.MetaDataDTO;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.*;
-import com.mdtlabs.coreplatform.spiceservice.customizedmodules.service.CustomizedModulesService;
-import com.mdtlabs.coreplatform.spiceservice.staticdata.service.StaticDataService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,16 +18,20 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-import com.mdtlabs.coreplatform.spiceservice.common.Constants;
 import com.mdtlabs.coreplatform.commonservice.common.CommonUtil;
+import com.mdtlabs.coreplatform.commonservice.common.model.dto.MetaDataDTO;
 import com.mdtlabs.coreplatform.spiceservice.apiinterface.FhirServiceApiInterface;
+import com.mdtlabs.coreplatform.spiceservice.common.Constants;
 import com.mdtlabs.coreplatform.spiceservice.common.TestConstants;
 import com.mdtlabs.coreplatform.spiceservice.common.TestDataProvider;
+import com.mdtlabs.coreplatform.spiceservice.common.dto.*;
 import com.mdtlabs.coreplatform.spiceservice.common.enumeration.AppointmentType;
 import com.mdtlabs.coreplatform.spiceservice.common.model.CallRegister;
+import com.mdtlabs.coreplatform.spiceservice.customizedmodules.service.CustomizedModulesService;
 import com.mdtlabs.coreplatform.spiceservice.followup.repository.CallRegisterRepository;
 import com.mdtlabs.coreplatform.spiceservice.followup.service.FollowUpService;
 import com.mdtlabs.coreplatform.spiceservice.medicalreview.service.impl.MedicalReviewServiceImpl;
+import com.mdtlabs.coreplatform.spiceservice.staticdata.service.StaticDataService;
 
 /**
  * <p>
@@ -579,12 +579,11 @@ class MedicationServiceTest {
 
         doNothing().when(fhirServiceApiInterface).updateNCDAppointment("Bearer", "mob", request);
         medicalReviewService.updateNCDAppointment(request);
-
+        verify(fhirServiceApiInterface, times(0)).updateNCDAppointment("Bearer", "mob", request);
     }
 
     @Test
     void getInstruction() {
-       // when(MessageValidator.getInstance().getMessage(Constants.INSTRUCTIONS)).thenReturn(List.of());
         List<String> response = medicalReviewService.getInstruction();
         Assertions.assertNotNull(response);
     }

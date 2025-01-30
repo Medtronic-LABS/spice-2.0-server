@@ -4,10 +4,9 @@ import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.mdtlabs.coreplatform.commonservice.common.model.dto.MetaDataDTO;
-
-import com.mdtlabs.coreplatform.spiceservice.common.model.Symptom;
 import lombok.Data;
+
+import com.mdtlabs.coreplatform.commonservice.common.model.dto.MetaDataDTO;
 
 /**
  * <p>
@@ -19,24 +18,24 @@ import lombok.Data;
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class StaticMetaDataResponseDTO {
-	
-	private List<MetaDataDTO> medicalSupplies;
-	
-	private List<MetaDataDTO> patientStatus;
-	
-	private List<MetaDataDTO> systemicExaminations;
-	
-	private List<MetaDataDTO> presentingComplaints;
-	
-	private List<MetaDataDTO> diseaseCategories;
-	
-	private List<MetaDataDTO> counselledOn;
-	
-	private List<MetaDataDTO> examinations;
 
-	private List<MetaDataDTO> obstetricExaminations;
-	
-	private List<MetaDataDTO> pregnancyHistories;
+    private List<MetaDataDTO> medicalSupplies;
+
+    private List<MetaDataDTO> patientStatus;
+
+    private List<MetaDataDTO> systemicExaminations;
+
+    private List<MetaDataDTO> presentingComplaints;
+
+    private List<MetaDataDTO> diseaseCategories;
+
+    private List<MetaDataDTO> counselledOn;
+
+    private List<MetaDataDTO> examinations;
+
+    private List<MetaDataDTO> obstetricExaminations;
+
+    private List<MetaDataDTO> pregnancyHistories;
 
     private List<MetaDataDTO> cost;
 
@@ -81,7 +80,7 @@ public class StaticMetaDataResponseDTO {
     private List<MetaDataDTO> symptoms;
 
     private Map<String, Object> cvdRiskAlgorithms;
-    
+
     private List<MetaDataDTO> stateOfPerineum;
 
 }

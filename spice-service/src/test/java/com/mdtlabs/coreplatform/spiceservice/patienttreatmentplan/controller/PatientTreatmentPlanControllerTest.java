@@ -1,17 +1,17 @@
 package com.mdtlabs.coreplatform.spiceservice.patienttreatmentplan.controller;
 
-import com.mdtlabs.coreplatform.spiceservice.common.dto.RequestDTO;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.TreatmentPlanDTO;
-import com.mdtlabs.coreplatform.spiceservice.patienttreatmentplan.service.PatientTreatmentPlanService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.verify;
+
+import com.mdtlabs.coreplatform.spiceservice.common.dto.RequestDTO;
+import com.mdtlabs.coreplatform.spiceservice.common.dto.TreatmentPlanDTO;
+import com.mdtlabs.coreplatform.spiceservice.patienttreatmentplan.service.PatientTreatmentPlanService;
 
 @ExtendWith(MockitoExtension.class)
 class PatientTreatmentPlanControllerTest {

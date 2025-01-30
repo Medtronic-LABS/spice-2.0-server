@@ -1,18 +1,17 @@
 package com.mdtlabs.coreplatform.commonservice.common.model.dto;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.mdtlabs.coreplatform.commonservice.common.CommonUtil;
-import com.mdtlabs.coreplatform.commonservice.common.contexts.UserContextHolder;
-
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import com.mdtlabs.coreplatform.commonservice.common.CommonUtil;
+import com.mdtlabs.coreplatform.commonservice.common.contexts.UserContextHolder;
 
 /**
  * <p>
@@ -93,6 +92,8 @@ public class MetaDataDTO implements Serializable {
     private List<String> appTypes;
     
     private String gender;
+
+    private String code;
 
     public MetaDataDTO(String category) {
         this.category = category;

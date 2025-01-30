@@ -355,8 +355,7 @@ public class AdminController {
      */
     @PostMapping("/healthfacility/country-list/{countryId}")
     public List<HealthFacilityDTO> getHealthFacilitiesByCountry(@PathVariable("countryId") Long countryId) {
-        List<HealthFacilityDTO> response = healthFacilityService.getHealthFacilitiesByCountryId(countryId);
-        return response;
+        return healthFacilityService.getHealthFacilitiesByCountryId(countryId);
     }
 
     /**
@@ -372,8 +371,7 @@ public class AdminController {
      */
     @PostMapping("/healthfacility/chiefdom-list/{chiefdomId}")
     public List<HealthFacilityDTO> getHealthFacilitiesByChiefdom(@PathVariable("chiefdomId") Long chiefdomId) {
-        List<HealthFacilityDTO> response = healthFacilityService.getHealthFacilitiesByChiefdomId(chiefdomId);
-        return response;
+        return healthFacilityService.getHealthFacilitiesByChiefdomId(chiefdomId);
     }
 
     /**

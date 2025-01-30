@@ -1,5 +1,6 @@
 package com.mdtlabs.coreplatform.adminservice.model.dto;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -73,7 +74,7 @@ public class HealthFacilityDTO {
             return new ModelMapper().map(this.clinicalWorkflows, new TypeToken<List<ClinicalWorkflowDTO>>() {
             }.getType());
         }
-        return null;
+        return Collections.emptyList();
     }
 
     public List<ClinicalWorkflowDTO> getCustomizedWorkflows() {
@@ -81,6 +82,6 @@ public class HealthFacilityDTO {
             return new ModelMapper().map(this.customizedWorkflows, new TypeToken<List<ClinicalWorkflowDTO>>() {
             }.getType());
         }
-        return null;
+        return Collections.emptyList();
     }
 }

@@ -1,18 +1,15 @@
 package com.mdtlabs.coreplatform.adminservice.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mdtlabs.coreplatform.adminservice.model.dto.CustomizationRequestDTO;
 import com.mdtlabs.coreplatform.adminservice.model.dto.WorkflowCustomizationDTO;
 import com.mdtlabs.coreplatform.adminservice.service.WorkflowCustomizationService;
 import com.mdtlabs.coreplatform.commonservice.common.model.dto.SearchRequestDTO;
 import com.mdtlabs.coreplatform.commonservice.common.model.entity.WorkflowCustomization;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.modelmapper.ModelMapper;
 
 import java.util.Collections;
 import java.util.List;

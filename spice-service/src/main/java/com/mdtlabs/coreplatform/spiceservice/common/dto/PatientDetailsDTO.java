@@ -217,6 +217,7 @@ public class PatientDetailsDTO {
             currentCalendar.setTime(new Date());
             this.age = currentCalendar.get(Calendar.YEAR) - birthCalendar.get(Calendar.YEAR);
         }
-        return this.age;
+        return Objects.nonNull(this.age) ? this.age : 0;
+//        return this.age;
     }
 }

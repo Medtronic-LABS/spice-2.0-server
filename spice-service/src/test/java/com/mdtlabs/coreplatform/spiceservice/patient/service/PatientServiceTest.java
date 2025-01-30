@@ -5,14 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.mdtlabs.coreplatform.commonservice.common.exception.DataNotAcceptableException;
-import com.mdtlabs.coreplatform.commonservice.common.exception.DataNotFoundException;
-import com.mdtlabs.coreplatform.commonservice.common.model.entity.PatientTransfer;
-import com.mdtlabs.coreplatform.commonservice.common.model.entity.WgsData;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.*;
-import com.mdtlabs.coreplatform.spiceservice.common.model.CallRegister;
-import com.mdtlabs.coreplatform.spiceservice.patient.repository.WgsDataRepository;
-import com.mdtlabs.coreplatform.spiceservice.patienttransfer.repository.PatientTransferRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,23 +16,27 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
-import static com.mdtlabs.coreplatform.spiceservice.common.TestDataProvider.getPatientDetailsDTO;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyDouble;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import com.mdtlabs.coreplatform.commonservice.common.CommonUtil;
+import com.mdtlabs.coreplatform.commonservice.common.exception.DataNotAcceptableException;
+import com.mdtlabs.coreplatform.commonservice.common.exception.DataNotFoundException;
 import com.mdtlabs.coreplatform.commonservice.common.exception.SpiceValidation;
+import com.mdtlabs.coreplatform.commonservice.common.model.entity.PatientTransfer;
+import com.mdtlabs.coreplatform.commonservice.common.model.entity.WgsData;
 import com.mdtlabs.coreplatform.spiceservice.apiinterface.AdminServiceApiInterface;
 import com.mdtlabs.coreplatform.spiceservice.apiinterface.FhirServiceApiInterface;
 import com.mdtlabs.coreplatform.spiceservice.common.Constants;
 import com.mdtlabs.coreplatform.spiceservice.common.TestConstants;
 import com.mdtlabs.coreplatform.spiceservice.common.TestDataProvider;
+import com.mdtlabs.coreplatform.spiceservice.common.dto.*;
+import com.mdtlabs.coreplatform.spiceservice.common.model.CallRegister;
 import com.mdtlabs.coreplatform.spiceservice.followup.repository.CallRegisterRepository;
 import com.mdtlabs.coreplatform.spiceservice.followup.service.FollowUpService;
+import com.mdtlabs.coreplatform.spiceservice.patient.repository.WgsDataRepository;
 import com.mdtlabs.coreplatform.spiceservice.patient.service.impl.PatientServiceImpl;
+import com.mdtlabs.coreplatform.spiceservice.patienttransfer.repository.PatientTransferRepository;
 
 /**
  * <p>
@@ -252,14 +248,13 @@ class PatientServiceTest {
         patientRequestDTO.setLimit(10);
         PregnancyInfo pregnancyInfo = new PregnancyInfo();
         pregnancyInfo.setPncVisitNo(1);
-        List<PregnancyInfo> pregnancyInfos = List.of(pregnancyInfo);
 
         //when
        TestDataProvider.getStaticMock();
-       // when(fhirServiceApiInterface.getPregnancyInfoByVillages("BearerTest", "mob", patientRequestDTO)).thenReturn(pregnancyInfos);
 
         //then
         List<PregnancyInfo> response = patientService.getPregnancyInfoByVillages(patientRequestDTO);
+        Assertions.assertNotNull(response);
         TestDataProvider.cleanUp();
     }
 
@@ -369,7 +364,9 @@ class PatientServiceTest {
         when(fhirServiceApiInterface.searchPatientDetails("Bearer",
                 "mob", patientDTO)).thenReturn(new PatientDetailsDTO());
 
-        PatientDetailsDTO result = patientService.searchPatientDetails(patientDTO);
+        patientService.searchPatientDetails(patientDTO);
+        verify(fhirServiceApiInterface, times(0)).searchPatientDetails("Bearer",
+                "mob", patientDTO);
         TestDataProvider.cleanUp();
     }
 
@@ -435,6 +432,7 @@ class PatientServiceTest {
         when(patientTransferRepository.findByPatientFhirId(requestData.getPatientId())).thenReturn(patientTransfers);
         //then
         patientService.deletePatientByPatientId(requestData);
+        verify(patientTransferRepository, times(1)).findByPatientFhirId(requestData.getPatientId());
         TestDataProvider.cleanUp();
     }
 
@@ -464,6 +462,8 @@ class PatientServiceTest {
                 requestDTO);
         //then
         patientService.updateReferredSite(requestDTO);
+        verify(fhirServiceApiInterface, times(0)).updateReferredSite("Bearer", "mob",
+                requestDTO);
         TestDataProvider.cleanUp();
     }
 
@@ -471,7 +471,6 @@ class PatientServiceTest {
     void getPatientDetailsByVillageIds() {
         TestDataProvider.init();
         RequestDTO request = new RequestDTO();
-        List<PatientDetailsDTO> patientDetailsDTOS = List.of(getPatientDetailsDTO());
         request.setPatientId(TestConstants.PATIENT_ID);
         request.setVillageIds(List.of(TestConstants.STRING_ONE));
         //then

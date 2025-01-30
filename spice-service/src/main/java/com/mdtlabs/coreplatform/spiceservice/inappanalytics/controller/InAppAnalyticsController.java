@@ -2,6 +2,7 @@ package com.mdtlabs.coreplatform.spiceservice.inappanalytics.controller;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.util.Map;
 
 import io.minio.errors.MinioException;
 import org.springframework.http.HttpStatus;
@@ -49,10 +50,10 @@ public class InAppAnalyticsController {
      * @return A {@link SuccessResponse} with the URL of the uploaded file in the S3 bucket.
      */
     @PostMapping("/upload-file")
-    public SuccessResponse uploadFileInS3(@RequestParam("file") MultipartFile multipartFile) {
+    public SuccessResponse<Map<String, String>> uploadFileInS3(@RequestParam("file") MultipartFile multipartFile) {
         try {
             inAppAnalyticsService.uploadFileInS3(multipartFile);
-            return new SuccessResponse(SuccessCode.UPLOAD_FILE, HttpStatus.CREATED);
+            return new SuccessResponse<>(SuccessCode.UPLOAD_FILE, HttpStatus.CREATED);
         } catch (IOException | MinioException | GeneralSecurityException iOException) {
             Logger.logError(iOException);
             throw new SpiceValidation(1514, iOException.getMessage());

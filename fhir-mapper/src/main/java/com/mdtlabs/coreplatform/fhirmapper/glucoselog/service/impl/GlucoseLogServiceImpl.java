@@ -145,7 +145,7 @@ public class GlucoseLogServiceImpl implements GlucoseLogService {
             Bundle bundle = restApiUtil.getBatchRequest(
                     constructGlucoseLogSymptomObservationUrl(patientGlucoseLogRequestData.getMemberId()));
             patientGlucoseLogs.setLatestGlucoseLog(setLatestGlucoseLog(patientGlucoseLogs.getGlucoseLogList(), glucoseLogDTO));
-            patientGlucoseLogs.getLatestGlucoseLog().setSymptoms(symptomConverter.getSymptomListByBundle(bundle));
+            patientGlucoseLogs.getLatestGlucoseLog().setSymptoms(symptomConverter.getSymptomListByBundle(bundle, Boolean.FALSE));
         }
     }
 

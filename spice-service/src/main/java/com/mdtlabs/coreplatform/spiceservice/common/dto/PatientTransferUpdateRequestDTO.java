@@ -1,9 +1,7 @@
 package com.mdtlabs.coreplatform.spiceservice.common.dto;
 
 
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-import com.mdtlabs.coreplatform.commonservice.common.ErrorConstants;
 import com.mdtlabs.coreplatform.commonservice.common.model.enumeration.PatientTransferStatus;
 
 /**

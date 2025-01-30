@@ -93,8 +93,7 @@ public class MedicationServiceImpl implements MedicationService {
      */
     public List<MedicationDTO> getMedicationsByIds(List<Long> ids) {
         List<Medication> medications = medicationRepository.getAllMedicationsByIds(ids);
-        List<MedicationDTO> medicationDTOList = this.convertMedicationToMedicationDTO(medications);
-        return medicationDTOList;
+        return this.convertMedicationToMedicationDTO(medications);
     }
 
     /**
@@ -115,8 +114,7 @@ public class MedicationServiceImpl implements MedicationService {
             throw new DataNotAcceptableException(12010);
         }
         mapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
-        Medication s = medicationRepository.save(convertMedication(medication));
-        return s;
+        return medicationRepository.save(convertMedication(medication));
     }
 
     /**
@@ -231,7 +229,7 @@ public class MedicationServiceImpl implements MedicationService {
     @Override
     public ResponseListDTO<MedicationDTO> searchMedicationByName(SearchRequestDTO requestDTO) {
         String searchTerm = requestDTO.getSearchTerm();
-        if (Objects.isNull(searchTerm) || 0 == searchTerm.length()) {
+        if (Objects.isNull(searchTerm) || searchTerm.isEmpty()) {
             throw new DataNotAcceptableException(18008);
         }
         List<Medication> medications = medicationRepository.searchMedications(searchTerm, UserContextHolder.getUserDto().getCountry().getId());
@@ -252,9 +250,8 @@ public class MedicationServiceImpl implements MedicationService {
      */
     private List<Medication> convertMedicationDTOToMedication(List<MedicationDTO> medicationDTOs) {
         List<Medication> medications = new ArrayList<>();
-        medicationDTOs.stream().forEach(medicationDTO -> {
-            medications.add(convertMedication(medicationDTO));
-        });
+        medicationDTOs.forEach(medicationDTO ->
+            medications.add(convertMedication(medicationDTO)));
         return medications;
     }
 

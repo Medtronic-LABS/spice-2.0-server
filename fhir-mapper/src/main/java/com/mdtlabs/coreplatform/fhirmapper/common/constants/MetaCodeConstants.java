@@ -74,6 +74,9 @@ public class MetaCodeConstants {
     public static final String OTHER = "Other";
     public static final String BLANK_STRING = "";
 
+    public static final String NO_SYMPTOMS_HYPERTENSION_KEY = "hypertensionNoSymptom";
+    public static final String NO_SYMPTOMS_DIABETES_KEY = "diabetesNoSymptoms";
+
     // Diabetes symptom keys
     public static final String FREQUENT_URINATION_KEY = "frequentUrination";
     public static final String EXCESSIVE_THIRST_KEY = "excessiveThirst";

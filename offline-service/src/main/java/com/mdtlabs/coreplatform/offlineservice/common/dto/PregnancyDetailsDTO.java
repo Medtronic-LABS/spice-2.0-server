@@ -102,4 +102,6 @@ public class PregnancyDetailsDTO {
 
     private Boolean isPregnancyRisk;
 
+    private String patientVisitId;
+
 }

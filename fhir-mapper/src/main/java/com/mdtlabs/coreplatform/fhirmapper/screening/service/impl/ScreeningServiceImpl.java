@@ -89,6 +89,7 @@ import com.mdtlabs.coreplatform.fhirmapper.screening.service.ScreeningService;
  */
 @Service
 public class ScreeningServiceImpl implements ScreeningService {
+
     @Value("${app.fhir-server-url}")
     private String fhirServerUrl;
     private final FhirUtils fhirUtils;
@@ -198,8 +199,8 @@ public class ScreeningServiceImpl implements ScreeningService {
         QuestionnaireResponse questionnaireResponse = createQuestionnaireResponse(request, organization,
                 patient, relatedPerson, encounter);
         Observation mentalHealthObservation = createMentalHealthObservation(request, relatedPerson,
-                questionnaireResponse);
-        QuestionnaireResponse hivQuestionnaireResponse = createHIVQuestionnaireResponse(request, organization,
+                questionnaireResponse, encounter, organization);
+        QuestionnaireResponse HIVquestionnaireResponse = createHIVQuestionnaireResponse(request, organization,
                 patient, relatedPerson, encounter);
         ResponseEntity<FhirResponseDTO> responseEntity;
         Map<String, List<String>> responseWithFhirIds;
@@ -214,7 +215,7 @@ public class ScreeningServiceImpl implements ScreeningService {
                 FhirConstants.ENCOUNTER_IDENTIFIER_URL, provenanceDTO);
         commonConverter.setQuestionnarieDetailsInBundle(bundle, questionnaireResponse,
                 FhirConstants.PHQ4_QUESTIONNAIRERESPONSE_IDENTIFIER_URL, provenanceDTO, Boolean.FALSE);
-        commonConverter.setHIVQuestionnarieDetailsInBundle(bundle, hivQuestionnaireResponse,
+        commonConverter.setHIVQuestionnarieDetailsInBundle(bundle, HIVquestionnaireResponse,
                 FhirConstants.HIV_QUESTIONNAIRERESPONSE_IDENTIFIER_URL, provenanceDTO);
         setObservationDetails(bundle, patient, relatedPerson, bpLogObservation,
                 FhirConstants.BLOOD_PRESSURE_IDENTIFIER_URL, provenanceDTO);
@@ -389,8 +390,11 @@ public class ScreeningServiceImpl implements ScreeningService {
      */
     private List<ServiceRequest> updateOldReferralTicket(ScreeningLogRequestDTO requestDTO, Patient patient) {
         List<ServiceRequest> serviceRequests = new ArrayList<>();
-        if (Boolean.TRUE.equals(requestDTO.getIsReferAssessment()) && Objects.nonNull(requestDTO.getReferredReasons())
-                && !requestDTO.getReferredReasons().isEmpty() && Objects.nonNull(patient) && Objects.nonNull(patient.getIdPart())) {
+        if (Boolean.TRUE.equals(requestDTO.getIsReferAssessment())
+                && Objects.nonNull(requestDTO.getReferredReasons())
+                && !requestDTO.getReferredReasons().isEmpty()
+                && Objects.nonNull(patient)
+                && Objects.nonNull(patient.getIdPart())) {
             Bundle bundle = restApiUtil.getBatchRequest(String.format(Constants.SERVICE_REQUEST_BY_PATIENT_ID_QUERY,
                     patient.getIdPart()));
             for (Bundle.BundleEntryComponent component : bundle.getEntry()) {
@@ -598,8 +602,9 @@ public class ScreeningServiceImpl implements ScreeningService {
                     pregnancyDetailsDTO.setIsPregnancyRisk(Boolean.TRUE);
                     createRedRiskObservation(relatedPerson, patient, bundle, provenanceDTO);
                 }
-            } else if (Objects.nonNull(requestDTO.getBioMetrics())
-                    && (requestDTO.getBioMetrics().getAge() < 18 || requestDTO.getBioMetrics().getAge() > 35)) {
+            }
+            if (Objects.equals(Boolean.TRUE, pregnancyDetailsDTO.getIsPregnant()) && (Objects.nonNull(requestDTO.getBioMetrics())
+                    && (requestDTO.getBioMetrics().getAge() < 18 || requestDTO.getBioMetrics().getAge() > 35))) {
                 pregnancyDetailsDTO.setIsPregnancyRisk(Boolean.TRUE);
             }
             String url = String.format(Constants.FETCH_LATEST_OBSERVATION_QUERY, FhirConstants.PREGNANCY.toLowerCase(),
@@ -806,7 +811,7 @@ public class ScreeningServiceImpl implements ScreeningService {
      */
     private Observation createMentalHealthObservation(ScreeningLogRequestDTO requestDTO,
                                                       RelatedPerson relatedPerson,
-                                                      QuestionnaireResponse questionnaireResponse) {
+                                                      QuestionnaireResponse questionnaireResponse, Encounter encounter, Organization organization) {
         MentalHealthObservationDTO mentalHealthObservationDTO = new MentalHealthObservationDTO();
         Map<String, String> riskDetails = new HashMap<>();
         Map<String, QuestionnaireResponse> questionnaireResponses = new HashMap<>();
@@ -838,7 +843,7 @@ public class ScreeningServiceImpl implements ScreeningService {
             mentalHealthObservationDTO.setMentalRiskDetails(riskDetails);
             mentalHealthObservationDTO.setRelatedPersonId(relatedPerson.getIdPart());
             mentalHealthObservationDTO.setQuestionnaireResponses(questionnaireResponses);
-            observation = questionnaireResponseConverter.processMentalHealthDetails(mentalHealthObservationDTO);
+            observation = questionnaireResponseConverter.processMentalHealthDetails(mentalHealthObservationDTO, encounter, organization);
         }
         return observation;
     }
@@ -1063,7 +1068,7 @@ public class ScreeningServiceImpl implements ScreeningService {
                 dateFilter.put(Constants.END_DATE, DateUtil.getUserTimezoneTime(userTimezone, Constants.ONE, Boolean.TRUE));
             } else if (Constants.THIS_WEEK.equals(requestDTO.getSortField())) {
                 String startDate = DateUtil.getStartDayOfWeekByUserTimeZone(userTimezone);
-                String endDate = DateUtil.convertDateToStringInFHIRFormat(
+                String endDate = DateUtil.convertDateToString(
                         DateUtil.addDateWithTimezone(DateUtil.formatDate(startDate), Constants.INT_SEVEN, userTimezone));
                 dateFilter.put(Constants.START_DATE, startDate);
                 dateFilter.put(Constants.END_DATE, endDate);
@@ -1116,11 +1121,11 @@ public class ScreeningServiceImpl implements ScreeningService {
             List<Observation> observations = resources.getOrDefault(ResourceType.Observation, List.of()).stream().map(Observation.class::cast).toList();
             List<MedicationDispense> medicationDispenses = resources.getOrDefault(ResourceType.MedicationDispense, List.of()).stream().map(MedicationDispense.class::cast).toList();
             medicationDispenses.forEach(medicationDispense ->
-                medicationDispense.getIdentifier().forEach(identifier -> {
-                    if (identifier.getSystem().contains(Constants.PRESCRIPTION_FILLED_DAYS) && !identifier.getValue().equals(String.valueOf(Constants.ZERO))) {
-                        dispensed.addAndGet(1);
-                    }
-                })
+                    medicationDispense.getIdentifier().forEach(identifier -> {
+                        if (identifier.getSystem().contains(Constants.PRESCRIPTION_FILLED_DAYS) && !identifier.getValue().equals(String.valueOf(Constants.ZERO))) {
+                            dispensed.addAndGet(1);
+                        }
+                    })
             );
             List<RelatedPerson> uniqueRelatedPersons = relatedPersons.stream()
                     .collect(Collectors.toMap(
@@ -1132,39 +1137,39 @@ public class ScreeningServiceImpl implements ScreeningService {
                     .toList();
 
             uniqueRelatedPersons.forEach(relatedPerson ->
-                relatedPerson.getIdentifier().forEach(identifier -> {
-                    if (identifier.getSystem().contains(Constants.IS_PATIENT_REFERRED) &&
-                            Constants.YES.equalsIgnoreCase(identifier.getValue())) {
-                        referred.addAndGet(1);
-                    }
-                })
+                    relatedPerson.getIdentifier().forEach(identifier -> {
+                        if (identifier.getSystem().contains(Constants.IS_PATIENT_REFERRED) &&
+                                Constants.YES.equalsIgnoreCase(identifier.getValue())) {
+                            referred.addAndGet(1);
+                        }
+                    })
             );
 
             observations.forEach(observation ->
-                observation.getIdentifier().forEach(identifier -> {
-                    if (FhirIdentifierConstants.OBSERVATION_TYPE_SYSTEM_URL.equals(identifier.getSystem()) &&
-                            Constants.NUTRITION_LIFESTYLE.equals(identifier.getValue())) {
-                        lifestyleCount.addAndGet(1);
-                    } else if (FhirIdentifierConstants.OBSERVATION_TYPE_SYSTEM_URL.equals(identifier.getSystem()) &&
-                            Constants.PSYCHOLOGY_ASSESSMENT.equals(identifier.getValue())) {
-                        notesCount.addAndGet(1);
-                    }
-                })
+                    observation.getIdentifier().forEach(identifier -> {
+                        if (FhirIdentifierConstants.OBSERVATION_TYPE_SYSTEM_URL.equals(identifier.getSystem()) &&
+                                Constants.NUTRITION_LIFESTYLE.equals(identifier.getValue())) {
+                            lifestyleCount.addAndGet(1);
+                        } else if (FhirIdentifierConstants.OBSERVATION_TYPE_SYSTEM_URL.equals(identifier.getSystem()) &&
+                                Constants.PSYCHOLOGY_ASSESSMENT.equals(identifier.getValue())) {
+                            notesCount.addAndGet(1);
+                        }
+                    })
             );
 
             encounters.forEach(encounter ->
-                encounter.getIdentifier().forEach(identifier -> {
-                    if (FhirIdentifierConstants.ENCOUNTER_TYPE_SYSTEM_URL.equals(identifier.getSystem()) &&
-                            FhirConstants.SCREENING.equals(identifier.getValue())) {
-                        screened.addAndGet(1);
-                    } else if (FhirIdentifierConstants.ENCOUNTER_TYPE_SYSTEM_URL.equals(identifier.getSystem()) &&
-                            PatientStatusConstants.ASSESSMENT.equals(identifier.getValue())) {
-                        assessed.addAndGet(1);
-                    } else if (FhirIdentifierConstants.ENCOUNTER_TYPE_SYSTEM_URL.equals(identifier.getSystem()) &&
-                            PatientStatusConstants.ENROLLMENT.equals(identifier.getValue())) {
-                        enrolled.addAndGet(1);
-                    }
-                })
+                    encounter.getIdentifier().forEach(identifier -> {
+                        if (FhirIdentifierConstants.ENCOUNTER_TYPE_SYSTEM_URL.equals(identifier.getSystem()) &&
+                                FhirConstants.SCREENING.equals(identifier.getValue())) {
+                            screened.addAndGet(1);
+                        } else if (FhirIdentifierConstants.ENCOUNTER_TYPE_SYSTEM_URL.equals(identifier.getSystem()) &&
+                                PatientStatusConstants.ASSESSMENT.equals(identifier.getValue())) {
+                            assessed.addAndGet(1);
+                        } else if (FhirIdentifierConstants.ENCOUNTER_TYPE_SYSTEM_URL.equals(identifier.getSystem()) &&
+                                PatientStatusConstants.ENROLLMENT.equals(identifier.getValue())) {
+                            enrolled.addAndGet(1);
+                        }
+                    })
             );
             dashboardDetails.setScreened(screened.get());
             dashboardDetails.setAssessed(assessed.get());

@@ -210,10 +210,10 @@ public class AuthenticationFilter extends OncePerRequestFilter {
      */
     protected void doLogApi(ContentCachingRequestWrapper request, ContentCachingResponseWrapper response, FilterChain filterChain) throws ServletException, IOException {
         try {
-            beforeRequest(request, response);
+//            beforeRequest(request, response);
             filterChain.doFilter(request, response);
         } finally {
-            afterRequest(request, response);
+//            afterRequest(request, response);
             response.copyBodyToResponse();
         }
     }

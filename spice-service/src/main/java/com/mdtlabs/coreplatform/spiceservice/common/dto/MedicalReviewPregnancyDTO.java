@@ -2,7 +2,6 @@ package com.mdtlabs.coreplatform.spiceservice.common.dto;
 
 import lombok.Data;
 
-import java.util.Date;
 import java.util.List;
 
 /**

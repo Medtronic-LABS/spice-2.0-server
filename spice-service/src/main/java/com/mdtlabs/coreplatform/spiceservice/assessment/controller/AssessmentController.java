@@ -1,6 +1,5 @@
 package com.mdtlabs.coreplatform.spiceservice.assessment.controller;
 
-import java.util.Objects;
 
 import com.mdtlabs.coreplatform.spiceservice.message.SuccessCode;
 import com.mdtlabs.coreplatform.spiceservice.message.SuccessResponse;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mdtlabs.coreplatform.spiceservice.assessment.service.AssessmentService;
 import com.mdtlabs.coreplatform.spiceservice.common.dto.AssessmentDTO;
-import com.mdtlabs.coreplatform.spiceservice.common.enumeration.AppointmentType;
 
 /**
  * Controller for handling assessment-related operations.

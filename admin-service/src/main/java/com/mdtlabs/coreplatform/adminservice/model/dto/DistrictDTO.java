@@ -25,7 +25,7 @@ public class DistrictDTO {
 
     private List<UserResponseDTO> users;
 
-    private Date UpdatedAt;
+    private Date updatedAt;
 
     private String status;
 

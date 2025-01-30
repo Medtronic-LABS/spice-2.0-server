@@ -269,7 +269,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     public UserResponseDTO addAdmin(UserRequestDTO request) {
         Set<Role> roles = roleService.getRolesByIds(request.getRoleIds());
         if (roles.stream().allMatch(role -> Objects.equals(Constants.ROLE_SUPER_ADMIN, role.getName())
-                || Objects.equals(Constants.ROLE_REPORT_ADMIN, role.getName()))) {
+                || Objects.equals(Constants.ROLE_REPORT_ADMIN, role.getName()) || Objects.equals(Constants.ROLE_FACILITY_REPORT_ADMIN, role.getName()))) {
             if (!Objects.isNull(request.getInsightUserOrganizationIds())
                     && !request.getInsightUserOrganizationIds().isEmpty()) {
                 List<Organization> organizationList = organizationRepository
@@ -373,7 +373,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     public UserResponseDTO updateAdmin(UserRequestDTO request) {
         Set<Role> roles = roleService.getRolesByIds(request.getRoleIds());
         if (roles.stream().allMatch(role -> Objects.equals(Constants.ROLE_SUPER_ADMIN, role.getName())
-                || Objects.equals(Constants.ROLE_REPORT_ADMIN, role.getName()))) {
+                || Objects.equals(Constants.ROLE_REPORT_ADMIN, role.getName()) || Objects.equals(Constants.ROLE_FACILITY_REPORT_ADMIN, role.getName()))) {
             if (!Objects.isNull(request.getInsightUserOrganizationIds())
                     && !request.getInsightUserOrganizationIds().isEmpty()) {
                 List<Organization> organizationList = organizationRepository
@@ -627,7 +627,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         user.setRoles(roles);
         user.setSuiteAccess(roles.stream().map(Role::getSuiteAccessName).collect(Collectors.toSet()));
         if (user.getRoles().stream().allMatch(role -> Objects.equals(Constants.ROLE_SUPER_ADMIN, role.getName())
-                || Objects.equals(Constants.ROLE_REPORT_ADMIN, role.getName()))) {
+                || Objects.equals(Constants.ROLE_REPORT_ADMIN, role.getName()) || Objects.equals(Constants.ROLE_FACILITY_REPORT_ADMIN, role.getName()))) {
             user.setOrganizations(null);
         } else if (!Objects.isNull(organization)) {
             user.getOrganizations().add(organization);

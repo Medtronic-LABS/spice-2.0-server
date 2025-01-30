@@ -467,7 +467,7 @@ public class PrescriptionRequestServiceImpl implements PrescriptionRequestServic
             if (encounters.isEmpty()) {
                 return new PrescriptionHistoryDTO();
             } else {
-                String encounterId = (String) encounters.get(0).get(Constants.ID);
+                String encounterId = (String) encounters.getLast().get(Constants.ID);
                 request.setPatientVisitId(encounterId);
                 PrescriptionHistoryDTO prescriptionHistory = getPrescriptionHistoryByVisitId(request);
                 prescriptionHistory.setHistory(encounters);

@@ -51,7 +51,7 @@ import com.mdtlabs.coreplatform.spiceservice.prescription.service.impl.Prescript
  */
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class PrescriptionServiceTest {
+class PrescriptionServiceTest {
 
     @Mock
     private AmazonS3 s3Client;
@@ -67,6 +67,7 @@ public class PrescriptionServiceTest {
 
     @BeforeEach
     public void setUp() {
+        //This method is intentionally left empty.
     }
 
     @Test

@@ -93,9 +93,8 @@ public interface CountryCustomizationRepository extends JpaRepository<CountryCus
      *
      * @param countryId
      * @param cultureId
-     * @param Category
-     * @return
+     * @param category
      */
-    public List<CountryCustomization> findByCountryIdAndCultureIdAndCategory(Long countryId, Long cultureId, String Category);
+    public List<CountryCustomization> findByCountryIdAndCultureIdAndCategory(Long countryId, Long cultureId, String category);
 
 }

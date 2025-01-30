@@ -39,8 +39,6 @@ import com.mdtlabs.coreplatform.spiceservice.staticdata.repository.SymptomReposi
 @Service
 public class BpLogServiceImpl implements BpLogService {
 
-	private final PatientTreatmentPlanService patientTreatmentPlanService;
-
 	private final SymptomRepository symptomRepository;
 
 	private final FhirServiceApiInterface fhirServiceApiInterface;
@@ -49,10 +47,8 @@ public class BpLogServiceImpl implements BpLogService {
 
 
 	@Autowired
-	public BpLogServiceImpl(PatientTreatmentPlanService patientTreatmentPlanService,
-							FhirServiceApiInterface fhirServiceApiInterface, SymptomRepository symptomRepository,
+	public BpLogServiceImpl(FhirServiceApiInterface fhirServiceApiInterface, SymptomRepository symptomRepository,
                             FollowUpService followUpService) {
-		this.patientTreatmentPlanService = patientTreatmentPlanService;
 		this.fhirServiceApiInterface = fhirServiceApiInterface;
 		this.symptomRepository = symptomRepository;
         this.followUpService = followUpService;
@@ -71,7 +67,6 @@ public class BpLogServiceImpl implements BpLogService {
 		if (Objects.nonNull(patientAssessmentDTO.getNextBpAssessmentDate())) {
 			createCallRegister(patientAssessmentDTO);
 		}
-		// TODO nextBpAssessmentDate calculation based on the patient treatment plan
 		return bpLogDTO;
 	}
 
@@ -140,9 +135,8 @@ public class BpLogServiceImpl implements BpLogService {
 		if(Objects.nonNull(patientBpLogsDTO) && Objects.nonNull(patientBpLogsDTO.getLatestBpLog()) &&
 				Objects.nonNull(patientBpLogsDTO.getLatestBpLog().getSymptoms())) {
 			List<Symptom> bpSymptoms = symptomRepository.findByNameInAndType(patientBpLogsDTO.getLatestBpLog().getSymptoms(), Constants.HYPERTENSION);
-			bpSymptoms.forEach(symptom -> {
-				symptoms.add(symptom.getName());
-			});
+			bpSymptoms.forEach(symptom ->
+				symptoms.add(symptom.getName()));
 			patientBpLogsDTO.getLatestBpLog().setSymptoms(symptoms);
 		}
 		return patientBpLogsDTO;

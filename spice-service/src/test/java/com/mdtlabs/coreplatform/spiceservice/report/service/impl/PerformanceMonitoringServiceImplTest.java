@@ -1,9 +1,16 @@
 package com.mdtlabs.coreplatform.spiceservice.report.service.impl;
 
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.times;
+import java.util.*;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 import com.mdtlabs.coreplatform.commonservice.common.CommonUtil;
 import com.mdtlabs.coreplatform.commonservice.common.model.dto.UserVillageDTO;
@@ -12,17 +19,9 @@ import com.mdtlabs.coreplatform.spiceservice.apiinterface.UserServiceApiInterfac
 import com.mdtlabs.coreplatform.spiceservice.common.Constants;
 import com.mdtlabs.coreplatform.spiceservice.common.TestDataProvider;
 import com.mdtlabs.coreplatform.spiceservice.common.dto.CallRegisterDto;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.PerformanceReport;
 import com.mdtlabs.coreplatform.spiceservice.common.dto.FilterRequestDTO;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.SearchRequestDTO;
+import com.mdtlabs.coreplatform.spiceservice.common.dto.PerformanceReport;
 import com.mdtlabs.coreplatform.spiceservice.followup.repository.CallRegisterRepository;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import java.util.*;
 
 @ExtendWith(MockitoExtension.class)
 class PerformanceMonitoringServiceImplTest {

@@ -26,13 +26,13 @@ class FormMetaServiceImplTest {
     private  FormMetaServiceImpl formMetaService;
 
     @Test
-    public void testGetMetaForms() {
+    void testGetMetaForms() {
         formMetaService.getMetaForms();
         verify(formMetaUiRepository, times(1)).findByIsDeletedFalseAndIsActiveTrue();
     }
 
     @Test
-    public void testGetMetaFormsWithValue() {
+    void testGetMetaFormsWithValue() {
         List<FormMetaUi> formMetaUi = List.of(new FormMetaUi());
         CommonUtil.getCommonListsInstance().setFormMetaUis(formMetaUi);
         List<FormMetaUi> metaForms = formMetaService.getMetaForms();
@@ -41,7 +41,7 @@ class FormMetaServiceImplTest {
     }
 
     @Test
-    public void testGetMetaFormsArgs() {
+    void testGetMetaFormsArgs() {
         FormMetaUi formMetaUi = new FormMetaUi();
         formMetaUi.setFormName("s");
         when(formMetaUiRepository.findByIsDeletedFalseAndIsActiveTrue()).thenReturn(List.of(formMetaUi));

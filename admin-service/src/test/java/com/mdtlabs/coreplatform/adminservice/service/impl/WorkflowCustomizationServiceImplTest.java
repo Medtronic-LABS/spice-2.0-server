@@ -101,7 +101,8 @@ class WorkflowCustomizationServiceImplTest {
 
     @Test
     void testRemoveCustomizationThrowsBadRequestException() {
-        assertThrows(BadRequestException.class, () -> workflowCustomizationService.removeCustomization(new SearchRequestDTO()));
+        SearchRequestDTO request = new SearchRequestDTO();
+        assertThrows(BadRequestException.class, () -> workflowCustomizationService.removeCustomization(request));
     }
 
     @Test
@@ -200,9 +201,8 @@ class WorkflowCustomizationServiceImplTest {
         when(workflowCustomizationRepository.findByIdAndIsDeletedAndTenantId(requestData.getId(), false, requestData.getTenantId()))
                 .thenReturn(null);
 
-        Exception exception = assertThrows(DataNotFoundException.class, () -> {
-            workflowCustomizationService.removeCustomization(requestData);
-        });
+       assertThrows(DataNotFoundException.class, () ->
+            workflowCustomizationService.removeCustomization(requestData));
 
     }
 

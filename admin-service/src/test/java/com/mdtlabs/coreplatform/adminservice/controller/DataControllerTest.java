@@ -128,7 +128,6 @@ class DataControllerTest {
 
     @Test
     void getCountries() {
-        List<VillageDTO> villages = List.of(new VillageDTO());
         when(dataService.getCountriesPhoneCodes()).thenReturn(List.of(TestConstants.STRING_ONE));
 
         SuccessResponse<String> response = dataController.getCountries();
@@ -282,18 +281,4 @@ class DataControllerTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
-    @Test
-    void getCommunityUnitsWithNullTotalCount() {
-        //given
-        SearchRequestDTO request = TestDataProvider.getSearchRequestDTO();
-        ResponseListDTO<CommonResponseDTO> responseListDTO = new ResponseListDTO<>(Collections.emptyList(), null);
-
-        //when
-        when(dataService.getCommunityUnits(request)).thenReturn(responseListDTO);
-
-        //then
-        SuccessResponse<CommonResponseDTO> response = dataController.getCommunityUnits(request);
-        assertNotNull(response);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-    }
 }

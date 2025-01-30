@@ -34,7 +34,7 @@ public class PatientDTO {
 
     private Long age;
 
-    private String Performer;
+    private String performer;
 
     private String memberReference;
 
@@ -44,7 +44,7 @@ public class PatientDTO {
 
     private String chw;
 
-    private String HHId;
+    private String hhid;
 
     private Boolean isPregnant;
 

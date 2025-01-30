@@ -110,4 +110,6 @@ public class PregnancyDetailsDTO {
     private NcdPatientStatus ncdPatientStatus;
 
     private Boolean isDangerSymptoms;
+
+    private String patientVisitId;
 }

@@ -11,8 +11,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -37,7 +35,7 @@ class RegionCustomizationServiceImplTest {
     }
 
     @Test
-    public void testGetRegionCustomizationsByCategory() {
+    void testGetRegionCustomizationsByCategory() {
         TestDataProvider.getStaticMock();
         regionCustomizationService.getRegionCustomizationsByCategory("s");
         verify(regionCustomizationRepository, times(1)).findByCountryIdAndCategoryAndIsActiveTrueAndIsDeletedFalse(UserContextHolder.getUserDto().getCountry().getId(), "s");

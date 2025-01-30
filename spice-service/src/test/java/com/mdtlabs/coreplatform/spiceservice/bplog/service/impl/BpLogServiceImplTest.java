@@ -1,5 +1,24 @@
 package com.mdtlabs.coreplatform.spiceservice.bplog.service.impl;
 
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
+
 import com.mdtlabs.coreplatform.commonservice.common.CommonUtil;
 import com.mdtlabs.coreplatform.commonservice.common.exception.DataNotFoundException;
 import com.mdtlabs.coreplatform.spiceservice.apiinterface.FhirServiceApiInterface;
@@ -11,39 +30,11 @@ import com.mdtlabs.coreplatform.spiceservice.common.dto.PatientBpLogsDTO;
 import com.mdtlabs.coreplatform.spiceservice.common.dto.RequestDTO;
 import com.mdtlabs.coreplatform.spiceservice.common.model.Symptom;
 import com.mdtlabs.coreplatform.spiceservice.followup.service.FollowUpService;
-import com.mdtlabs.coreplatform.spiceservice.patienttreatmentplan.service.PatientTreatmentPlanService;
 import com.mdtlabs.coreplatform.spiceservice.staticdata.repository.SymptomRepository;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.junit.jupiter.MockitoSettings;
-import org.mockito.quality.Strictness;
-
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 class BpLogServiceImplTest {
-
-    @Mock
-    private PatientTreatmentPlanService patientTreatmentPlanService;
 
     @Mock
     private FhirServiceApiInterface fhirServiceApiInterface;
@@ -80,7 +71,6 @@ class BpLogServiceImplTest {
 
         //when
         when(fhirServiceApiInterface.assessmentCreate(anyString(), anyString(), any(AssessmentDTO.class))).thenReturn(assessmentDTO);
-
         //then
         BpLogDTO result = bpLogService.addBpLog(bpLogDTO);
         assertNotNull(result);
@@ -143,7 +133,7 @@ class BpLogServiceImplTest {
     }
 
     @Test
-    public void testGetBpPatientLogsThrowsDataNotFoundWhenMemberIdNotPresent() {
+    void testGetBpPatientLogsThrowsDataNotFoundWhenMemberIdNotPresent() {
         RequestDTO requestDTO = new RequestDTO();
         assertThrows(DataNotFoundException.class, () -> bpLogService.getPatientBpLogsWithSymptoms(requestDTO));
     }

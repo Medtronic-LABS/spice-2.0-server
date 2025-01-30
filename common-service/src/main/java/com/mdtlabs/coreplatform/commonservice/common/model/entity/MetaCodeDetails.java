@@ -4,19 +4,19 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
-import org.hibernate.annotations.Type;
-
-import com.mdtlabs.coreplatform.commonservice.common.FieldConstants;
-import com.mdtlabs.coreplatform.commonservice.common.TableConstants;
-import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+
+import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 import lombok.Data;
+import org.hibernate.annotations.Type;
+
+import com.mdtlabs.coreplatform.commonservice.common.FieldConstants;
+import com.mdtlabs.coreplatform.commonservice.common.TableConstants;
 
 /**
  * This is a entity class for Metacode details.
@@ -45,6 +45,13 @@ public class MetaCodeDetails extends BaseEntity implements Serializable {
 
     @Column(name = FieldConstants.TEXT)
     private String text;
+
+    @Column(name = FieldConstants.FORM_NAME)
+    private String formName;
+
+    @Column(name = FieldConstants.FORM_DATA_ID)
+    private String formDataId;
+
 
     @Data
     public static class Code implements Serializable{

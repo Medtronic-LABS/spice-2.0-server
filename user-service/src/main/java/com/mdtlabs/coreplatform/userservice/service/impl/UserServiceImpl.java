@@ -61,6 +61,7 @@ import com.mdtlabs.coreplatform.commonservice.common.model.dto.UserSuperAdminDto
 import com.mdtlabs.coreplatform.commonservice.common.model.dto.UserVillageDTO;
 import com.mdtlabs.coreplatform.commonservice.common.model.dto.UserVillageResponseDTO;
 import com.mdtlabs.coreplatform.commonservice.common.model.dto.VillageDTO;
+import com.mdtlabs.coreplatform.commonservice.common.model.entity.Culture;
 import com.mdtlabs.coreplatform.commonservice.common.model.entity.EmailTemplate;
 import com.mdtlabs.coreplatform.commonservice.common.model.entity.Organization;
 import com.mdtlabs.coreplatform.commonservice.common.model.entity.Role;
@@ -1664,5 +1665,14 @@ public class UserServiceImpl implements UserService {
             roleIds.add(role.getId());
         }
         return userRepository.findUsersByRoleIdS(roleIds, requestDto.getTenantId(), requestDto.getSearchTerm());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void updateCulture(UserDTO requestDTO) {
+        User user = userRepository.findById(requestDTO.getId()).orElseThrow(() -> new DataNotFoundException(1010));
+        user.setCulture(modelMapper.map(requestDTO.getCulture(), Culture.class));
+        userRepository.save(user);
     }
 }

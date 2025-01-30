@@ -5,12 +5,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.mdtlabs.coreplatform.commonservice.common.model.dto.ResponseListDTO;
-import com.mdtlabs.coreplatform.spiceservice.common.Constants;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.CallRegisterDto;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.PatientRequestDTO;
-import com.mdtlabs.coreplatform.spiceservice.message.SuccessCode;
-import com.mdtlabs.coreplatform.spiceservice.message.SuccessResponse;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,19 +13,16 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
+import org.springframework.http.HttpStatus;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 
+import com.mdtlabs.coreplatform.commonservice.common.model.dto.ResponseListDTO;
 import com.mdtlabs.coreplatform.spiceservice.common.TestDataProvider;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.FollowUpCriteria;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.FollowUpDTO;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.RequestDTO;
+import com.mdtlabs.coreplatform.spiceservice.common.dto.*;
 import com.mdtlabs.coreplatform.spiceservice.followup.service.FollowUpService;
-import org.springframework.http.HttpStatus;
+import com.mdtlabs.coreplatform.spiceservice.message.SuccessResponse;
 
 /**
  * <p>
@@ -120,8 +111,8 @@ class FollowUpControllerTest {
 
         SuccessResponse<FollowUpDTO> response = followUpController.getFollowUpPatients(patientRequestDTO);
 
-        assertNotNull(response);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
     @Test
@@ -131,8 +122,8 @@ class FollowUpControllerTest {
 
         SuccessResponse<CallRegisterDto> response = followUpController.getPendingCallRegister();
 
-        assertNotNull(response);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
 
@@ -150,11 +141,11 @@ class FollowUpControllerTest {
 
         List<FollowUpDTO> result = followUpController.getOfflineScreeningFollowUps(patientRequestDTO);
 
-        assertEquals(1, result.size());
+        Assertions.assertEquals(1, result.size());
     }
 
     @Test
-    public void testGetOfflineAssessmentFollowUps() {
+    void testGetOfflineAssessmentFollowUps() {
         List<FollowUpDTO> firstBatch = new ArrayList<>();
         firstBatch.add(TestDataProvider.getFollowUpDTO());
 
@@ -168,9 +159,9 @@ class FollowUpControllerTest {
 
         PatientRequestDTO patientRequestDTO = TestDataProvider.getPatientRequestDTO();
         List<FollowUpDTO> result = followUpController.getOfflineAssessmentFollowUps(patientRequestDTO);
-        assertNotNull(result);
-        assertEquals(2, result.size());
-        assertEquals(firstBatch.get(0).getName(), result.get(0).getName());
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(2, result.size());
+        Assertions.assertEquals(firstBatch.getFirst().getName(), result.getFirst().getName());
     }
 
     @Test
@@ -188,9 +179,9 @@ class FollowUpControllerTest {
 
         PatientRequestDTO patientRequestDTO = TestDataProvider.getPatientRequestDTO();
         List<FollowUpDTO> result = followUpController.getOfflineMedicalReviewFollowUps(patientRequestDTO);
-        assertNotNull(result);
-        assertEquals(2, result.size());
-        assertEquals(firstBatch.get(0).getName(), result.get(0).getName());
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(2, result.size());
+        Assertions.assertEquals(firstBatch.getFirst().getName(), result.getFirst().getName());
     }
 
     @Test
@@ -198,14 +189,13 @@ class FollowUpControllerTest {
         FollowUpDTO followUpDTO = TestDataProvider.getFollowUpDTO();
         when(followUpService.updateNcdFollowUp(any())).thenReturn(followUpDTO);
         SuccessResponse<FollowUpDTO> response = followUpController.updateNcdFollowUp(followUpDTO);
-        assertNotNull(response);
+        Assertions.assertNotNull(response);
     }
 
     @Test
     void getOfflineLostToFollowUps() {
         PatientRequestDTO patientRequestDTO = TestDataProvider.getPatientRequestDTO();
-        List<FollowUpDTO> lostToFollowUpList = List.of(TestDataProvider.getFollowUpDTO());
         List<FollowUpDTO> result = followUpController.getOfflineLostToFollowUps(patientRequestDTO);
-        assertNotNull(result);
+        Assertions.assertNotNull(result);
     }
 }

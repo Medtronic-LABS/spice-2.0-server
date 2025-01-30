@@ -21,7 +21,7 @@ import static org.mockito.Mockito.times;
  */
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class AdminServiceApplicationTest {
+class AdminServiceApplicationTest {
     private static final String ARG = "";
     private static final String[] ARGS = new String[]{ARG};
 

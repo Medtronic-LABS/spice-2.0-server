@@ -17,4 +17,6 @@ public class SymptomDTO {
     private String name;
 
     private String otherSymptom;
+
+    private String type;
 }
