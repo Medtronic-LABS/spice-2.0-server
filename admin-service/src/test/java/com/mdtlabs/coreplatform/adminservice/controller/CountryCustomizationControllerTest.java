@@ -29,7 +29,7 @@ class CountryCustomizationControllerTest {
 
 
     @Test
-    public void testAddCustomization() {
+    void testAddCustomization() {
         CountryCustomizationDTO customizationDto = new CountryCustomizationDTO();
 
         when(countryCustomizationService.createCustomization(any(CountryCustomization.class))).thenReturn(null);
@@ -39,7 +39,7 @@ class CountryCustomizationControllerTest {
     }
 
     @Test
-    public void testGetCustomization() {
+    void testGetCustomization() {
         CustomizationRequestDTO requestDto = new CustomizationRequestDTO();
         CountryCustomization customization = new CountryCustomization();
 
@@ -51,7 +51,7 @@ class CountryCustomizationControllerTest {
     }
 
     @Test
-    public void testUpdateCustomization() {
+    void testUpdateCustomization() {
         CountryCustomizationDTO customizationDto = new CountryCustomizationDTO();
 
         when(countryCustomizationService.updateCustomization(any(CountryCustomization.class))).thenReturn(null);
@@ -61,7 +61,7 @@ class CountryCustomizationControllerTest {
     }
 
     @Test
-    public void testGetCountryCustomizations() {
+    void testGetCountryCustomizations() {
         long cultureId = 1L;
         List<CountryCustomization> customizations = new ArrayList<>();
 
@@ -72,7 +72,7 @@ class CountryCustomizationControllerTest {
     }
 
     @Test
-    public void testGetCountryCustomizationsByCategory() {
+    void testGetCountryCustomizationsByCategory() {
         long cultureId = 1L;
         String category = "exampleCategory";
         List<CountryCustomization> customizations = new ArrayList<>();

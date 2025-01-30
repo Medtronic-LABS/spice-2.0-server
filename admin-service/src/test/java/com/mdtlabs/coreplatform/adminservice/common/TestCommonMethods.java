@@ -42,8 +42,7 @@ public class TestCommonMethods {
         userSelectedTenantContextHolder.when(UserSelectedTenantContextHolder::get).thenReturn(1L);
     }
     public static UserDTO getUserDTO() {
-        UserDTO userDTO = modelMapper.map(TestDataProvider.getUser(), UserDTO.class);
-        return userDTO;
+        return modelMapper.map(TestDataProvider.getUser(), UserDTO.class);
     }
 
     public static void getStaticMockValidation(String searchTerm) {

@@ -1,12 +1,7 @@
 package com.mdtlabs.coreplatform.spiceservice.deviceDetails.service;
 
-import com.mdtlabs.coreplatform.commonservice.common.contexts.UserContextHolder;
-import com.mdtlabs.coreplatform.commonservice.common.model.dto.UserContextDTO;
-import com.mdtlabs.coreplatform.commonservice.common.model.entity.DeviceDetails;
-import com.mdtlabs.coreplatform.spiceservice.common.TestConstants;
-import com.mdtlabs.coreplatform.spiceservice.common.TestDataProvider;
-import com.mdtlabs.coreplatform.spiceservice.devicedetails.repository.DeviceDetailsRepository;
-import com.mdtlabs.coreplatform.spiceservice.devicedetails.service.impl.DeviceDetailsServiceImpl;
+import java.util.Date;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -16,14 +11,18 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import org.modelmapper.ModelMapper;
 
-import java.util.Date;
+import static org.mockito.Mockito.*;
 
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
+import com.mdtlabs.coreplatform.commonservice.common.model.dto.UserContextDTO;
+import com.mdtlabs.coreplatform.commonservice.common.model.entity.DeviceDetails;
+import com.mdtlabs.coreplatform.spiceservice.common.TestConstants;
+import com.mdtlabs.coreplatform.spiceservice.common.TestDataProvider;
+import com.mdtlabs.coreplatform.spiceservice.devicedetails.repository.DeviceDetailsRepository;
+import com.mdtlabs.coreplatform.spiceservice.devicedetails.service.impl.DeviceDetailsServiceImpl;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class DeviceDetailsServiceImplTest {
+class DeviceDetailsServiceImplTest {
     @InjectMocks
     private DeviceDetailsServiceImpl deviceDetailsServiceImpl;
     @Mock
@@ -37,6 +36,7 @@ public class DeviceDetailsServiceImplTest {
         DeviceDetails deviceDetails = new DeviceDetails();
         when(deviceDetailsRepository.findByRefIdAndIsDeletedFalseAndIsActiveTrue(refId)).thenReturn(deviceDetails);
         deviceDetailsServiceImpl.getDeviceByRefId(refId);
+        verify(deviceDetailsRepository, atLeastOnce()).findByRefIdAndIsDeletedFalseAndIsActiveTrue(refId);
     }
 
     @Test
@@ -45,6 +45,8 @@ public class DeviceDetailsServiceImplTest {
         DeviceDetails deviceDetails = new DeviceDetails();
         when(deviceDetailsRepository.findByRefIdAndIsDeletedFalseAndIsActiveTrue(deviceInfoId)).thenReturn(deviceDetails);
         deviceDetailsServiceImpl.findByRefId(deviceInfoId);
+        verify(deviceDetailsRepository, atLeastOnce()).findByRefIdAndIsDeletedFalseAndIsActiveTrue(deviceInfoId);
+
     }
 
     @Test
@@ -66,7 +68,8 @@ public class DeviceDetailsServiceImplTest {
                         existingDeviceDetails.getDeviceId())).thenReturn(existingDeviceDetails);
         when(deviceDetailsRepository.save(existingDeviceDetails)).thenReturn(existingDeviceDetails);
         deviceDetailsServiceImpl.validateDeviceDetails(existingDeviceDetails);
+        verify(deviceDetailsRepository, atLeastOnce()).findByUserIdAndTenantIdAndDeviceIdAndIsDeletedFalseAndIsActiveTrue(TestConstants.ONE, existingDeviceDetails.getTenantId(),
+                existingDeviceDetails.getDeviceId());
         TestDataProvider.cleanUp();
-
     }
 }

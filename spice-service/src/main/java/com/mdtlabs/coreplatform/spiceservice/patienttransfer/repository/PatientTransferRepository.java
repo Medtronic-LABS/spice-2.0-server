@@ -1,7 +1,6 @@
 package com.mdtlabs.coreplatform.spiceservice.patienttransfer.repository;
 
 import java.util.List;
-import java.util.Map;
 
 import feign.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,8 +9,6 @@ import org.springframework.stereotype.Repository;
 
 import com.mdtlabs.coreplatform.commonservice.common.model.entity.PatientTransfer;
 import com.mdtlabs.coreplatform.commonservice.common.model.enumeration.PatientTransferStatus;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.RequestDTO;
-import com.mdtlabs.coreplatform.spiceservice.common.model.CallRegister;
 
 /**
  * <p>

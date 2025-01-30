@@ -33,6 +33,16 @@ public interface SpiceServiceApiInterface {
             @RequestHeader(Constants.CLIENT) String client);
 
     /**
+     * Add metadata in Redis
+     *
+     * @param authorization auth token
+     * @param client auth client
+     */
+    @PostMapping("/static-data/set-meta-data-cache")
+    void setMetaData(@RequestHeader(Constants.AUTHORIZATION) String authorization,
+                                      @RequestHeader(Constants.CLIENT) String client);
+
+    /**
      * Creates a Member Link notification to map with household
      *
      * @param token auth token

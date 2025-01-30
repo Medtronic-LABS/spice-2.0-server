@@ -5,14 +5,13 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Objects;
 
-import com.mdtlabs.coreplatform.commonservice.common.model.dto.UserContextDTO;
 import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mdtlabs.coreplatform.commonservice.common.contexts.UserContextHolder;
-import com.mdtlabs.coreplatform.commonservice.common.model.dto.UserDTO;
+import com.mdtlabs.coreplatform.commonservice.common.model.dto.UserContextDTO;
 import com.mdtlabs.coreplatform.commonservice.common.model.entity.DeviceDetails;
 import com.mdtlabs.coreplatform.spiceservice.common.Constants;
 import com.mdtlabs.coreplatform.spiceservice.devicedetails.repository.DeviceDetailsRepository;

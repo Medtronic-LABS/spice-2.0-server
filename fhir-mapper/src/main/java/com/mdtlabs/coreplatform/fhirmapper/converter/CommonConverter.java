@@ -199,6 +199,7 @@ public class CommonConverter {
                 .setSystem(FhirIdentifierConstants.FHIR_YES_NO_CODE)
                 .setCode(Boolean.TRUE.equals(isRegularSmoker) ? Constants.YES_CODE : Constants.NO_CODE)
                 .setDisplay(Boolean.TRUE.equals(isRegularSmoker) ? Constants.YES : Constants.NO);
+        observation.getValueCodeableConcept().setText(Boolean.FALSE.equals(isRegularSmoker) ? Constants.NO : Constants.YES);
         if (Objects.nonNull(date)) {
             observation.setEffective(new DateTimeType(date));
         } else {
@@ -376,7 +377,7 @@ public class CommonConverter {
 
         if (Objects.nonNull(encounter) && Objects.nonNull(encounter.getIdPart())) {
             observation.setEncounter(new Reference(
-                    String.format(FhirConstants.ENCOUNTER_IDENTIFIER_URL, encounter.getIdPart())));
+                    String.format(FhirConstants.ENCOUNTER_ID, encounter.getIdPart())));
         } else if (Objects.nonNull(encounter)) {
             observation.setEncounter(new Reference(FhirConstants.ENCOUNTER_IDENTIFIER_URL));
         }
@@ -1104,7 +1105,9 @@ public class CommonConverter {
      */
     public Location getLocationFromBundle(Bundle bundle, String identifier) {
         Optional<Resource> resourceOpt = this.getResourceFromBundleByIdentifier(bundle, identifier);
-        if (resourceOpt.isPresent() && resourceOpt.get() instanceof Location location) {
+
+        if (resourceOpt.isPresent() && resourceOpt.get() instanceof Location
+                location) {
             return location;
         } else {
             return null;
@@ -1142,6 +1145,7 @@ public class CommonConverter {
      */
     public Location getLocationFromBundleByIdentifier(Bundle bundle, String identifier) {
         Optional<Resource> resourceOpt = this.getResourceFromBundleByIdentifier(bundle, identifier);
+
         if (resourceOpt.isPresent() && resourceOpt.get() instanceof Location location) {
             return location;
         } else {
@@ -1315,9 +1319,9 @@ public class CommonConverter {
             Condition hypertensionCondition = patientStatusConverter.createHypertensionStatus(patientStatusDto,
                     hypertensionConditionReference.get());
             patientStatusConverter.setReference(diabetesCondition, patientStatusDto.getPatientReference(),
-                    patientStatusDto.getPatientVisitId());
+                    patientStatusDto.getPatientVisitId(), patientStatusDto.getMemberReference());
             patientStatusConverter.setReference(hypertensionCondition, patientStatusDto.getPatientReference(),
-                    patientStatusDto.getPatientVisitId());
+                    patientStatusDto.getPatientVisitId(), patientStatusDto.getMemberReference());
             this.setConditionInBundle(bundle, diabetesCondition,
                     FhirConstants.PATIENT_STATUS_DIABETES_IDENTIFIER_URL, isUpdate, patientStatusDto.getProvenance());
             this.setConditionInBundle(bundle, hypertensionCondition,
@@ -1342,8 +1346,7 @@ public class CommonConverter {
         resultBundle.getEntry().stream().map(Bundle.BundleEntryComponent::getResource)
                 .filter(Condition.class::isInstance)
                 .map(Condition.class::cast)
-                .forEach(confirmedNCDCondition::set
-                );
+                .forEach(confirmedNCDCondition::set);
         return confirmedNCDCondition.get();
     }
 
@@ -1364,7 +1367,7 @@ public class CommonConverter {
         condition = patientStatusConverter.createConfirmedNCDStatus(patientStatusDto,
                 condition);
         patientStatusConverter.setReference(condition, patientStatusDto.getPatientReference(),
-                patientStatusDto.getPatientVisitId());
+                patientStatusDto.getPatientVisitId(), patientStatusDto.getMemberReference());
         this.setConditionInBundle(bundle, condition,
                 FhirConstants.PATIENT_DIAGNOSIS_IDENTIFIER_URL, isUpdate, patientStatusDto.getProvenance());
     }
@@ -1395,14 +1398,14 @@ public class CommonConverter {
         if (mentalHealth.hasVerificationStatus()) {
             uuid = fhirUtils.getUniqueId();
             patientStatusConverter.setReference(mentalHealth, patientStatusDto.getPatientReference(),
-                    patientStatusDto.getPatientVisitId());
+                    patientStatusDto.getPatientVisitId(), patientStatusDto.getMemberReference());
             this.setConditionInBundle(bundle, mentalHealth,
                     StringUtil.concatString(Constants.FHIR_BASE_URL, uuid), Objects.nonNull(mentalHealthCondition.get()), patientStatusDto.getProvenance());
         }
         if (substance.hasVerificationStatus()) {
             uuid = fhirUtils.getUniqueId();
             patientStatusConverter.setReference(substance, patientStatusDto.getPatientReference(),
-                    patientStatusDto.getPatientVisitId());
+                    patientStatusDto.getPatientVisitId(), patientStatusDto.getMemberReference());
             this.setConditionInBundle(bundle, substance,
                     StringUtil.concatString(Constants.FHIR_BASE_URL, uuid), Objects.nonNull(substanceCondition.get()), patientStatusDto.getProvenance());
         }
@@ -1426,7 +1429,7 @@ public class CommonConverter {
         condition = patientStatusConverter.createConfirmedMentalHealthStatus(patientStatusDto,
                 condition);
         patientStatusConverter.setReference(condition, patientStatusDto.getPatientReference(),
-                patientStatusDto.getPatientVisitId());
+                patientStatusDto.getPatientVisitId(), patientStatusDto.getMemberReference());
         this.setConditionInBundle(bundle, condition,
                 StringUtil.concatString(Constants.FHIR_BASE_URL, uuid), isUpdate, patientStatusDto.getProvenance());
     }

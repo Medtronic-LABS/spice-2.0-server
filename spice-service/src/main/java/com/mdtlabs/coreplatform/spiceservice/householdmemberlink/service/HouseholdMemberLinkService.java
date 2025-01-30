@@ -3,7 +3,6 @@ package com.mdtlabs.coreplatform.spiceservice.householdmemberlink.service;
 import com.mdtlabs.coreplatform.spiceservice.common.dto.HouseholdMemberDTO;
 import com.mdtlabs.coreplatform.spiceservice.common.dto.HouseholdMemberLinkDTO;
 import com.mdtlabs.coreplatform.spiceservice.common.dto.RequestDTO;
-import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 

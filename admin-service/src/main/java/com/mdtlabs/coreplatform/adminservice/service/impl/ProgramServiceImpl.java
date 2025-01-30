@@ -46,7 +46,7 @@ public class ProgramServiceImpl implements ProgramService {
 
 	private final ProgramRepository programRepository;
     private final HealthFacilityService healthFacilityService;
-	private ModelMapper mapper = new ModelMapper();;
+	private ModelMapper mapper = new ModelMapper();
 
     @Autowired
     public ProgramServiceImpl(ProgramRepository programRepository, HealthFacilityService healthFacilityService) {

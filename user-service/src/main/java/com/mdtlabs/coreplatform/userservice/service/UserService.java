@@ -8,6 +8,7 @@ import com.mdtlabs.coreplatform.commonservice.common.model.dto.CommonRequestDTO;
 import com.mdtlabs.coreplatform.commonservice.common.model.dto.ResponseListDTO;
 import com.mdtlabs.coreplatform.commonservice.common.model.dto.RoleResponseDTO;
 import com.mdtlabs.coreplatform.commonservice.common.model.dto.SearchRequestDTO;
+import com.mdtlabs.coreplatform.commonservice.common.model.dto.UserDTO;
 import com.mdtlabs.coreplatform.commonservice.common.model.dto.UserPreferencesDTO;
 import com.mdtlabs.coreplatform.commonservice.common.model.dto.UserRequestDTO;
 import com.mdtlabs.coreplatform.commonservice.common.model.dto.UserResponseDTO;
@@ -572,4 +573,13 @@ public interface UserService {
      * @return a SuccessResponse containing the list of users, a success code, the size of the list, and the HTTP status.
      */
     List<User> getUserListByRole(CommonRequestDTO requestDTO);
+
+    /**
+     * <p>
+     * This method used to update culture for user.
+     * </p>
+     *
+     * @param requestDTO
+     */
+    void updateCulture(UserDTO requestDTO);
 }

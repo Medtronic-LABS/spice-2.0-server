@@ -21,7 +21,6 @@ import org.hl7.fhir.r4.model.Patient;
 import org.hl7.fhir.r4.model.Resource;
 import org.hl7.fhir.r4.model.ResourceType;
 import org.hl7.fhir.r4.model.ServiceRequest;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -82,11 +81,10 @@ public class HistoryServiceImpl implements HistoryService {
 
     private final RestApiUtil restApiUtil;
 
-    @Autowired
     public HistoryServiceImpl(FhirUtils fhirUtils, GeneralMedicalReviewService generalMedicalReviewService,
                               IccmMedicalReviewService iccmMedicalReviewService, MedicalReviewPregnancyANCService medicalReviewPregnancyANCService,
-                              MedicalReviewPregnancyPNCService medicalReviewPregnancyPNCService, LabourServiceImpl labourService, PatientService patientService,
-                              NcdMedicalReviewService ncdMedicalReviewService, RestApiUtil restApiUtil) {
+                              MedicalReviewPregnancyPNCService medicalReviewPregnancyPNCService, LabourServiceImpl labourService,
+                              PatientService patientService, NcdMedicalReviewService ncdMedicalReviewService, RestApiUtil restApiUtil) {
         this.fhirUtils = fhirUtils;
         this.generalMedicalReviewService = generalMedicalReviewService;
         this.iccmMedicalReviewService = iccmMedicalReviewService;
@@ -177,7 +175,7 @@ public class HistoryServiceImpl implements HistoryService {
                         setMedicalReviewHistoryDetails(medicalReviewHistory, encounter, requestDTO, isPncHistory);
                     }
                     isFirst = false;
-                } else if (ResourceType.ServiceRequest.equals(entry.getResource().getResourceType()) && Objects.nonNull(medicalReviewHistory.getNextVisitDate())) {
+                } else if (ResourceType.ServiceRequest.equals(entry.getResource().getResourceType()) || Objects.nonNull(medicalReviewHistory.getNextVisitDate())) {
                     ServiceRequest serviceRequest = (ServiceRequest) entry.getResource();
                     medicalReviewHistory.setNextVisitDate(getNextVisitDateFromServiceRequest(serviceRequest));
                 }
@@ -489,7 +487,7 @@ public class HistoryServiceImpl implements HistoryService {
                     if (resource.getResource() instanceof Encounter encounter) {
                         patientVisits.add(Map.of(Constants.ID, encounter.getIdPart(), Constants.DATE, encounter.getPeriod().getStart()));
                     }
-                    Bundle.BundleEntryComponent encounterComponent = bundle.getEntry().getFirst();
+                    Bundle.BundleEntryComponent encounterComponent = bundle.getEntry().getLast();
                     if (encounterComponent.getResource() instanceof Encounter encounter) {
                         requestDTO.setPatientVisitId(encounter.getIdPart());
                         response.setPatientVisitId(encounter.getIdPart());
@@ -521,10 +519,14 @@ public class HistoryServiceImpl implements HistoryService {
         List<Resource> resources = new ArrayList<>();
 
         if (!batchRequest.getEntry().isEmpty()) {
-            batchRequest.getEntry().forEach(resource -> resources.add(resource.getResource()));
+            batchRequest.getEntry().forEach(resource ->
+                    resources.add(resource.getResource())
+            );
         }
         resources.sort(Comparator.comparing(resource -> resource.getMeta().getLastUpdated()));
-        resources.stream().forEach(resource -> getObservationResponse(response, resource));
+        resources.stream().forEach(resource ->
+                getObservationResponse(response, resource)
+        );
     }
 
     /**
@@ -646,7 +648,9 @@ public class HistoryServiceImpl implements HistoryService {
             if (Constants.OBSERVATION_PHYSICAL_EXAMINATION.equals(observation.getCode().getText())) {
                 AtomicReference<String> notes = new AtomicReference<>();
                 if (observation.hasNote()) {
-                    observation.getNote().forEach(note -> notes.set(String.valueOf(note.getText())));
+                    observation.getNote().forEach(note ->
+                            notes.set(String.valueOf(note.getText()))
+                    );
                 }
                 List<PhysicalExamDTO> physicalExamDTOS = new ArrayList<>();
                 PhysicalExamDTO physicalExamDTO = new PhysicalExamDTO();

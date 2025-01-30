@@ -100,6 +100,9 @@ public class HealthFacility extends TenantBaseEntity {
                     @JoinColumn(name = FieldConstants.CUSTOMIZED_WORFKLOW_ID) })
     private List<ClinicalWorkflow> customizedWorkflows;
 
+    @Column(name = FieldConstants.ORG_UNIT_ID)
+    private String orgUnitId;
+
     public HealthFacility(String name, String code, Country country, District district, Chiefdom chiefdom) {
         this.name = name;
         this.code = code;

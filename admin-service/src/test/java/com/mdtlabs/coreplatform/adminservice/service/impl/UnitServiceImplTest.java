@@ -20,7 +20,7 @@ class UnitServiceImplTest {
     UnitServiceImpl unitService;
 
     @Test
-    public void testGetUnitsByType() {
+    void testGetUnitsByType() {
         unitService.getUnitsByType("S");
         verify(unitRepository, times(1)).findByTypeAndIsActiveTrueAndIsDeletedFalse("S");
     }

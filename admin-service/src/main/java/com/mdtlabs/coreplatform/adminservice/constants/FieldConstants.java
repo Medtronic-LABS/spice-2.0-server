@@ -1,7 +1,5 @@
 package com.mdtlabs.coreplatform.adminservice.constants;
 
-import lombok.NoArgsConstructor;
-
 /**
  * <p>
  * The FieldConstants class contains constants for various field names used in a Java application.
@@ -9,8 +7,9 @@ import lombok.NoArgsConstructor;
  *
  * @author Karthick Created on Jan 11, 2024
  */
-@NoArgsConstructor
 public final class FieldConstants {
+
+    private FieldConstants() {}
 
     //health facility params
     public static final String PHU_FOCAL_PERSON_NAME = "phu_focal_person_name";

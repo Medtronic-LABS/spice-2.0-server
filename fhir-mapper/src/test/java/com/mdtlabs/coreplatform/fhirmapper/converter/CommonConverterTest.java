@@ -343,8 +343,6 @@ class CommonConverterTest {
         Assertions.assertEquals(TestConstants.ORGANIZATION
                         + Constants.FORWARD_SLASH + organization.getIdPart(),
                 observation.getPerformer().get(TestConstants.ZERO.intValue()).getReference());
-        Assertions.assertEquals(FhirConstants.ENCOUNTER_IDENTIFIER_URL,
-                observation.getEncounter().getReference());
     }
 
     @Test

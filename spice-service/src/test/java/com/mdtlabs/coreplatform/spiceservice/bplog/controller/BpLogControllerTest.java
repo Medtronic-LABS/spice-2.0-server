@@ -1,9 +1,5 @@
 package com.mdtlabs.coreplatform.spiceservice.bplog.controller;
 
-import com.mdtlabs.coreplatform.spiceservice.bplog.service.BpLogService;
-import com.mdtlabs.coreplatform.spiceservice.common.TestConstants;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.BpLogDTO;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.RequestDTO;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -12,6 +8,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.verify;
+
+import com.mdtlabs.coreplatform.spiceservice.bplog.service.BpLogService;
+import com.mdtlabs.coreplatform.spiceservice.common.TestConstants;
+import com.mdtlabs.coreplatform.spiceservice.common.dto.BpLogDTO;
+import com.mdtlabs.coreplatform.spiceservice.common.dto.RequestDTO;
 
 @ExtendWith(MockitoExtension.class)
 class BpLogControllerTest {

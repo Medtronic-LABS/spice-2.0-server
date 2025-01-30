@@ -1,9 +1,8 @@
 package com.mdtlabs.coreplatform.spiceservice.metadata.service;
 
 
-import com.mdtlabs.coreplatform.commonservice.common.model.entity.Timezone;
-import com.mdtlabs.coreplatform.commonservice.common.repository.GenericRepository;
-import com.mdtlabs.coreplatform.spiceservice.metadata.service.impl.TimezoneServiceImpl;
+import java.util.Optional;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -12,14 +11,16 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
-import java.util.Optional;
-
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+
+import com.mdtlabs.coreplatform.commonservice.common.model.entity.Timezone;
+import com.mdtlabs.coreplatform.commonservice.common.repository.GenericRepository;
+import com.mdtlabs.coreplatform.spiceservice.metadata.service.impl.TimezoneServiceImpl;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class TimezoneServiceImplTest {
+class TimezoneServiceImplTest {
 
     @InjectMocks
     private TimezoneServiceImpl timezoneService;
@@ -34,5 +35,6 @@ public class TimezoneServiceImplTest {
 
         //then
         timezoneService.findById(1L);
+        verify(genericRepository, atLeastOnce()).findById(anyLong());
     }
 }

@@ -17,7 +17,6 @@ import com.mdtlabs.coreplatform.spiceservice.common.dto.RequestDTO;
 import com.mdtlabs.coreplatform.spiceservice.common.dto.EnrollmentRequestDTO;
 import com.mdtlabs.coreplatform.spiceservice.common.dto.EnrollmentResponseDTO;
 import com.mdtlabs.coreplatform.spiceservice.common.dto.ScreeningLogRequestDTO;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.DiagnosisDTO.DiseaseDTO;
 import com.mdtlabs.coreplatform.spiceservice.common.dto.WgsDataDTO;
 
 /**

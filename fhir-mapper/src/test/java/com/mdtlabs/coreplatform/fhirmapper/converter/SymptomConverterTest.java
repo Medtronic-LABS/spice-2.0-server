@@ -71,7 +71,7 @@ class SymptomConverterTest {
         }
 
         //then
-        List<String> response = symptomConverter.getSymptomListByBundle(bundle);
+        List<String> response = symptomConverter.getSymptomListByBundle(bundle, Boolean.TRUE);
         Assertions.assertNotNull(response);
     }
 

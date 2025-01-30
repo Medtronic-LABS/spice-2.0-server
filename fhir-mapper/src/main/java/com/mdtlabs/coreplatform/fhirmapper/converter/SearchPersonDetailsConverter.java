@@ -142,8 +142,13 @@ public class SearchPersonDetailsConverter {
                                         Observation observation) {
         PregnancyDetailsDTO pregnancyDetailsDTO = new PregnancyDetailsDTO();
 
-        if (Objects.nonNull(observation) && Observation.ObservationStatus.PRELIMINARY.equals(observation.getStatus())) {
-            pregnancyConverter.convertObservationToPregnancyDetails(pregnancyDetailsDTO, observation);
+        if (Objects.nonNull(observation)) {
+            if (Observation.ObservationStatus.PRELIMINARY.equals(observation.getStatus())) {
+                pregnancyConverter.convertObservationToPregnancyDetails(pregnancyDetailsDTO, observation);
+            }
+            if (Observation.ObservationStatus.FINAL.equals(observation.getStatus())) {
+                pregnancyDetailsDTO.setIsPregnant(Boolean.FALSE);
+            }
             patientDetailsDTO.setIsPregnant(pregnancyDetailsDTO.getIsPregnant());
             pregnancyDetailsDTO.setIsDangerSymptoms(patientDetailsDTO.getRedRiskPatient());
             patientDetailsDTO.setPregnancyDetails(pregnancyDetailsDTO);

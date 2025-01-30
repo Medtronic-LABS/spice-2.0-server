@@ -27,7 +27,7 @@ public interface CultureRepository extends JpaRepository<Culture, Long> {
      * 
      * @return List of culture entities.
      */
-    public List<Culture> findByIsDeletedFalseAndIsActiveTrue();
+    List<Culture> findByIsDeletedFalseAndIsActiveTrue();
     
     /**
      * <p>
@@ -37,6 +37,6 @@ public interface CultureRepository extends JpaRepository<Culture, Long> {
      * @param name
      * @return Culture entity.
      */
-    public Culture findByNameIgnoreCase(String name);
+    Culture findByNameIgnoreCase(String name);
 
 }

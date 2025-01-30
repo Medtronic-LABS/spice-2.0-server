@@ -490,6 +490,7 @@ public class GeneralMedicalReviewServiceImpl implements GeneralMedicalReviewServ
                     patientStatusDto.getProvenance().getOrganizationId())));
             commonConverter.setPatientAndRelatedPersonLink(patient, relatedPerson);
             setPatientStatus(relatedPerson, patient);
+            commonConverter.setRelatedPersonDetailsInBundle(bundle, relatedPerson, null, patientStatusDto.getProvenance());
         }
         commonConverter.setPatientDetailsInBundle(bundle, patient,
                 FhirConstants.PATIENT_IDENTIFIER_URL, patientStatusDto.getProvenance());
@@ -611,9 +612,7 @@ public class GeneralMedicalReviewServiceImpl implements GeneralMedicalReviewServ
         AtomicReference<String> uuid = new AtomicReference<>();
         Map<String, List<String>> diagnosisCategories = new HashMap<>();
         Map<String, List<String>> diagnosisMap = new HashMap<>();
-        if (Objects.nonNull(confirmDiagnosisDTO.getDiagnosisNotes())) {
-            diagnosisMap.put(Constants.OTHER, null);
-        }
+        diagnosisMap.put(Constants.OTHER, null);
         List<String> requestDiagnosis = new ArrayList<>();
         for (DiagnosisDTO diagnosis : confirmDiagnosisDTO.getConfirmDiagnosis()) {
             requestDiagnosis.add(diagnosis.getType());
@@ -635,7 +634,8 @@ public class GeneralMedicalReviewServiceImpl implements GeneralMedicalReviewServ
                     Condition condition = commonConverter.getConfirmDiagnosis(confirmDiagnosisDTO.getPatientReference(), type);
                     Condition diagnosisCondition = patientStatusConverter.updateConfirmedDiagnosis(confirmDiagnosisDTO,
                             condition, type, diagnosis);
-                    patientStatusConverter.setReference(diagnosisCondition, confirmDiagnosisDTO.getPatientReference(), null);
+                    patientStatusConverter.setReference(diagnosisCondition, confirmDiagnosisDTO.getPatientReference(),
+                            null, confirmDiagnosisDTO.getMemberReference());
                     commonConverter.setConditionInBundle(bundle, diagnosisCondition,
                             FhirConstants.PATIENT_DIAGNOSIS_IDENTIFIER_URL.concat(uuid.get()), Objects.nonNull(condition),
                             confirmDiagnosisDTO.getProvenanceDTO());

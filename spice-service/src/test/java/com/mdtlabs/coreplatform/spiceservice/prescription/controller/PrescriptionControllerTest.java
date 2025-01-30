@@ -1,16 +1,8 @@
 package com.mdtlabs.coreplatform.spiceservice.prescription.controller;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mdtlabs.coreplatform.spiceservice.common.TestDataProvider;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.PrescriptionPredictionDTO;
-import org.hibernate.collection.spi.PersistentList;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,14 +16,10 @@ import org.springframework.mock.web.MockMultipartFile;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
-import com.mdtlabs.coreplatform.spiceservice.common.dto.PrescriptionDTO;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.PrescriptionHistoryDTO;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.PrescriptionRequestDTO;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.RequestDTO;
+import com.mdtlabs.coreplatform.spiceservice.common.TestDataProvider;
+import com.mdtlabs.coreplatform.spiceservice.common.dto.*;
 import com.mdtlabs.coreplatform.spiceservice.message.SuccessResponse;
 import com.mdtlabs.coreplatform.spiceservice.prescription.service.PrescriptionService;
 

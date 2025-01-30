@@ -24,6 +24,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import com.mdtlabs.coreplatform.commonservice.common.logger.Logger;
 import com.mdtlabs.coreplatform.spiceservice.common.dto.CallRegisterDto;
 import com.mdtlabs.coreplatform.commonservice.common.CommonUtil;
 import com.mdtlabs.coreplatform.commonservice.common.contexts.UserContextHolder;
@@ -784,7 +785,7 @@ public class FollowUpServiceImpl implements FollowUpService {
                 patientRequestDTO.getType(), patientRequestDTO.getLastSyncTime(),
                 patientRequestDTO.getCurrentSyncTime(), Objects.isNull(patientRequestDTO.getVillageIds())
                         ? null : patientRequestDTO.getVillageIds().stream().map(
-                                String::valueOf).collect(Collectors.toList()), pageable);
+                                String::valueOf).toList(), pageable);
         Map<String, PatientDetailsDTO> patientDetails = new HashMap<>();
         if (!callRegisters.getContent().isEmpty()) {
             PatientRequestDTO patientRequest = new PatientRequestDTO();
@@ -1089,15 +1090,15 @@ public class FollowUpServiceImpl implements FollowUpService {
                 dateFilter.put(Constants.START_DATE, DateUtil.getStartDayOfMonthByUserTimeZone(userTimezone));
                 dateFilter.put(Constants.END_DATE, DateUtil.getUserTimezoneTime(userTimezone,
                         Constants.ZERO,  Constants.BOOLEAN_TRUE));
+            } else if (!Objects.isNull(patientRequestDTO.getCustomDate())
+                            && !Objects.isNull(patientRequestDTO.getCustomDate().get(Constants.START_DATE))
+                            && !Objects.isNull(patientRequestDTO.getCustomDate().get(Constants.END_DATE))) {
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(patientRequestDTO.getCustomDate().get(Constants.START_DATE));
+                dateFilter.put(Constants.START_DATE, DateUtil.getISOString(calendar));
+                calendar.setTime(patientRequestDTO.getCustomDate().get(Constants.END_DATE));
+                dateFilter.put(Constants.END_DATE, DateUtil.getISOString(calendar));
             }
-        } else if (!Objects.isNull(patientRequestDTO.getCustomDate())
-                && !Objects.isNull(patientRequestDTO.getCustomDate().get(Constants.START_DATE))
-                && !Objects.isNull(patientRequestDTO.getCustomDate().get(Constants.END_DATE))) {
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(patientRequestDTO.getCustomDate().get(Constants.START_DATE));
-            dateFilter.put(Constants.START_DATE, DateUtil.getISOString(calendar));
-            calendar.setTime(patientRequestDTO.getCustomDate().get(Constants.END_DATE));
-            dateFilter.put(Constants.END_DATE, DateUtil.getISOString(calendar));
         }
         return dateFilter;
     }
@@ -1166,14 +1167,14 @@ public class FollowUpServiceImpl implements FollowUpService {
                                 || (Objects.nonNull(nextBgAssessmentDate)
                                 && (DateUtil.getCalendarDiff(DateUtil.formatDate(nextBgAssessmentDate,
                                         Constants.DATE_FORMAT), currentDate) >= lostToFollowupRemainingDays)))) {
-                            overDueCategories.add(Constants.ASSESSMENT);
+                            overDueCategories.add(Constants.WORKFLOW_ASSESSMENT);
                         }
                         if (Objects.nonNull(medicalReviewDate) && Objects.nonNull(currentDate)
                                 && (DateUtil.getCalendarDiff(DateUtil.formatDate(medicalReviewDate,
                                         Constants.DATE_FORMAT),
                                 currentDate))
                                 >= lostToFollowupRemainingDays) {
-                            overDueCategories.add(Constants.MEDICAL_REVIEW);
+                            overDueCategories.add(Constants.MEDICAL_REVIEW_CATEGORY);
                         }
                         followUpDetail.setOverDueCategories(overDueCategories);
                         if (Objects.nonNull(dueDate)) {
@@ -1198,6 +1199,7 @@ public class FollowUpServiceImpl implements FollowUpService {
                                     Constants.MEDICAL_REVIEW_DATE_FORMAT));
                         }
                     }
+                    default -> Logger.logInfo("No match found");
                 }
                 return followUpDetail;
             }
@@ -1310,6 +1312,7 @@ public class FollowUpServiceImpl implements FollowUpService {
                 }
                 sorts.add(new Sort.Order(Sort.Direction.DESC, FieldConstants.PATIENT_ID));
             }
+            default -> Logger.logInfo("No match found");
         }
     }
 
@@ -1399,9 +1402,8 @@ public class FollowUpServiceImpl implements FollowUpService {
             List<CallRegister> callRegisters
                     = callRegisterRepository.findByMemberIdAndIsCompletedAndIsDeletedFalse(memberId, Constants.BOOLEAN_FALSE);
             if (!callRegisters.isEmpty()) {
-                callRegisters.forEach(callRegister -> {
-                    callRegister.setReferredSiteId(siteReference);
-                });
+                callRegisters.forEach(callRegister ->
+                    callRegister.setReferredSiteId(siteReference));
                 callRegisterRepository.saveAll(callRegisters);
             }
         }

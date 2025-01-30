@@ -1,8 +1,6 @@
 package com.mdtlabs.coreplatform.spiceservice.assessment.service;
 
 import com.mdtlabs.coreplatform.spiceservice.common.dto.AssessmentDTO;
-import com.mdtlabs.coreplatform.spiceservice.common.enumeration.AppointmentType;
-import com.mdtlabs.coreplatform.spiceservice.message.SuccessResponse;
 
 /**
  * Service interface for managing assessments.

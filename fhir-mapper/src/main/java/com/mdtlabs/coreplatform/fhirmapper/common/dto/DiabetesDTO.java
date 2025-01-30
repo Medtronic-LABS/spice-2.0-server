@@ -11,4 +11,5 @@ import lombok.Data;
 public class DiabetesDTO {
     private String name;
     private double id;
+    private String value;
 }

@@ -425,7 +425,8 @@ class GeneralMedicalReviewServiceImplTest {
         when(fhirUtils.getUniqueId()).thenReturn(com.mdtlabs.coreplatform.commonservice.common.Constants.STRING_FIVE);
         when(restApiUtil.getBatchRequest(anyString())).thenReturn(new Bundle());
         when(patientStatusConverter.updateConfirmedDiagnosis(confirmDiagnosisDTO, null, Constants.HYPERTENSION, List.of(Constants.HYPERTENSION_DIAGNOSIS_VALUE))).thenReturn(condition);
-        doNothing().when(patientStatusConverter).setReference(condition, confirmDiagnosisDTO.getPatientReference(),TestConstants.PATIENT_ID);
+        doNothing().when(patientStatusConverter).setReference(condition, confirmDiagnosisDTO.getPatientReference(),
+                TestConstants.PATIENT_ID, confirmDiagnosisDTO.getMemberReference());
         doNothing().when(commonConverter).setConditionInBundle(new Bundle(),condition, FhirConstants.PATIENT_DIAGNOSIS_IDENTIFIER_URL.concat(com.mdtlabs.coreplatform.commonservice.common.Constants.STRING_FIVE), Boolean.FALSE, confirmDiagnosisDTO.getProvenanceDTO());
         when(restApiUtil.constructRequestEntity(any(Bundle.class))).thenReturn(new HttpEntity<>(bundleDto, headers));
         when(restApiUtil.postBatchRequest("fhirServerUrl", new HttpEntity<>(bundleDto, headers))).thenReturn(responseEntity);

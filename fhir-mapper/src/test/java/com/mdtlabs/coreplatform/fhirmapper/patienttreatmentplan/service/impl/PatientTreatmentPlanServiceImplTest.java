@@ -80,7 +80,7 @@ class PatientTreatmentPlanServiceImplTest {
         when(restApiUtil.getBatchRequest(anyString())).thenReturn(TestDataProvider.getObservationBundle());
 
         //then
-        TreatmentPlanResponseDTO response = patientTreatmentPlanService.createProvisionalPlan(treatmentPlanDTO, bundle);
+        TreatmentPlanResponseDTO response = patientTreatmentPlanService.createProvisionalPlan(treatmentPlanDTO, bundle, null, new ArrayList<>());
         Assertions.assertNotNull(response);
     }
 
@@ -98,7 +98,7 @@ class PatientTreatmentPlanServiceImplTest {
         Bundle bundle = null;
 
         //then
-        TreatmentPlanResponseDTO response = patientTreatmentPlanService.createProvisionalPlan(treatmentPlanDTO, bundle);
+        TreatmentPlanResponseDTO response = patientTreatmentPlanService.createProvisionalPlan(treatmentPlanDTO, bundle, null, new ArrayList<>());
         Assertions.assertNotNull(response);
     }
 
@@ -302,7 +302,7 @@ class PatientTreatmentPlanServiceImplTest {
                 "reference", FhirConstants.PREGNANCY))).thenReturn(responseBundle);
 
         //then
-        TreatmentPlanResponseDTO response = patientTreatmentPlanService.createProvisionalPlan(treatmentPlanDTO, bundle);
+        TreatmentPlanResponseDTO response = patientTreatmentPlanService.createProvisionalPlan(treatmentPlanDTO, bundle, null, new ArrayList<>());
         Assertions.assertNotNull(response);
     }
 }

@@ -1,6 +1,5 @@
 package com.mdtlabs.coreplatform.spiceservice.mentalhealth.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mdtlabs.coreplatform.commonservice.common.CommonUtil;

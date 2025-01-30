@@ -200,4 +200,5 @@ public final class FieldConstants {
     public static final String AUTH_TAG = "auth_tag";
     public static final String RSA_PUBLIC_KEY = "rsa_public_key";
     public static final String REF_ID = "ref_id";
+    public static final String ORG_UNIT_ID = "org_unit_id";
 }

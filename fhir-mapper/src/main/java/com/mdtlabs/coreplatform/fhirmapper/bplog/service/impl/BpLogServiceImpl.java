@@ -117,7 +117,7 @@ public class BpLogServiceImpl implements BpLogService {
             Bundle bundle = restApiUtil.getBatchRequest(
                     constructBpLogSymptomObservationUrl(bpLogList));
             patientBpLogs.setLatestBpLog(bpLogList);
-            patientBpLogs.getLatestBpLog().setSymptoms(symptomConverter.getSymptomListByBundle(bundle));
+            patientBpLogs.getLatestBpLog().setSymptoms(symptomConverter.getSymptomListByBundle(bundle, Boolean.TRUE));
         }
     }
 

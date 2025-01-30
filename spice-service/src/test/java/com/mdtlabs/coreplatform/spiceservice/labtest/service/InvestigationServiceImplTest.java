@@ -1,19 +1,8 @@
 package com.mdtlabs.coreplatform.spiceservice.labtest.service;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import com.mdtlabs.coreplatform.commonservice.common.CommonUtil;
-import com.mdtlabs.coreplatform.commonservice.common.model.dto.SearchRequestDTO;
-import com.mdtlabs.coreplatform.spiceservice.apiinterface.AdminServiceApiInterface;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.LabTestCustomizationDTO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,12 +13,16 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import com.mdtlabs.coreplatform.commonservice.common.CommonUtil;
+import com.mdtlabs.coreplatform.commonservice.common.model.dto.SearchRequestDTO;
+import com.mdtlabs.coreplatform.spiceservice.apiinterface.AdminServiceApiInterface;
 import com.mdtlabs.coreplatform.spiceservice.apiinterface.FhirServiceApiInterface;
 import com.mdtlabs.coreplatform.spiceservice.common.TestDataProvider;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.LabTestDTO;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.LabTestHistoryDTO;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.LabTestRequestDTO;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.RequestDTO;
+import com.mdtlabs.coreplatform.spiceservice.common.dto.*;
 import com.mdtlabs.coreplatform.spiceservice.labtest.service.impl.InvestigationServiceImpl;
 
 @ExtendWith(MockitoExtension.class)
@@ -168,23 +161,6 @@ class InvestigationServiceImplTest {
     }
 
     @Test
-    void testUpdateInvestigationResultkl() {
-
-        TestDataProvider.init();
-        //when
-        TestDataProvider.getStaticMock();
-
-        LabTestRequestDTO labTestRequestDTO = TestDataProvider.getLabTestRequestDTO();
-        investigationService.updateInvestigationResult(labTestRequestDTO);
-        verify(fhirServiceApiInterface).updateInvestigationResult(
-                CommonUtil.getAuthToken(),
-                CommonUtil.getClient(),
-                labTestRequestDTO
-        );
-        TestDataProvider.cleanUp();
-    }
-
-    @Test
     void testGetIntensificationDetails() {
         TestDataProvider.init();
         TestDataProvider.getStaticMock();
@@ -210,7 +186,7 @@ class InvestigationServiceImplTest {
 
 
     @Test
-    public void testGetLabTestCustomization() {
+    void testGetLabTestCustomization() {
         TestDataProvider.init();
         TestDataProvider.getStaticMock();
         SearchRequestDTO requestDTO = TestDataProvider.getSearchRequestDTO();

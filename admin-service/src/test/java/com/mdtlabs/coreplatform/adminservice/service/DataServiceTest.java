@@ -322,7 +322,6 @@ class DataServiceTest {
         Assertions.assertNotNull(response);
         Assertions.assertEquals(response, new ArrayList<>());
 
-        villages = new ArrayList<>();
         villageResponse = new ArrayList<>();
         when(villageRepository.findUnlinkedVillagesByUserId(request.getTenantIds(), request.getUserId())).thenReturn(villageResponse);
         response = dataService.getVillagesWithoutUsers(request);
@@ -476,7 +475,8 @@ class DataServiceTest {
         List<Chiefdom> chiefdoms = List.of(chiefdom);
 
         when(chiefdomRepository.findByCountryIdAndIsDeletedFalse(countryId)).thenReturn(chiefdoms);
-        dataService.getChiefdomsByCountryId(countryId);
+        List<ChiefdomDTO> response = dataService.getChiefdomsByCountryId(countryId);
+        assertNotNull(response);
     }
 
     @Test
@@ -484,9 +484,10 @@ class DataServiceTest {
         Long countryId = 1L;
         VillageDTO villageDTO = new VillageDTO();
         villageDTO.setCountryId(countryId);
-        List<VillageDTO> villageDTOList = List.of(villageDTO);
 
         when(villageRepository.findByCountryIdAndIsDeletedFalse(countryId)).thenReturn(List.of());
-        dataService.getVillagesByCountryId(countryId);
+        List<VillageDTO> response = dataService.getVillagesByCountryId(countryId);
+        assertNotNull(response);
+
     }
 }

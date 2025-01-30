@@ -3,13 +3,11 @@ package com.mdtlabs.coreplatform.spiceservice.staticdata.repository;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import com.mdtlabs.coreplatform.spiceservice.common.model.Menu;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import com.mdtlabs.coreplatform.spiceservice.common.model.Menu;
 
 /**
  * <p>

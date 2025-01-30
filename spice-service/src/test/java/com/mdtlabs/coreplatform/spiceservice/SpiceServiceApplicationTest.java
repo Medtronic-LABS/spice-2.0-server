@@ -23,7 +23,7 @@ import static org.mockito.Mockito.times;
  */
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class SpiceServiceApplicationTest {
+class SpiceServiceApplicationTest {
 
     private static final String ARG = "";
     private static final String[] ARGS = new String[]{ARG};

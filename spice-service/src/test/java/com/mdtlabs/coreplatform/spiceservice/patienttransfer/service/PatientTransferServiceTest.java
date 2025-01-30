@@ -1,16 +1,7 @@
 package com.mdtlabs.coreplatform.spiceservice.patienttransfer.service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-import com.mdtlabs.coreplatform.commonservice.common.CommonUtil;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.ConfirmDiagnosisDTO;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.PatientDetailsDTO;
-import com.mdtlabs.coreplatform.spiceservice.customizedmodules.service.CustomizedModulesService;
-import com.mdtlabs.coreplatform.spiceservice.followup.service.FollowUpService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,9 +13,7 @@ import org.mockito.quality.Strictness;
 import org.springframework.security.authentication.BadCredentialsException;
 
 import static org.junit.Assert.assertThrows;
-import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import com.mdtlabs.coreplatform.commonservice.common.contexts.UserContextHolder;
 import com.mdtlabs.coreplatform.commonservice.common.contexts.UserSelectedTenantContextHolder;
@@ -38,10 +27,9 @@ import com.mdtlabs.coreplatform.spiceservice.apiinterface.FhirServiceApiInterfac
 import com.mdtlabs.coreplatform.spiceservice.common.Constants;
 import com.mdtlabs.coreplatform.spiceservice.common.TestConstants;
 import com.mdtlabs.coreplatform.spiceservice.common.TestDataProvider;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.PatientDTO;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.PatientTransferRequestDTO;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.PatientTransferUpdateRequestDTO;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.RequestDTO;
+import com.mdtlabs.coreplatform.spiceservice.common.dto.*;
+import com.mdtlabs.coreplatform.spiceservice.customizedmodules.service.CustomizedModulesService;
+import com.mdtlabs.coreplatform.spiceservice.followup.service.FollowUpService;
 import com.mdtlabs.coreplatform.spiceservice.patienttransfer.repository.PatientTransferRepository;
 import com.mdtlabs.coreplatform.spiceservice.patienttransfer.service.impl.PatientTransferServiceImpl;
 

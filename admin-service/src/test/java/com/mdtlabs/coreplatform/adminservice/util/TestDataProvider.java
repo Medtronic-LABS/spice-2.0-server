@@ -18,8 +18,6 @@ import com.mdtlabs.coreplatform.commonservice.common.model.dto.*;
 import com.mdtlabs.coreplatform.commonservice.common.model.entity.Culture;
 import org.mockito.MockedStatic;
 import org.modelmapper.ModelMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import com.mdtlabs.coreplatform.adminservice.model.dto.RequestDTO;
 import com.mdtlabs.coreplatform.adminservice.model.dto.ChiefdomDTO;
 import com.mdtlabs.coreplatform.adminservice.model.dto.Code;
@@ -52,7 +50,6 @@ import com.mdtlabs.coreplatform.commonservice.common.model.entity.Village;
 
 public class TestDataProvider {
 
-    private static final Logger log = LoggerFactory.getLogger(TestDataProvider.class);
     public static ModelMapper modelMapper = new ModelMapper();
     private static MockedStatic<CommonUtil> commonUtil;
     private static MockedStatic<UserSelectedTenantContextHolder> userSelectedTenantContextHolder;
@@ -95,8 +92,8 @@ public class TestDataProvider {
     }
 
     public static void getMessageValidatorMock() {
-        messageFormat.when(() -> MessageFormat.format("Invalid token.", TestConstants.ARGUMENT, TestConstants.MESSAGE)).thenReturn("message");
-        messageFormat.when(() -> MessageFormat.format("Invalid token.", TestConstants.ARGUMENT)).thenReturn("message");
+        messageFormat.when(() -> MessageFormat.format("Invalid token: {0}, message: {1}", TestConstants.ARGUMENT, TestConstants.MESSAGE)).thenReturn("message");
+        messageFormat.when(() -> MessageFormat.format("Invalid token: {0}", TestConstants.ARGUMENT)).thenReturn("message");
     }
     
     public static void cleanUp() {
@@ -108,8 +105,7 @@ public class TestDataProvider {
     }
 
     public static UserDTO getUserDTO() {
-        UserDTO userDTO = modelMapper.map(getUser(), UserDTO.class);
-        return userDTO;
+        return modelMapper.map(getUser(), UserDTO.class);
     }
 
     public static User getUser() {
@@ -328,8 +324,7 @@ public class TestDataProvider {
     }
 
     public static UserResponseDTO getUserResponseDTO() {
-        UserResponseDTO userResponseDTO = new ModelMapper().map(getUserDTO(), UserResponseDTO.class);
-        return userResponseDTO;
+        return new ModelMapper().map(getUserDTO(), UserResponseDTO.class);
     }
 
     public static CountryRequestDTO getCountryRequestDTO() {
@@ -387,8 +382,7 @@ public class TestDataProvider {
     }
 
     public static DistrictListDTO getDistrictListDTO(long id, String name, long tenantId) {
-        DistrictListDTO districtListDTO = new DistrictListDTO(id, name, tenantId);
-        return districtListDTO;
+        return new DistrictListDTO(id, name, tenantId);
     }
 
     public static SearchRequestDTO getRequestDtoForPagination(String searchTerm, int skip, int limit) {

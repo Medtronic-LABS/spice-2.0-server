@@ -3,6 +3,7 @@ package com.mdtlabs.coreplatform.fhirmapper.assessment.service.impl;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -20,6 +21,7 @@ import org.hl7.fhir.r4.model.DiagnosticReport;
 import org.hl7.fhir.r4.model.Encounter;
 import org.hl7.fhir.r4.model.Location;
 import org.hl7.fhir.r4.model.MedicationDispense;
+import org.hl7.fhir.r4.model.MedicationRequest;
 import org.hl7.fhir.r4.model.Observation;
 import org.hl7.fhir.r4.model.Observation.ObservationComponentComponent;
 import org.hl7.fhir.r4.model.Patient;
@@ -85,8 +87,8 @@ import com.mdtlabs.coreplatform.fhirmapper.converter.QuestionnaireResponseConver
 import com.mdtlabs.coreplatform.fhirmapper.converter.SpiceConverter;
 import com.mdtlabs.coreplatform.fhirmapper.converter.SymptomConverter;
 import com.mdtlabs.coreplatform.fhirmapper.converter.VitalSignsConverter;
-import com.mdtlabs.coreplatform.fhirmapper.mapper.FhirAssessmentMapper;
 import com.mdtlabs.coreplatform.fhirmapper.household.service.HouseholdService;
+import com.mdtlabs.coreplatform.fhirmapper.mapper.FhirAssessmentMapper;
 import com.mdtlabs.coreplatform.fhirmapper.mentalhealth.service.MentalHealthService;
 import com.mdtlabs.coreplatform.fhirmapper.patient.service.PatientService;
 import com.mdtlabs.coreplatform.fhirmapper.patienttreatmentplan.service.PatientTreatmentPlanService;
@@ -101,6 +103,12 @@ import com.mdtlabs.coreplatform.fhirmapper.patienttreatmentplan.service.PatientT
  */
 @Service
 public class AssessmentServiceImpl implements AssessmentService {
+
+    @Value("${app.fhir-server-url}")
+    private String fhirServerUrl;
+
+    @Value("${app.smart-anc}")
+    private Boolean isSmartAnc;
 
     private final FhirAssessmentMapper fhirAssessmentMapper;
     private final FhirUtils fhirUtils;
@@ -122,12 +130,6 @@ public class AssessmentServiceImpl implements AssessmentService {
     private final VitalSignsConverter vitalSignsConverter;
     private final PatientTreatmentPlanService patientTreatmentPlanService;
     private final SpiceServiceApiInterface spiceServiceApiInterface;
-
-    @Value("${app.fhir-server-url}")
-    private String fhirServerUrl;
-
-    @Value("${app.smart-anc}")
-    private Boolean isSmartAnc;
 
     public AssessmentServiceImpl(FhirAssessmentMapper fhirAssessmentMapper, FhirUtils fhirUtils, RestApiUtil restApiUtil, MentalHealthService mentalHealthService, PatientService patientService, HouseholdService householdService, BloodPressureConverter bloodPressureConverter, BloodGlucoseConverter bloodGlucoseConverter,
                                  EncounterConverter encounterConverter,
@@ -291,7 +293,7 @@ public class AssessmentServiceImpl implements AssessmentService {
         Observation temperatureObservation = createTemperatureObservation(assessmentDTO, encounter);
         Map<String, QuestionnaireResponse> questionnaireResponses = mentalHealthService.createQuestionnaireResponse(assessmentDTO,
                 patient, relatedPerson, encounter, bundle, provenanceDTO);
-        Observation mentalHealthObservation = createMentalHealthObservation(assessmentDTO, relatedPerson, questionnaireResponses);
+        Observation mentalHealthObservation = createMentalHealthObservation(assessmentDTO, relatedPerson, questionnaireResponses, encounter);
         Observation redRiskObservation = createRedRiskObservation(assessmentDTO, relatedPerson);
 
         commonConverter.setPatientDetailsInBundle(bundle, patient,
@@ -345,10 +347,10 @@ public class AssessmentServiceImpl implements AssessmentService {
      * Creates a FHIR Condition resource based on the provided assessment data, patient, and related person.
      * </p>
      *
-     * @param bundle           The FHIR Bundle containing Condition resources
-     * @param assessmentDTO    The data transfer object containing assessment details.
-     * @param patientReference The patient associated with the condition.
-     * @param relatedPerson    The related person asserting the condition.
+     * @param bundle          The FHIR Bundle containing Condition resources
+     * @param assessmentDTO   The data transfer object containing assessment details.
+     * @param patientReference  The patient associated with the condition.
+     * @param relatedPerson   The related person asserting the condition.
      */
     private void createProvsionalDiagnosisCondition(Bundle bundle, AssessmentDTO assessmentDTO, String patientReference,
                                                     RelatedPerson relatedPerson, ProvenanceDTO provenanceDTO) {
@@ -370,7 +372,9 @@ public class AssessmentServiceImpl implements AssessmentService {
         }
         List<CodeableConcept> codeableConcepts = new ArrayList<>();
         if (Objects.nonNull(assessmentDTO.getProvisionalDiagnosis()) && !assessmentDTO.getProvisionalDiagnosis().isEmpty()) {
-            assessmentDTO.getProvisionalDiagnosis().forEach(diagnosis -> codeableConcepts.add(fhirUtils.createCodeableConcept(diagnosis)));
+            assessmentDTO.getProvisionalDiagnosis().forEach(diagnosis ->
+                codeableConcepts.add(fhirUtils.createCodeableConcept(diagnosis))
+            );
         }
         condition.setCategory(codeableConcepts);
         commonConverter.setConditionInBundle(bundle, condition, FhirConstants.CONDITION_IDENTIFIER_URL, isConditionExists ? Boolean.TRUE : Boolean.FALSE,
@@ -383,7 +387,7 @@ public class AssessmentServiceImpl implements AssessmentService {
      * </p>
      *
      * @param relatedPerson The RelatedPerson object whose status needs to be updated.
-     * @param patient       The Patient object whose status needs to be updated.
+     * @param patient The Patient object whose status needs to be updated.
      */
     private void updatePatientStatus(RelatedPerson relatedPerson, Patient patient) {
         if (Objects.nonNull(relatedPerson)) {
@@ -409,12 +413,12 @@ public class AssessmentServiceImpl implements AssessmentService {
      * Sets patient mental health and red risk details in bundle
      * </p>
      *
-     * @param redRiskObservation      The FHIR Observation entity
-     * @param mentalHealthObservation The FHIR Observation entity
-     * @param patient                 The FHIR Patient entity.
-     * @param relatedPerson           The FHIR RelatedPerson entity.
-     * @param provenanceDTO           The ProvenanceDTO entity to store performers information
-     * @param bundle                  The FHIR bundle entity it contains patient vital observations
+     * @param redRiskObservation          The FHIR Observation entity
+     * @param mentalHealthObservation     The FHIR Observation entity
+     * @param patient                     The FHIR Patient entity.
+     * @param relatedPerson               The FHIR RelatedPerson entity.
+     * @param provenanceDTO               The ProvenanceDTO entity to store performers information
+     * @param bundle                      The FHIR bundle entity it contains patient vital observations
      */
     private void setPatientRiskDetailsInBundle(Observation redRiskObservation,
                                                Observation mentalHealthObservation,
@@ -436,9 +440,9 @@ public class AssessmentServiceImpl implements AssessmentService {
      * Process and create FHIR vital signs observation based on given
      * bundle details
      *
-     * @param bundle        The FHIR bundle entity it contains patient vital observations.
-     * @param relatedPerson The FHIR RelatedPerson entity.
-     * @param provenanceDTO The ProvenanceDTO entity to store performers information
+     * @param bundle                 The FHIR bundle entity it contains patient vital observations.
+     * @param relatedPerson          The FHIR RelatedPerson entity.
+     * @param provenanceDTO          The ProvenanceDTO entity to store performers information
      * @return Converted FHIR Observation entity.
      */
     private Observation createVitalSignsObservation(Bundle bundle, RelatedPerson relatedPerson,
@@ -480,10 +484,10 @@ public class AssessmentServiceImpl implements AssessmentService {
     /**
      * Set the resource id of the patient, encounter and related person into the assessmentDto.
      *
-     * @param assessmentDTO  assessmentDTO resource for set the resource id of the patient, encounter and related person
+     * @param assessmentDTO assessmentDTO resource for set the resource id of the patient, encounter and related person
      * @param responseEntity responseEntity for fetch the resource id of the patient, encounter
-     * @param relatedPerson  relatedPerson to fetch the id.
-     * @param patient        patient to fetch the id.
+     * @param relatedPerson relatedPerson to fetch the id.
+     * @param patient patient to fetch the id.
      */
     private void setResourceIds(AssessmentDTO assessmentDTO, ResponseEntity<FhirResponseDTO> responseEntity,
                                 RelatedPerson relatedPerson, Patient patient) {
@@ -514,8 +518,9 @@ public class AssessmentServiceImpl implements AssessmentService {
      * assessment details
      * </p>
      *
-     * @param assessmentDTO The patient assessment details
-     * @param relatedPerson The Fhir RelatedPerson entity
+     * @param assessmentDTO            The patient assessment details
+     * @param relatedPerson            The Fhir RelatedPerson entity
+     *
      * @return Converted FHIR Observation entity.
      */
     private Observation createRedRiskObservation(AssessmentDTO assessmentDTO,
@@ -534,14 +539,15 @@ public class AssessmentServiceImpl implements AssessmentService {
      * assessment details
      * </p>
      *
-     * @param assessmentDTO          The patient assessment details
-     * @param relatedPerson          The Fhir RelatedPerson entity
-     * @param questionnaireResponses The Map of Fhir QuestionnaireResponse entity
+     * @param assessmentDTO            The patient assessment details
+     * @param relatedPerson            The Fhir RelatedPerson entity
+     * @param questionnaireResponses   The Map of Fhir QuestionnaireResponse entity
+     *
      * @return Converted FHIR Observation entity.
      */
     private Observation createMentalHealthObservation(AssessmentDTO assessmentDTO,
                                                       RelatedPerson relatedPerson,
-                                                      Map<String, QuestionnaireResponse> questionnaireResponses) {
+                                                      Map<String, QuestionnaireResponse> questionnaireResponses, Encounter encounter) {
         MentalHealthObservationDTO mentalHealthObservationDTO = new MentalHealthObservationDTO();
         Map<String, String> mentalHealthRiskDetails = new HashMap<>();
         Observation observation = null;
@@ -583,9 +589,9 @@ public class AssessmentServiceImpl implements AssessmentService {
             mentalHealthObservationDTO.setMentalRiskDetails(mentalHealthRiskDetails);
             mentalHealthObservationDTO.setRelatedPersonId(relatedPerson.getIdPart());
             mentalHealthObservationDTO.setQuestionnaireResponses(questionnaireResponses);
-            observation = questionnaireResponseConverter.processMentalHealthDetails(mentalHealthObservationDTO);
+            observation = questionnaireResponseConverter.processMentalHealthDetails(mentalHealthObservationDTO, encounter, null);
         }
-        return observation;
+        return  observation;
     }
 
     /**
@@ -596,13 +602,13 @@ public class AssessmentServiceImpl implements AssessmentService {
      * @return {@link Observation} Converted FHIR Observation entity.
      */
     private Observation createSymptomObservation(AssessmentDTO assessmentDTO, Encounter encounter) {
-        Observation observation = null;
+        Observation observation =  null;
         if (Objects.nonNull(assessmentDTO.getNcdSymptoms())) {
             observation = symptomConverter.createSymptomObservation(assessmentDTO.getNcdSymptoms(), assessmentDTO.getAssessmentTakenOn());
             commonConverter.setObservationEncounterAndOrganization(observation, null, encounter);
             commonConverter.setObservationText(observation, FhirConstants.SYMPTOM);
         }
-        return observation;
+        return  observation;
     }
 
     /**
@@ -613,14 +619,14 @@ public class AssessmentServiceImpl implements AssessmentService {
      * @return {@link Observation} Converted FHIR Observation entity.
      */
     private Observation createComplianceObservation(AssessmentDTO assessmentDTO, Encounter encounter) {
-        Observation observation = null;
+        Observation observation =  null;
         if (Objects.nonNull(assessmentDTO.getCompliance())) {
             observation = complianceConverter
                     .createComplianceObservation(assessmentDTO.getCompliance(), assessmentDTO.getAssessmentTakenOn());
             commonConverter.setObservationEncounterAndOrganization(observation, null, encounter);
             commonConverter.setObservationText(observation, FhirConstants.COMPLIANCE);
         }
-        return observation;
+        return  observation;
     }
 
     /**
@@ -632,7 +638,7 @@ public class AssessmentServiceImpl implements AssessmentService {
      */
     private Observation createPregnancyObservation(AssessmentDTO assessmentDTO,
                                                    Encounter encounter) {
-        Observation observation = null;
+        Observation observation =  null;
         PregnancyDetailsDTO pregnancyDetailsDTO = assessmentDTO.getPregnancyAnc();
         if (Objects.nonNull(pregnancyDetailsDTO) && (Boolean.TRUE.equals(pregnancyDetailsDTO.getIsPregnant()))) {
             ProvenanceDTO provenanceDTO = assessmentDTO.getEncounter().getProvenance();
@@ -648,14 +654,15 @@ public class AssessmentServiceImpl implements AssessmentService {
             }
             commonConverter.setObservationEncounterAndOrganization(observation, null, encounter);
         }
-        return observation;
+        return  observation;
     }
 
     /**
      * Process and create FHIR Location entity based on given
      * screening log details
      *
-     * @param assessmentDTO The assessment details
+     * @param assessmentDTO    The assessment details
+     *
      * @return Converted FHIR Location entity.
      */
     private Location createLocation(AssessmentDTO assessmentDTO) {
@@ -686,9 +693,10 @@ public class AssessmentServiceImpl implements AssessmentService {
      * Process and create FHIR Patient entity based on given
      * screening log details
      *
-     * @param assessmentDTO The screening log details
-     * @param patient       The FHIR Patient entity
-     * @param relatedPerson The FHIR Related Person entity
+     * @param assessmentDTO    The screening log details
+     * @param patient          The FHIR Patient entity
+     * @param relatedPerson    The FHIR Related Person entity
+     *
      * @return {@link Observation} Converted FHIR Observation entity.
      */
     private Patient createPatient(AssessmentDTO assessmentDTO, Patient patient, RelatedPerson relatedPerson) {
@@ -710,9 +718,9 @@ public class AssessmentServiceImpl implements AssessmentService {
      * {@inheritDoc}
      */
     public void setObservationDetails(Bundle bundle,
-                                      Observation observation,
-                                      String identifierUrl, AssessmentDTO assessmentDTO, Patient patient,
-                                      RelatedPerson relatedPerson, ProvenanceDTO provenanceDTO) {
+                                       Observation observation,
+                                       String identifierUrl, AssessmentDTO assessmentDTO, Patient patient,
+                                       RelatedPerson relatedPerson, ProvenanceDTO provenanceDTO) {
         if (Objects.nonNull(observation)) {
             commonConverter.setObservationReference(observation, patient, relatedPerson);
             commonConverter.setObservationDetailsInBundle(bundle, observation, identifierUrl, provenanceDTO);
@@ -727,8 +735,9 @@ public class AssessmentServiceImpl implements AssessmentService {
      * Process and create FHIR bp log observation based on given
      * assessment details
      *
-     * @param assessmentDTO The screening log details
+     * @param assessmentDTO    The screening log details
      * @param encounter     The FHIR Encounter entity
+     *
      * @return Converted FHIR Observation entity.
      */
     private Observation createBpLogObservation(AssessmentDTO assessmentDTO,
@@ -765,8 +774,9 @@ public class AssessmentServiceImpl implements AssessmentService {
      * Process and create FHIR glucose log observation based on given
      * assessment details
      *
-     * @param assessmentDTO The screening log details
+     * @param assessmentDTO    The screening log details
      * @param encounter     The FHIR Encounter entity
+     *
      * @return Converted FHIR Observation entity.
      */
     private Observation createGlucoseLogObservation(AssessmentDTO assessmentDTO,
@@ -778,15 +788,16 @@ public class AssessmentServiceImpl implements AssessmentService {
             commonConverter.setObservationEncounterAndOrganization(observation, null, encounter);
             commonConverter.setObservationText(observation, FhirConstants.BLOOD_GLUCOSE);
         }
-        return observation;
+        return  observation;
     }
 
     /**
      * Process and create FHIR height observation based on given
      * assessment details
      *
-     * @param assessmentDTO The screening log details
+     * @param assessmentDTO    The screening log details
      * @param encounter     The FHIR Encounter entity
+     *
      * @return Converted FHIR Observation entity.
      */
     private Observation createHeightObservation(AssessmentDTO assessmentDTO, Encounter encounter) {
@@ -798,15 +809,16 @@ public class AssessmentServiceImpl implements AssessmentService {
             commonConverter.setObservationEncounterAndOrganization(observation, null, encounter);
             commonConverter.setObservationText(observation, FhirConstants.HEIGHT);
         }
-        return observation;
+        return  observation;
     }
 
     /**
      * Process and create FHIR weight observation based on given
      * assessment details
      *
-     * @param assessmentDTO The screening log details
+     * @param assessmentDTO    The screening log details
      * @param encounter     The FHIR Encounter entity
+     *
      * @return Converted FHIR Observation entity.
      */
     private Observation createWeightObservation(AssessmentDTO assessmentDTO, Encounter encounter) {
@@ -818,15 +830,16 @@ public class AssessmentServiceImpl implements AssessmentService {
             commonConverter.setObservationEncounterAndOrganization(observation, null, encounter);
             commonConverter.setObservationText(observation, FhirConstants.WEIGHT);
         }
-        return observation;
+        return  observation;
     }
 
     /**
      * Process and create FHIR BMI observation based on given
      * assessment details
      *
-     * @param assessmentDTO The screening log details
+     * @param assessmentDTO    The screening log details
      * @param encounter     The FHIR Encounter entity
+     *
      * @return Converted FHIR Observation entity.
      */
     private Observation createBmiObservation(AssessmentDTO assessmentDTO, Encounter encounter) {
@@ -837,15 +850,16 @@ public class AssessmentServiceImpl implements AssessmentService {
             commonConverter.setObservationEncounterAndOrganization(observation, null, encounter);
             commonConverter.setObservationText(observation, FhirConstants.BMI);
         }
-        return observation;
+        return  observation;
     }
 
     /**
      * Process and create FHIR Temperature observation based on given
      * assessment details
      *
-     * @param assessmentDTO The screening log details
+     * @param assessmentDTO    The screening log details
      * @param encounter     The FHIR Encounter entity
+     *
      * @return Converted FHIR Observation entity.
      */
     private Observation createTemperatureObservation(AssessmentDTO assessmentDTO, Encounter encounter) {
@@ -857,7 +871,7 @@ public class AssessmentServiceImpl implements AssessmentService {
             commonConverter.setObservationEncounterAndOrganization(observation, null, encounter);
             commonConverter.setObservationText(observation, FhirConstants.TEMPERATURE);
         }
-        return observation;
+        return  observation;
     }
 
     /**
@@ -897,7 +911,7 @@ public class AssessmentServiceImpl implements AssessmentService {
      * {@inheritDoc}
      */
     public Observation createSuicideObservation(AssessmentDTO assessmentDTO,
-                                                Encounter encounter) {
+                                                 Encounter encounter) {
         Observation observation = null;
         if (Objects.nonNull(assessmentDTO.getSuicideScreener()) && !assessmentDTO.getSuicideScreener().isEmpty()) {
             if (Objects.nonNull(assessmentDTO.getSuicideScreener().get(Constants.OBSERVATION_ID))) {
@@ -910,10 +924,10 @@ public class AssessmentServiceImpl implements AssessmentService {
                             observation.setComponent(new ArrayList<>());
                             assessmentDTO.getSuicideScreener().remove(Constants.OBSERVATION_ID);
                             for (Map.Entry<String, String> data : assessmentDTO.getSuicideScreener().entrySet()) {
-                                commonConverter.setSuicideOrSubstanceComponent(observation, data);
+                                    commonConverter.setSuicideOrSubstanceComponent(observation, data);
+                                }
                             }
                         }
-                    }
                 }
             } else {
                 observation = commonConverter.createSuicideScreenerObservation(assessmentDTO.getSuicideScreener(),
@@ -922,7 +936,7 @@ public class AssessmentServiceImpl implements AssessmentService {
                 commonConverter.setObservationText(observation, MetaCodeConstants.SUICIDAL_SCREENER);
             }
         }
-        return observation;
+        return  observation;
     }
 
     /**
@@ -1022,8 +1036,7 @@ public class AssessmentServiceImpl implements AssessmentService {
                     createReferralTicketForRMNCH(assessmentDTO, bundle, null);
                 }
                 break;
-            default:
-                break;
+            default: break;
         }
     }
 
@@ -1179,10 +1192,10 @@ public class AssessmentServiceImpl implements AssessmentService {
      * Close Pnc visits in ANC first Visit and Close
      * Anc visits in PNC first visit
      *
-     * @param bundle      Bundle Object
-     * @param memberId    MemberId
-     * @param encounterId EncounterId
-     * @param assessment  provenanceDetails
+     * @param bundle         Bundle Object
+     * @param memberId       MemberId
+     * @param encounterId    EncounterId
+     * @param assessment     provenanceDetails
      */
     private void handleFirstVisit(Bundle bundle, String memberId, String encounterId, Boolean isPregnant,
                                   AssessmentDTO assessment) {
@@ -1264,8 +1277,8 @@ public class AssessmentServiceImpl implements AssessmentService {
     /**
      * Update Previous EncounterDetails
      *
-     * @param reason     Ticket reason
-     * @param ticketType Ticket Type
+     * @param reason        Ticket reason
+     * @param ticketType    Ticket Type
      */
     private RequestDTO getRequestDto(AssessmentDTO assessmentDTO, String reason, String ticketType,
                                      List<String> ticketStatuses, String patientStatus) {
@@ -1651,6 +1664,7 @@ public class AssessmentServiceImpl implements AssessmentService {
     public ResponseEntity<FhirResponseDTO> createTB(AssessmentDTO assessmentDTO) {
         Bundle bundle = new Bundle().setType(Bundle.BundleType.TRANSACTION);
         String uuid = fhirUtils.getUniqueId();
+
         Encounter encounter = fhirAssessmentMapper.setEncounter(new Encounter(),
                 assessmentDTO.getEncounter(),
                 assessmentDTO.getAssessmentType(), Boolean.TRUE);
@@ -2017,44 +2031,57 @@ public class AssessmentServiceImpl implements AssessmentService {
     /**
      * Creates Provisional treatment plan for a patient.
      *
-     * @param assessmentDTO {@link AssessmentDTO} entity is given
+     * @param assessmentDto
+     * @return TreatmentPlanResponseDTO
      */
-    public TreatmentPlanResponseDTO createProvisionalTreatmentPlan(AssessmentDTO assessmentDTO) {
-        CarePlan patientTreatmentPlan = patientTreatmentPlanService.getCarePlanForPatient(assessmentDTO.getMemberReference());
+    public TreatmentPlanResponseDTO createProvisionalTreatmentPlan(AssessmentDTO assessmentDto) {
+        CarePlan patientTreatmentPlan = patientTreatmentPlanService.getCarePlanForPatient(assessmentDto.getMemberReference());
         TreatmentPlanDTO treatmentPlanDTO = new TreatmentPlanDTO();
 
-        TreatmentPlanResponseDTO response = new TreatmentPlanResponseDTO();
+        List<String> details = new ArrayList<>();
         if (!Objects.isNull(patientTreatmentPlan)) {
-            if (!Objects.isNull(assessmentDTO.getBpLog())) {
-                Date nextBpDate = patientTreatmentPlanService.updateNextVisitDateForPatient(assessmentDTO.getMemberReference(), assessmentDTO.getPatientId(), Constants.FREQUENCY_BP_CHECK, patientTreatmentPlan, assessmentDTO.getEncounter().getProvenance(), assessmentDTO.getAssessmentTakenOn());
+            patientTreatmentPlan.getActivity().forEach(
+                   activityComponent ->  details.add(activityComponent.getDetail().getCode().getText())
+            );
+        }
+        TreatmentPlanResponseDTO response = new TreatmentPlanResponseDTO();
+        if (!Objects.isNull(patientTreatmentPlan) && (details.contains(Constants.FREQUENCY_BP_CHECK) || details.contains(Constants.FREQUENCY_BG_CHECK))) {
+            if (!Objects.isNull(assessmentDto.getBpLog()) && details.contains(Constants.FREQUENCY_BP_CHECK)) {
+                Date nextBpDate = patientTreatmentPlanService.updateNextVisitDateForPatient(assessmentDto.getMemberReference(),assessmentDto.getPatientId(), Constants.FREQUENCY_BP_CHECK, patientTreatmentPlan, assessmentDto.getEncounter().getProvenance(), assessmentDto.getAssessmentTakenOn());
                 treatmentPlanDTO.setNextBpAssessmentDate(nextBpDate);
             }
-            if (!Objects.isNull(assessmentDTO.getGlucoseLog())
-                    && (!Objects.isNull(assessmentDTO.getGlucoseLog().getGlucoseValue())
-                    || !Objects.isNull(assessmentDTO.getGlucoseLog().getHba1c()))) {
-                Date nextBgDate = patientTreatmentPlanService.updateNextVisitDateForPatient(assessmentDTO.getMemberReference(), assessmentDTO.getPatientId(), Constants.FREQUENCY_BG_CHECK, patientTreatmentPlan, assessmentDTO.getEncounter().getProvenance(), assessmentDTO.getAssessmentTakenOn());
+            if (!Objects.isNull(assessmentDto.getGlucoseLog())
+                    && (!Objects.isNull(assessmentDto.getGlucoseLog().getGlucoseValue())
+                    || !Objects.isNull(assessmentDto.getGlucoseLog().getHba1c()))
+                    && details.contains(Constants.FREQUENCY_BG_CHECK)) {
+                Date nextBgDate = patientTreatmentPlanService.updateNextVisitDateForPatient(assessmentDto.getMemberReference(),assessmentDto.getPatientId(), Constants.FREQUENCY_BG_CHECK, patientTreatmentPlan, assessmentDto.getEncounter().getProvenance(), assessmentDto.getAssessmentTakenOn());
                 treatmentPlanDTO.setNextBgAssessmentDate(nextBgDate);
             }
-        } else if (Constants.ASSESSMENT.equals(assessmentDTO.getType()) && StringUtils.isNotBlank(assessmentDTO.getCvdRiskLevel())) {
-            boolean isPregnancyAnc = !Objects.isNull(assessmentDTO.getPregnancyAnc());
-            treatmentPlanDTO.setBGDefaultFrequency((!Objects.isNull(assessmentDTO.getGlucoseLog()) &&
-                    !Objects.isNull(assessmentDTO.getGlucoseLog().getGlucoseValue())));
-            treatmentPlanDTO.setHba1c(!Objects.isNull(assessmentDTO.getGlucoseLog()) && (!Objects.isNull(assessmentDTO.getGlucoseLog().getGlucoseValue())
-                    || !Objects.isNull(assessmentDTO.getGlucoseLog().getHba1c())) ? Boolean.TRUE : Boolean.FALSE);
-            treatmentPlanDTO.setPregnancyAnc(isPregnancyAnc);
-            treatmentPlanDTO.setCvdRiskLevel(assessmentDTO.getCvdRiskLevel());
-            treatmentPlanDTO.setProvenance(assessmentDTO.getEncounter().getProvenance());
-            treatmentPlanDTO.setMemberReference(assessmentDTO.getMemberReference());
-            treatmentPlanDTO.setPatientReference(Objects.isNull(assessmentDTO.getPatientReference()) ?
-                    assessmentDTO.getPatientId() : assessmentDTO.getPatientReference());
-            treatmentPlanDTO.setFrequencies(spiceServiceApiInterface.getFrequencies(CommonUtil.getAuthToken(), CommonUtil.getClient()));
-            response = patientTreatmentPlanService.createProvisionalPlan(treatmentPlanDTO, null);
         }
-        assessmentDTO.setNextBgAssessmentDate(treatmentPlanDTO.getNextBgAssessmentDate());
-        assessmentDTO.setNextBpAssessmentDate(treatmentPlanDTO.getNextBpAssessmentDate());
-        assessmentDTO.setNextMedicalReviewDate(treatmentPlanDTO.getNextMedicalReviewDate());
+
+        if (Constants.ASSESSMENT.equals(assessmentDto.getType())
+                && (Objects.isNull(patientTreatmentPlan) || Objects.equals(CarePlan.CarePlanStatus.DRAFT, patientTreatmentPlan.getStatus()))
+                && ((StringUtils.isNotBlank(assessmentDto.getCvdRiskLevel()) && !new HashSet<>(details).containsAll(List.of(Constants.FREQUENCY_BP_CHECK, Constants.FREQUENCY_BG_CHECK, Constants.FREQUENCY_HBA1C_CHECK, Constants.FREQUENCY_MEDICAL_REVIEW)))
+                || (Objects.nonNull(assessmentDto.getPregnancyAnc()) && !new HashSet<>(details).containsAll(List.of(Constants.FREQUENCY_MEDICAL_REVIEW, Constants.FREQUENCY_CHO_CHECK))))) {
+            boolean isPregnancyAnc = !Objects.isNull(assessmentDto.getPregnancyAnc());
+            treatmentPlanDTO.setBGDefaultFrequency((!Objects.isNull(assessmentDto.getGlucoseLog()) &&
+                    !Objects.isNull(assessmentDto.getGlucoseLog().getGlucoseValue())));
+            treatmentPlanDTO.setHba1c(!Objects.isNull(assessmentDto.getGlucoseLog()) && (!Objects.isNull(assessmentDto.getGlucoseLog().getGlucoseValue())
+                    || !Objects.isNull(assessmentDto.getGlucoseLog().getHba1c())) ? Boolean.TRUE : Boolean.FALSE);
+            treatmentPlanDTO.setPregnancyAnc(isPregnancyAnc);
+            treatmentPlanDTO.setCvdRiskLevel(assessmentDto.getCvdRiskLevel());
+            treatmentPlanDTO.setProvenance(assessmentDto.getEncounter().getProvenance());
+            treatmentPlanDTO.setMemberReference(assessmentDto.getMemberReference());
+            treatmentPlanDTO.setPatientReference(Objects.isNull(assessmentDto.getPatientReference()) ?
+                    assessmentDto.getPatientId() : assessmentDto.getPatientReference());
+            treatmentPlanDTO.setFrequencies(spiceServiceApiInterface.getFrequencies(CommonUtil.getAuthToken(), CommonUtil.getClient()));
+            response = patientTreatmentPlanService.createProvisionalPlan(treatmentPlanDTO, null, Objects.isNull(patientTreatmentPlan) ? null : patientTreatmentPlan, details);
+        }
+        assessmentDto.setNextBgAssessmentDate(treatmentPlanDTO.getNextBgAssessmentDate());
+        assessmentDto.setNextBpAssessmentDate(treatmentPlanDTO.getNextBpAssessmentDate());
+        assessmentDto.setNextMedicalReviewDate(treatmentPlanDTO.getNextMedicalReviewDate());
         if (Objects.nonNull(response)) {
-            assessmentDTO.setTreatmentPlanResponse(convertToAssessmentTreatmentPlan(response));
+            assessmentDto.setTreatmentPlanResponse(convertToAssessmentTreatmentPlan(response));
         }
         return response;
     }
@@ -2064,7 +2091,8 @@ public class AssessmentServiceImpl implements AssessmentService {
      * Convert treatment plan response to assessment treatment plan response
      * </p>
      *
-     * @param treatmentPlanResponseDTO TreatmentPlanResponseDTO entity contains bp, bg and hba1c frequencies
+     * @param treatmentPlanResponseDTO  TreatmentPlanResponseDTO entity contains bp, bg and hba1c frequencies
+     *
      * @return AssessmentTreatmentPlanDTO entity
      */
     private AssessmentTreatmentPlanDTO convertToAssessmentTreatmentPlan(TreatmentPlanResponseDTO treatmentPlanResponseDTO) {
@@ -2134,6 +2162,9 @@ public class AssessmentServiceImpl implements AssessmentService {
         observationBundle.getEntry().forEach(entry -> {
             Observation observation = (Observation) entry.getResource();
             glucoseLogDTO.setBgTakenOn(observation.getEffectiveDateTimeType().getValue());
+            if (observation.hasValueQuantity() && Objects.nonNull(observation.getValueQuantity().getValue())) {
+                glucoseLogDTO.setGlucoseValue(observation.getValueQuantity().getValue().doubleValue());
+            }
         });
         return glucoseLogDTO;
     }

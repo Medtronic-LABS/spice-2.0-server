@@ -21,7 +21,7 @@ class PerformanceMonitoringControllerTest {
     PerformanceMonitoringController performanceMonitoringController;
 
     @Test
-    public void testGetChwPerformanceMonitoringReport() {
+    void testGetChwPerformanceMonitoringReport() {
         performanceMonitoringController.getChwPerformanceMonitoringReport(new FilterRequestDTO());
         verify(performanceMonitoringService, times(1)).getChwPerformanceMonitoringReport(new FilterRequestDTO());
     }

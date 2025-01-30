@@ -45,6 +45,7 @@ import com.mdtlabs.coreplatform.fhirmapper.common.dto.pregnancy.PregnancySymptom
 @Component
 public class SpiceConverter {
 
+
     /**
      * <p>
      * Set patient height details in biometrics DTO using FHIR Observation entity.
@@ -115,9 +116,10 @@ public class SpiceConverter {
      *
      */
     public void setRegularSmokerDetails(Observation observation, BioMetricsDTO bioMetricsDTO) {
-        bioMetricsDTO.setIsRegularSmoker(false);
-        if (Objects.nonNull(observation)) {
-            bioMetricsDTO.setIsRegularSmoker(true);
+        bioMetricsDTO.setIsRegularSmoker(Boolean.FALSE);
+        if (Objects.nonNull(observation) && observation.hasValueCodeableConcept()) {
+            bioMetricsDTO.setIsRegularSmoker(Objects.equals(Constants.YES, observation.getValueCodeableConcept().getText())
+                    ? Boolean.TRUE : Boolean.FALSE);
         }
     }
 

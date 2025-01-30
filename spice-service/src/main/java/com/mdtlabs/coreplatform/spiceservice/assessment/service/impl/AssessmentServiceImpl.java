@@ -28,7 +28,6 @@ import com.mdtlabs.coreplatform.spiceservice.common.dto.RiskAlgorithmDTO;
 import com.mdtlabs.coreplatform.spiceservice.common.dto.ScreeningLogRequestDTO;
 import com.mdtlabs.coreplatform.spiceservice.common.dto.pregnancy.PregnancySymptomDTO;
 import com.mdtlabs.coreplatform.spiceservice.common.model.CallRegister;
-import com.mdtlabs.coreplatform.spiceservice.common.model.Message;
 import com.mdtlabs.coreplatform.spiceservice.common.dto.ScreeningLog;
 import com.mdtlabs.coreplatform.spiceservice.common.dto.SymptomDTO;
 import com.mdtlabs.coreplatform.spiceservice.customizedmodules.service.CustomizedModulesService;
@@ -51,7 +50,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Date;
-import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -81,8 +79,6 @@ public class AssessmentServiceImpl implements AssessmentService {
     private final UserServiceApiInterface userApiInterface;
 
     private final NotificationApiInterface notificationApiInterface;
-
-    private com.mdtlabs.coreplatform.spiceservice.common.CommonUtil spiceUtil;
 
     private final RiskAlgorithm riskAlgorithm;
 
@@ -554,7 +550,7 @@ public class AssessmentServiceImpl implements AssessmentService {
         ScreeningLog screeningLog = fhirServiceApiInterface.getScreeningLog(CommonUtil.getAuthToken(),
                 CommonUtil.getClient(), screeningLogRequestDTODTO);
         if (null == cultureId) {
-            cultureId = staticDataService.findCulture(Constants.DEFAULT_CULTURE_VALUE).getId();
+           staticDataService.findCulture(Constants.DEFAULT_CULTURE_VALUE).getId();
         }
         boolean existingRiskLevel = Constants.HIGH.equals(screeningLog.getRiskLevel());
         String riskLevel = calculateRiskLevel(assessmentDTO, screeningLog);
@@ -728,7 +724,7 @@ public class AssessmentServiceImpl implements AssessmentService {
         Logger.logInfo("In AssessmentServiceImpl, creating assessment bp log information");
         Long cultureId = UserContextHolder.getUserDto().getCultureId();
         if (null == cultureId) {
-            cultureId = staticDataService.findCulture(Constants.DEFAULT_CULTURE_VALUE).getId();
+            staticDataService.findCulture(Constants.DEFAULT_CULTURE_VALUE).getId();
         }
         boolean isRedRisk = false;
         ScreeningLogRequestDTO screeningLogRequestDTODTO = new ScreeningLogRequestDTO();
@@ -777,7 +773,7 @@ public class AssessmentServiceImpl implements AssessmentService {
         Logger.logInfo("In AssessmentServiceImpl, creating assessment bg log information");
         Long cultureId = UserContextHolder.getUserDto().getCultureId();
         if (null == cultureId) {
-            cultureId = staticDataService.findCulture(Constants.DEFAULT_CULTURE_VALUE).getId();
+           staticDataService.findCulture(Constants.DEFAULT_CULTURE_VALUE).getId();
         }
         boolean isRedRisk = false;
         ScreeningLogRequestDTO screeningLogRequestDTODTO = new ScreeningLogRequestDTO();
@@ -789,7 +785,7 @@ public class AssessmentServiceImpl implements AssessmentService {
         GlucoseLogDTO existingGlucoseLog = fhirServiceApiInterface.getExistingGlucoseLog(CommonUtil.getAuthToken(),
                 CommonUtil.getClient(), assessment);
         if (!Objects.isNull(existingGlucoseLog) && !Objects.isNull(existingGlucoseLog.getBgTakenOn())
-                && !Objects.isNull(assessment.getAssessmentTakenOn())
+                && !Objects.isNull(assessment.getAssessmentTakenOn()) && Objects.nonNull(existingGlucoseLog.getGlucoseValue())
                 && (Constants.ZERO > assessment.getAssessmentTakenOn().compareTo(existingGlucoseLog.getBgTakenOn()))) {
             assessment.setOldRecord(true);
         } else {

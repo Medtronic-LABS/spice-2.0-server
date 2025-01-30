@@ -1,16 +1,9 @@
 package com.mdtlabs.coreplatform.spiceservice.report.service.impl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mdtlabs.coreplatform.commonservice.common.CommonUtil;
@@ -39,7 +32,7 @@ import com.mdtlabs.coreplatform.spiceservice.report.service.PerformanceMonitorin
 @Service
 public class PerformanceMonitoringServiceImpl implements PerformanceMonitoringService {
 
-    private final UserServiceApiInterface  userServiceApiInterface;
+    private final UserServiceApiInterface userServiceApiInterface;
 
     private final FhirServiceApiInterface fhirServiceApiInterface;
 
@@ -169,7 +162,7 @@ public class PerformanceMonitoringServiceImpl implements PerformanceMonitoringSe
      * @param visitTypes Set<String>
      */
     protected void updateVisitCount(CallRegisterDto value, Map<String, Map<String, PerformanceReport>> reports,
-                                  String userId, Set<String> visitTypes, Set<String> callTypes) {
+                                    String userId, Set<String> visitTypes, Set<String> callTypes) {
         if (value.getAttempts() == Constants.ZERO) {
             addFollowUpCount(Constants.FOLLOW_UP_DUE_CALL, reports.get(value.getVillageId()).get(userId), callTypes,
                     Boolean.FALSE, value.getType());
@@ -186,10 +179,10 @@ public class PerformanceMonitoringServiceImpl implements PerformanceMonitoringSe
      *
      * @param value             String
      * @param performanceReport Performance Report
-     * @param types        visitTypes
+     * @param types             visitTypes
      */
     protected void addFollowUpCount(String value, PerformanceReport performanceReport, Set<String> types,
-                                  boolean allowToadd, String type) {
+                                    boolean allowToadd, String type) {
         if ((!Objects.isNull(types) && types.add(type)) || allowToadd) {
             if (value.equals(Constants.FOLLOW_UP_DUE_VISIT)) {
                 performanceReport.setFollowUpDueVisit();
@@ -211,9 +204,14 @@ public class PerformanceMonitoringServiceImpl implements PerformanceMonitoringSe
     protected Long getUserId(FilterRequestDTO requestDTO, CallRegisterDto callRegisterDto, boolean returnCreatedBy) {
         String createdByStr = String.valueOf(callRegisterDto.getCreatedBy());
         String updatedByStr = String.valueOf(callRegisterDto.getUpdatedBy());
-        return (requestDTO.getUserFhirIds().containsValue(createdByStr) ||  returnCreatedBy) ? callRegisterDto.getCreatedBy() :
-                requestDTO.getUserFhirIds().containsValue(updatedByStr) ? callRegisterDto.getUpdatedBy() :
-                        !Objects.isNull(callRegisterDto.getChwId()) ? Long.valueOf(callRegisterDto.getChwId()) : null;
+        Long result = null;
+        if (requestDTO.getUserFhirIds().containsValue(createdByStr) || returnCreatedBy) {
+            result = callRegisterDto.getCreatedBy();
+        } else if (requestDTO.getUserFhirIds().containsValue(updatedByStr)) {
+            result = callRegisterDto.getUpdatedBy();
+        } else if (!Objects.isNull(callRegisterDto.getChwId())) {
+            result = Long.valueOf(callRegisterDto.getChwId());
+        }
+        return result;
     }
-
 }

@@ -70,7 +70,6 @@ class GlucoseLogServiceImplTest {
         CallRegister callRegister = TestDataProvider.getCallRegister();
         AssessmentDTO assessmentDTO = TestDataProvider.getAssessmentData();
         callRegister.setMemberId(assessmentDTO.getMemberReference());
-        FollowUpDTO followUpDTO = TestDataProvider.getFollowUpDTO();
         callRegister.setPatientId(Objects.nonNull(assessmentDTO.getPatientId())
                 ? assessmentDTO.getPatientId() : assessmentDTO.getPatientReference());
         callRegister.setIsInitiated(Boolean.FALSE);
@@ -89,7 +88,6 @@ class GlucoseLogServiceImplTest {
         //when
         TestDataProvider.getStaticMock();
         when(fhirServiceApiInterface.assessmentCreate(anyString(), anyString(), any(AssessmentDTO.class))).thenReturn(patientAssessmentDTO);
-//        when(followUpService.addCallRegister(callRegister, Boolean.TRUE)).thenReturn(followUpDTO);
         //then
         GlucoseLogDTO result = glucoseLogService.addGlucoseLog(glucoseLogDTO);
         assertNotNull(result);

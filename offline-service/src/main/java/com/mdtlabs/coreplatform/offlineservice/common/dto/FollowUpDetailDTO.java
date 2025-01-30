@@ -23,6 +23,12 @@ public class FollowUpDetailDTO {
 
     private String reason;
 
+    private String otherReason;
+
+    private String otherVisitedFacilityName;
+
+    private String visitedFacilityId;
+
     private String patientStatus;
 
     private Long attempts;

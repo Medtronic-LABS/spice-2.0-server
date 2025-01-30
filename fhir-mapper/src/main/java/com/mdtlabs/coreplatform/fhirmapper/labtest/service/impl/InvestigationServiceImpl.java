@@ -503,7 +503,8 @@ public class InvestigationServiceImpl implements InvestigationService {
     private LabTestDTO mapDiagnosticReportToLabTestDTO(DiagnosticReport diagnosticReport, boolean showResult,
                                                        Bundle investigationBundle) {
         LabTestDTO labTestDTO = new LabTestDTO();
-        if (Objects.nonNull(diagnosticReport)) {
+        if (Objects.nonNull(diagnosticReport) && diagnosticReport.hasStatus()
+                && !diagnosticReport.getStatus().equals(DiagnosticReport.DiagnosticReportStatus.CANCELLED)) {
             Practitioner recommendedName = getPractitionerById(investigationBundle, fhirUtils.getIdFromReference
                     (diagnosticReport.getPerformer().getFirst().getReference()));
             labTestDTO.setId(diagnosticReport.getIdPart());
@@ -732,7 +733,7 @@ public class InvestigationServiceImpl implements InvestigationService {
             if (encounters.isEmpty()) {
                 return new LabTestHistoryDTO();
             } else {
-                String encounterId = (String) encounters.get(0).get(Constants.ID);
+                String encounterId = (String) encounters.getLast().get(Constants.ID);
                 request.setPatientVisitId(encounterId);
                 LabTestHistoryDTO labTestHistoryDTO = getInvestigationHistoryByVisitId(request);
                 labTestHistoryDTO.setHistory(encounters);
@@ -759,7 +760,8 @@ public class InvestigationServiceImpl implements InvestigationService {
         }
         List<LabTestDTO> labTests = new ArrayList<>();
         String investigationHistoryUrl = String.format(Constants.INVESTIGATION_BY_ENCOUNTER,
-                ResourceType.Encounter.name().concat(Constants.FORWARD_SLASH).concat(request.getPatientVisitId()));
+                ResourceType.Encounter.name().concat(Constants.FORWARD_SLASH).concat(request.getPatientVisitId()))
+                .concat(Constants.STATUS_NOT_CANCELLED);
         Bundle investigationHistoryBundle = restApiUtil.getBatchRequest(investigationHistoryUrl);
         investigationHistoryBundle.getEntry().forEach(resource -> {
             if (resource.getResource() instanceof DiagnosticReport diagnosticReport) {
@@ -855,7 +857,7 @@ public class InvestigationServiceImpl implements InvestigationService {
      */
     private List<Map<String, Object>> getEncounterByVisit(RequestDTO request) {
         List<Map<String, Object>> encounterList = new ArrayList<>();
-        String url = String.format(Constants.GET_INVESTIGATION_ENCOUNTER_QUERY, request.getPatientReference(),
+        String url = String.format(Constants.GET_INVESTIGATION_ASC_ENCOUNTER_QUERY, request.getPatientReference(),
                 StringUtil.concatString(FhirIdentifierConstants.INVESTIGATION_STATUS_SYSTEM_URL, Constants.VERTICAL_BAR, Constants.INVESTIGATED));
         Bundle bundle = restApiUtil.getBatchRequest(url);
         bundle.getEntry().stream().forEach(resource -> {

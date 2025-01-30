@@ -2,7 +2,6 @@ package com.mdtlabs.coreplatform.spiceservice.apiinterface;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import com.mdtlabs.coreplatform.spiceservice.common.dto.MentalHealthDTO;
 import com.mdtlabs.coreplatform.spiceservice.common.dto.PatientGlucoseLogDTO;
@@ -11,7 +10,6 @@ import com.mdtlabs.coreplatform.spiceservice.common.dto.DashboardDetails;
 import com.mdtlabs.coreplatform.spiceservice.common.dto.DashboardDetailsRequestDTO;
 import com.mdtlabs.coreplatform.spiceservice.common.dto.ScreeningLog;
 import com.mdtlabs.coreplatform.spiceservice.common.dto.ScreeningLogRequestDTO;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.ScreeningLogResponseDTO;
 import com.mdtlabs.coreplatform.spiceservice.common.dto.TreatmentPlanDTO;
 import com.mdtlabs.coreplatform.spiceservice.common.dto.TreatmentPlanResponseDTO;
 
@@ -20,7 +18,6 @@ import com.mdtlabs.coreplatform.spiceservice.common.dto.GlucoseLogDTO;
 import feign.FeignException;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,18 +30,15 @@ import com.mdtlabs.coreplatform.spiceservice.FeignConfig;
 import com.mdtlabs.coreplatform.spiceservice.common.dto.AssessmentDTO;
 import com.mdtlabs.coreplatform.spiceservice.common.dto.BioDataDTO;
 import com.mdtlabs.coreplatform.spiceservice.common.dto.BirthHistoryDTO;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.BpLogDTO;
 import com.mdtlabs.coreplatform.spiceservice.common.dto.ConfirmDiagnosisDTO;
 import com.mdtlabs.coreplatform.spiceservice.common.dto.DiagnosisDTO;
 import com.mdtlabs.coreplatform.spiceservice.common.dto.DiagnosisDTO.DiseaseDTO;
 import com.mdtlabs.coreplatform.spiceservice.common.dto.EnrollmentRequestDTO;
 import com.mdtlabs.coreplatform.spiceservice.common.dto.EnrollmentResponseDTO;
 import com.mdtlabs.coreplatform.spiceservice.common.dto.FilterRequestDTO;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.FilterRequestDTO;
 import com.mdtlabs.coreplatform.spiceservice.common.dto.GeneralMedicalReviewDTO;
 import com.mdtlabs.coreplatform.spiceservice.common.dto.GeneralMedicalReviewSummaryDTO;
 import com.mdtlabs.coreplatform.spiceservice.common.dto.GeneralMedicalReviewSummaryDetailsDTO;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.GlucoseLogDTO;
 import com.mdtlabs.coreplatform.spiceservice.common.dto.HouseholdDTO;
 import com.mdtlabs.coreplatform.spiceservice.common.dto.HouseholdMemberDTO;
 import com.mdtlabs.coreplatform.spiceservice.common.dto.IccmResponseDTO;
@@ -82,15 +76,7 @@ import com.mdtlabs.coreplatform.spiceservice.common.dto.ReferralDetailsDTO;
 import com.mdtlabs.coreplatform.spiceservice.common.dto.ReferralTicketDTO;
 import com.mdtlabs.coreplatform.spiceservice.common.dto.RequestDTO;
 import com.mdtlabs.coreplatform.spiceservice.common.dto.UnderFiveIccmDTO;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.PatientGlucoseLogDTO;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.PatientStatusDTO;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.DashboardDetails;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.DashboardDetailsRequestDTO;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.ScreeningLog;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.ScreeningLogRequestDTO;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.TreatmentPlanDTO;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.TreatmentPlanResponseDTO;
-import org.springframework.web.bind.annotation.RequestParam;
+
 
 /**
  * This API interface used to interact with FHIR mapper

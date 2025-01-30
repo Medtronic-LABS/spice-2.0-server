@@ -1,24 +1,9 @@
 package com.mdtlabs.coreplatform.spiceservice.staticdata.service.impl;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.*;
 
-import com.mdtlabs.coreplatform.commonservice.common.contexts.AppTypesContextHolder;
-import com.mdtlabs.coreplatform.commonservice.common.contexts.SelectedAppTypeContextHolder;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.RegionCustomizationDTO;
-import com.mdtlabs.coreplatform.commonservice.common.model.entity.Culture;
-import com.mdtlabs.coreplatform.spiceservice.common.model.CultureValues;
-import com.mdtlabs.coreplatform.spiceservice.common.model.Message;
-import com.mdtlabs.coreplatform.spiceservice.staticdata.repository.CultureValuesRepository;
-import com.mdtlabs.coreplatform.spiceservice.staticdata.repository.MessageRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.modelmapper.ModelMapper;
@@ -29,96 +14,26 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mdtlabs.coreplatform.commonservice.common.CommonUtil;
+import com.mdtlabs.coreplatform.commonservice.common.contexts.AppTypesContextHolder;
+import com.mdtlabs.coreplatform.commonservice.common.contexts.SelectedAppTypeContextHolder;
 import com.mdtlabs.coreplatform.commonservice.common.contexts.UserContextHolder;
 import com.mdtlabs.coreplatform.commonservice.common.contexts.UserSelectedTenantContextHolder;
 import com.mdtlabs.coreplatform.commonservice.common.exception.SpiceValidation;
-import com.mdtlabs.coreplatform.commonservice.common.model.dto.RoleDTO;
 import com.mdtlabs.coreplatform.commonservice.common.exception.Validation;
 import com.mdtlabs.coreplatform.commonservice.common.logger.Logger;
-import com.mdtlabs.coreplatform.commonservice.common.model.dto.MetaDataDTO;
-import com.mdtlabs.coreplatform.commonservice.common.model.dto.UserContextDTO;
 import com.mdtlabs.coreplatform.commonservice.common.model.dto.SearchRequestDTO;
-import com.mdtlabs.coreplatform.commonservice.common.model.dto.UserResponseDTO;
-import com.mdtlabs.coreplatform.commonservice.common.model.dto.VillageDTO;
-import com.mdtlabs.coreplatform.commonservice.common.model.entity.BaseEntity;
-import com.mdtlabs.coreplatform.commonservice.common.model.entity.ClinicalWorkflow;
-import com.mdtlabs.coreplatform.commonservice.common.model.entity.CountryCustomization;
-import com.mdtlabs.coreplatform.commonservice.common.model.entity.HealthFacility;
-import com.mdtlabs.coreplatform.commonservice.common.model.entity.WorkflowCustomization;
+import com.mdtlabs.coreplatform.commonservice.common.model.dto.*;
+import com.mdtlabs.coreplatform.commonservice.common.model.entity.*;
 import com.mdtlabs.coreplatform.spiceservice.apiinterface.AdminServiceApiInterface;
 import com.mdtlabs.coreplatform.spiceservice.apiinterface.UserServiceApiInterface;
 import com.mdtlabs.coreplatform.spiceservice.common.Constants;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.DiseaseCategoryDTO;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.FormMetaDTO;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.FrequencyDTO;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.HealthFacilityDTO;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.MedicalReviewStaticDataDTO;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.MetaDTO;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.MetaFormDTO;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.StaticMetaDataResponseDTO;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.StaticUserDataResponseDTO;
+import com.mdtlabs.coreplatform.spiceservice.common.dto.*;
 import com.mdtlabs.coreplatform.spiceservice.common.dto.MetaDTO.NCDFromDTO;
-import com.mdtlabs.coreplatform.spiceservice.common.model.Comorbidity;
-import com.mdtlabs.coreplatform.spiceservice.common.model.Complaints;
-import com.mdtlabs.coreplatform.spiceservice.common.model.Complication;
-import com.mdtlabs.coreplatform.spiceservice.common.model.CurrentMedication;
-import com.mdtlabs.coreplatform.spiceservice.common.model.Diagnosis;
-import com.mdtlabs.coreplatform.spiceservice.common.model.DiseaseCategory;
-import com.mdtlabs.coreplatform.spiceservice.common.model.DosageForm;
-import com.mdtlabs.coreplatform.spiceservice.common.model.DosageFrequency;
-import com.mdtlabs.coreplatform.spiceservice.common.model.Examination;
-import com.mdtlabs.coreplatform.spiceservice.common.model.FormMeta;
-import com.mdtlabs.coreplatform.spiceservice.common.model.FormMetaUi;
-import com.mdtlabs.coreplatform.spiceservice.common.model.Frequency;
-import com.mdtlabs.coreplatform.spiceservice.common.model.FrequencyType;
-import com.mdtlabs.coreplatform.spiceservice.common.model.Lifestyle;
-import com.mdtlabs.coreplatform.spiceservice.common.model.MedicalCompliance;
-import com.mdtlabs.coreplatform.spiceservice.common.model.Menu;
-import com.mdtlabs.coreplatform.spiceservice.common.model.Meta;
-import com.mdtlabs.coreplatform.spiceservice.common.model.ModelQuestions;
-import com.mdtlabs.coreplatform.spiceservice.common.model.NutritionLifestyle;
-import com.mdtlabs.coreplatform.spiceservice.common.model.ObstetricExamination;
-import com.mdtlabs.coreplatform.spiceservice.common.model.PhysicalExamination;
-import com.mdtlabs.coreplatform.spiceservice.common.model.PresentingComplaints;
-import com.mdtlabs.coreplatform.spiceservice.common.model.Reason;
-import com.mdtlabs.coreplatform.spiceservice.common.model.RiskAlgorithm;
-import com.mdtlabs.coreplatform.spiceservice.common.model.Symptom;
-import com.mdtlabs.coreplatform.spiceservice.common.model.SystemicExaminations;
-import com.mdtlabs.coreplatform.spiceservice.common.model.Unit;
-import com.mdtlabs.coreplatform.spiceservice.staticdata.repository.ComorbidityRepository;
-import com.mdtlabs.coreplatform.spiceservice.staticdata.repository.ComplaintsRepository;
-import com.mdtlabs.coreplatform.spiceservice.staticdata.repository.ComplicationRepository;
-import com.mdtlabs.coreplatform.spiceservice.staticdata.repository.CultureRepository;
-import com.mdtlabs.coreplatform.spiceservice.staticdata.repository.CurrentMedicationRepository;
-import com.mdtlabs.coreplatform.spiceservice.staticdata.repository.DiagnosisRepository;
-import com.mdtlabs.coreplatform.spiceservice.staticdata.repository.DiseaseCategoryRepository;
-import com.mdtlabs.coreplatform.spiceservice.staticdata.repository.DosageFormRepository;
-import com.mdtlabs.coreplatform.spiceservice.staticdata.repository.DosageFrequencyRepository;
-import com.mdtlabs.coreplatform.spiceservice.staticdata.repository.ExaminationRepository;
-import com.mdtlabs.coreplatform.spiceservice.staticdata.repository.FormMetaRepository;
-import com.mdtlabs.coreplatform.spiceservice.staticdata.repository.FrequencyRepository;
-import com.mdtlabs.coreplatform.spiceservice.staticdata.repository.FrequencyTypeRepository;
-import com.mdtlabs.coreplatform.spiceservice.staticdata.repository.LifestyleRepository;
-import com.mdtlabs.coreplatform.spiceservice.staticdata.repository.MedicalComplianceRepository;
-import com.mdtlabs.coreplatform.spiceservice.staticdata.repository.MenuRepository;
-import com.mdtlabs.coreplatform.spiceservice.staticdata.repository.MetaRepository;
-import com.mdtlabs.coreplatform.spiceservice.staticdata.repository.ModelQuestionsRepository;
-import com.mdtlabs.coreplatform.spiceservice.staticdata.repository.NutritionLifestyleRepository;
-import com.mdtlabs.coreplatform.spiceservice.staticdata.repository.ObstetricExaminationRepository;
-import com.mdtlabs.coreplatform.spiceservice.staticdata.repository.PhysicalExaminationRepository;
-import com.mdtlabs.coreplatform.spiceservice.staticdata.repository.PresentingComplaintsRepository;
-import com.mdtlabs.coreplatform.spiceservice.staticdata.repository.ReasonRepository;
-import com.mdtlabs.coreplatform.spiceservice.staticdata.repository.RiskAlgorithmRepository;
-import com.mdtlabs.coreplatform.spiceservice.staticdata.repository.SymptomRepository;
-import com.mdtlabs.coreplatform.spiceservice.staticdata.repository.SystemicExaminationRepository;
-import com.mdtlabs.coreplatform.spiceservice.staticdata.repository.UnitRepository;
+import com.mdtlabs.coreplatform.spiceservice.common.model.*;
+import com.mdtlabs.coreplatform.spiceservice.staticdata.repository.*;
 import com.mdtlabs.coreplatform.spiceservice.staticdata.service.FormMetaService;
 import com.mdtlabs.coreplatform.spiceservice.staticdata.service.StaticDataService;
-import com.mdtlabs.coreplatform.commonservice.common.OrganizationUtil;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.MenuDTO;
 
 /**
  * <p>
@@ -130,8 +45,6 @@ import com.mdtlabs.coreplatform.spiceservice.common.dto.MenuDTO;
 public class StaticDataServiceImpl implements StaticDataService {
 
     private ModelMapper modelMapper = new ModelMapper();
-
-    private static com.mdtlabs.coreplatform.spiceservice.common.CommonUtil spiceCommonUtil;
 
     private final FormMetaRepository formMetaRepository;
 
@@ -195,11 +108,7 @@ public class StaticDataServiceImpl implements StaticDataService {
 
     private final FormMetaService formMetaService;
 
-    private final OrganizationUtil organizationUtil;
-    
     private final MessageRepository messageRepository;
-
-    private final CultureValuesRepository cultureValuesRepository;
 
     @Autowired
     public StaticDataServiceImpl(ComorbidityRepository comorbidityRepository,
@@ -232,8 +141,7 @@ public class StaticDataServiceImpl implements StaticDataService {
                                  RedisTemplate<String, Map<String, List<MetaDataDTO>>> redisTemplate,
                                  ObstetricExaminationRepository obstetricExaminationRepository,
                                  MetaRepository metaRepository, FormMetaService formMetaService,
-                                 OrganizationUtil organizationUtil, MessageRepository messageRepository,
-                                 CultureValuesRepository cultureValuesRepository) {
+                                 MessageRepository messageRepository) {
         this.formMetaRepository = formMetaRepository;
         this.userServiceApiInterface = userServiceApiInterface;
         this.menuRepository = menuRepository;
@@ -265,9 +173,7 @@ public class StaticDataServiceImpl implements StaticDataService {
         this.adminServiceApiInterface = adminServiceApiInterface;
         this.metaRepository = metaRepository;
         this.formMetaService = formMetaService;
-        this.organizationUtil = organizationUtil;
         this.messageRepository = messageRepository;
-        this.cultureValuesRepository = cultureValuesRepository;
     }
 
     @Value("${app.smart-anc}")
@@ -369,13 +275,12 @@ public class StaticDataServiceImpl implements StaticDataService {
         if (!Objects.isNull(menu)) {
             List<Map<String, Object>> mergedMenus = new ArrayList<>();
             Set<Object> menuNames = new HashSet<>();
-            menus.forEach(value -> {
+            menus.forEach(value ->
                 value.getMenus().forEach(menuItem -> {
                     if (menuNames.add(menuItem.get(Constants.NAME))) {
                         mergedMenus.add(menuItem);
                     }
-                });
-            });
+                }));
             menu.setMenus(mergedMenus);
         }
         return menu;
@@ -464,9 +369,8 @@ public class StaticDataServiceImpl implements StaticDataService {
         Map<String, String> consentForms = new HashMap<>();
             SearchRequestDTO request = new SearchRequestDTO();
             Map<Long, ClinicalWorkflow> customizedWorkflowMap = new HashMap<>();
-            customizedWorkflows.forEach(workflow -> {
-                customizedWorkflowMap.put(workflow.getId(), workflow);
-            });
+            customizedWorkflows.forEach(workflow ->
+                customizedWorkflowMap.put(workflow.getId(), workflow));
             request.setWorkflowIds(customizedWorkflows.isEmpty() ? null : customizedWorkflows.stream().map(BaseEntity::getId).toList());
             request.setDistrictId(healthFacility.getDistrict().getId());
 
@@ -515,7 +419,7 @@ public class StaticDataServiceImpl implements StaticDataService {
         response.setEnrollment(enrollment);
         response.setAssessment(assessment);
         response.setScreening(screening);
-        response.setModelQuestions(getModelQuestions(UserContextHolder.getUserDto().getCountry().getId(), cultureId,
+        response.setModelQuestions(getModelQuestions(UserContextHolder.getUserDto().getCountry().getId(),
                 selectedClinicalWorkflows.stream().map(ClinicalWorkflow::getWorkflowName).toList()));
         return response;
     }
@@ -539,8 +443,7 @@ public class StaticDataServiceImpl implements StaticDataService {
                     List<MetaDataDTO> symptoms = dataMap.get(Constants.SYMPTOMS).stream()
                             .filter(metaData -> (Objects.isNull(metaData.getAppTypes())
                                     || AppTypesContextHolder.get().stream().anyMatch(metaData.getAppTypes()::contains))).toList();
-                    response.setSymptoms(modelMapper.map(symptoms, new TypeToken<List<Symptom>>() {
-                    }.getType()));
+                    response.setSymptoms(symptoms);
                     break;
                 case Constants.META_MEDICAL_COMPLIANCES:
                     response.setMedicalCompliances(dataMap.get(Constants.META_MEDICAL_COMPLIANCES));
@@ -563,6 +466,7 @@ public class StaticDataServiceImpl implements StaticDataService {
                                     UserContextHolder.getUserDto().getCountry().getId()))
                             .findFirst().get().getCvdRiskAlgorithm());
                     break;
+
                 default:
                     break;
             }
@@ -648,7 +552,7 @@ public class StaticDataServiceImpl implements StaticDataService {
             switch (meta) {
                 case Constants.SYMPTOMS_BY_CATEGORY:
                     List<MetaDataDTO> symptomsByCategory = metaDatas.get(Constants.SYMPTOMS).stream()
-                            .filter(metaData -> type.equals(metaData.getCategory())).collect(Collectors.toList());
+                            .filter(metaData -> type.equals(metaData.getCategory())).toList();
                     staticData.setSymptoms(modelMapper.map(symptomsByCategory, new TypeToken<List<Symptom>>() {
                     }.getType()));
                     break;
@@ -660,17 +564,17 @@ public class StaticDataServiceImpl implements StaticDataService {
                     break;
                 case Constants.DISEASE:
                     List<MetaDataDTO> diseaseCategories = metaDatas.get(Constants.DISEASE).stream()
-                            .filter(metaData -> type.equals(metaData.getType())).collect(Collectors.toList());
+                            .filter(metaData -> type.equals(metaData.getType())).toList();
                     staticData.setDiseaseCategories(diseaseCategories);
                     break;
                 case Constants.EXAMINATION:
                     List<MetaDataDTO> examinationMeta = metaDatas.get(Constants.EXAMINATION).stream()
-                            .filter(metaData -> type.equals(metaData.getType())).collect(Collectors.toList());
+                            .filter(metaData -> type.equals(metaData.getType())).toList();
                     staticData.setExaminations(examinationMeta);
                     break;
                 case Constants.OBSTETRIC_EXAMINATION:
                     List<MetaDataDTO> physicalExaminations = metaDatas.get(Constants.OBSTETRIC_EXAMINATION).stream()
-                            .filter(metaData -> type.equals(metaData.getType())).collect(Collectors.toList());
+                            .filter(metaData -> type.equals(metaData.getType())).toList();
                     staticData.setObstetricExaminations(physicalExaminations);
                     break;
                 default:
@@ -691,7 +595,7 @@ public class StaticDataServiceImpl implements StaticDataService {
     private void setPresentingComplaints(StaticMetaDataResponseDTO staticData, String type,
             Map<String, List<MetaDataDTO>> metaDatas) {
         List<MetaDataDTO> presentingComplaintsByCategory = metaDatas.get(Constants.PRESENTING_COMPLAINTS).stream()
-                .filter(metaData -> type.equals(metaData.getType())).collect(Collectors.toList());
+                .filter(metaData -> type.equals(metaData.getType())).toList();
         staticData.setPresentingComplaints(presentingComplaintsByCategory);
     }
 
@@ -704,7 +608,7 @@ public class StaticDataServiceImpl implements StaticDataService {
     private void setSystemicExaminations(StaticMetaDataResponseDTO staticData, String type,
             Map<String, List<MetaDataDTO>> metaDatas) {
         List<MetaDataDTO> systemicExaminationByCategory = metaDatas.get(Constants.SYSTEMIC_EXAMINATION).stream()
-                .filter(metaData -> type.equals(metaData.getType())).collect(Collectors.toList());
+                .filter(metaData -> type.equals(metaData.getType())).toList();
         staticData.setSystemicExaminations(systemicExaminationByCategory);
     }
 
@@ -912,7 +816,7 @@ public class StaticDataServiceImpl implements StaticDataService {
      * @param countryId country ID of the user.
      * @return Collection on mental health meta data.
      */
-    public List<Map<String, String>> getModelQuestions(Long countryId, Long cultureId,
+    public List<Map<String, String>> getModelQuestions(Long countryId,
             List<String> clinicalWorkflows) {
         List<Map<String, String>> response = new ArrayList<>();
         Map<String, List<MetaDataDTO>> dataMap = setMetaDateCache();
@@ -922,14 +826,14 @@ public class StaticDataServiceImpl implements StaticDataService {
                     .filter(question -> (countryId.equals(question.getCountryId())
                             && clinicalWorkflows.contains(question.getWorkflow())))
                     .sorted(Comparator.comparing(MetaDataDTO::getDisplayOrder))
-                    .collect(Collectors.toList());
+                    .toList();
             if (Objects.isNull(modelQuestions) || modelQuestions.isEmpty()) {
                 modelQuestions = dataMap.get(Constants.META_MODEL_QUESTIONS).stream()
-                        .filter(question -> (question.isDefault())).collect(Collectors.toList());
+                        .filter(MetaDataDTO::isDefault).toList();
             }
             Map<String, List<MetaDataDTO>> questions = new HashMap<>();
             for (MetaDataDTO question : modelQuestions) {
-                if (!questions.keySet().contains(question.getType())) {
+                if (!questions.containsKey(question.getType())) {
                     questions.put(question.getType(), new ArrayList<>());
                 }
                 questions.get(question.getType()).add(question);
@@ -1063,9 +967,17 @@ public class StaticDataServiceImpl implements StaticDataService {
      */
     private Menu getMenuByRoleName(String roleName, Long countryId, List<String> appTypes) {
         List<Menu> menus = menuRepository.getMenuByRole(roleName, countryId);
-        String appType = Objects.nonNull(appTypes)
-                ? (appTypes.size() == Constants.ONE ? appTypes.getFirst() : Constants.NON_COMMUNITY)
-                : null;
+        String appType;
+
+        if (Objects.nonNull(appTypes)) {
+            if (appTypes.size() == Constants.ONE) {
+                appType = appTypes.getFirst();
+            } else {
+                appType = Constants.NON_COMMUNITY;
+            }
+        } else {
+            appType = null;
+        }
         return menus.stream()
                 .filter(sideMenu -> (Objects.nonNull(countryId) && countryId.equals(sideMenu.getCountryId())))
                 .findFirst()
@@ -1091,26 +1003,6 @@ public class StaticDataServiceImpl implements StaticDataService {
         return setMetaDateCache().get(Constants.META_MESSAGE);
     }
 
-    /**
-     *  Map JSON culture values with the respective culture ID.
-     * @param cultureValue List of culture values.
-     * @param jsonCultureValuesMap Culture JSON values mapped with the culture ID.
-     */
-    private void mapJSONCultureValuesWithCultureId(CultureValues cultureValue, Map<Long, Map<String, Map<Long, Object>>> jsonCultureValuesMap) {
-        Map<String, Map<Long, Object>> cultureValues = new HashMap<>();
-        if(jsonCultureValuesMap.containsKey(cultureValue.getCultureId())) {
-            cultureValues = jsonCultureValuesMap.get(cultureValue.getCultureId());
-        }
-        if (cultureValues.containsKey(cultureValue.getFormName())) {
-            cultureValues.get(cultureValue.getFormName()).put(cultureValue.getFormDataId(),
-                    cultureValue.getJsonCultureValue());
-        } else {
-            Map<Long, Object> cultureMap = new HashMap<>();
-            cultureMap.put(cultureValue.getFormDataId(), cultureValue.getJsonCultureValue());
-            cultureValues.put(cultureValue.getFormName(), cultureMap);
-        }
-        jsonCultureValuesMap.put(cultureValue.getCultureId(), cultureValues);
-    }
 
     /**
      * {@inheritDoc}
@@ -1131,9 +1023,7 @@ public class StaticDataServiceImpl implements StaticDataService {
      */
     public List<MetaDataDTO> getLifestyles() {
         Map<String, List<MetaDataDTO>> dataMap = setMetaDateCache();
-        List<MetaDataDTO> lifestyles = dataMap.get(Constants.META_LIFESTYLE);
-        return lifestyles;
-
+        return dataMap.get(Constants.META_LIFESTYLE);
     }
 
 }

@@ -1300,8 +1300,10 @@ public class PatientServiceImpl implements PatientService {
 
         if (!Objects.isNull(requestDTO.getReason())) {
             patient.addIdentifier().setSystem(FhirIdentifierConstants.PATIENT_DELETE_REASON_IDENTIFIER_URL)
-                    .setValue(requestDTO.getReason());
-            if (Constants.PATIENT_DEAD.equals(requestDTO.getReason())) {
+                    .setValue(Objects.nonNull(requestDTO.getOtherReason()) ? StringUtil.concatString(Constants.OTHER ,
+                            Constants.EMPTY_SPACE,  Constants.HYPHEN, Constants.EMPTY_SPACE,
+                            requestDTO.getOtherReason()) : requestDTO.getReason());
+            if(Constants.PATIENT_DEAD.equals(requestDTO.getReason())) {
                 patient.setDeceased(new BooleanType(Boolean.TRUE));
             }
         }
@@ -1915,6 +1917,7 @@ public class PatientServiceImpl implements PatientService {
                 String.format(Constants.ID_WHERE, requestDTO.getId()));
         url = StringUtil.concatString(url, Constants.AND);
         if (Objects.nonNull(requestDTO.getSearchText()) && !requestDTO.getSearchText().isEmpty()) {
+            requestDTO.setSearchText(requestDTO.getSearchText().replace(Constants.EMPTY_SPACE, Constants.EMPTY_STRING));
             if (CommonUtil.isAllNumeric(requestDTO.getSearchText())) {
                 Logger.logInfo("Search the patient with phone number" + requestDTO.getSearchText());
                 url = StringUtil.concatString(url, Constants.SP_NATIONAL_ID_VIRTUAL_ID_PHONE,
@@ -2535,6 +2538,10 @@ public class PatientServiceImpl implements PatientService {
         Encounter encounter = encounterConverter.createEncounter(patient, relatedPerson, null, null,
                 Objects.isNull(pregnancyDetailsDTO.getProvenance().getModifiedDate())
                         ? new Date() : pregnancyDetailsDTO.getProvenance().getModifiedDate());
+        if (Objects.nonNull(pregnancyDetailsDTO.getPatientVisitId())) {
+            encounter.setPartOf(new Reference(StringUtil.concatString(String.valueOf(ResourceType.Encounter),
+                    Constants.FORWARD_SLASH, pregnancyDetailsDTO.getPatientVisitId())));
+        }
         encounter.setStatus(Encounter.EncounterStatus.INPROGRESS);
         encounter.setServiceProvider(new Reference(StringUtil.concatString(String.valueOf(ResourceType.Organization),
                 Constants.FORWARD_SLASH, pregnancyDetailsDTO.getProvenance().getOrganizationId())));
@@ -3000,6 +3007,7 @@ public class PatientServiceImpl implements PatientService {
         patientStatusDTO.setProvenance(pregnancyDetailsDTO.getProvenance());
         patientStatusDTO.setMemberReference(pregnancyDetailsDTO.getMemberReference());
         patientStatusDTO.setPatientReference(pregnancyDetailsDTO.getPatientReference());
+        patientStatusDTO.setPatientVisitId(pregnancyDetailsDTO.getPatientVisitId());
         commonConverter.createOrUpdateDiabetesAndHypertensionPatientStatus(patientStatusDTO, bundle,
                 diabetesCondition, hypertensionCondition, Objects.nonNull(diabetesCondition.get()));
         if (Constants.KNOWN_PATIENT.equals(patientStatusDTO.getNcdPatientStatus().getDiabetesStatus())

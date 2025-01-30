@@ -88,7 +88,7 @@ public class RiskAlgorithm {
      */
     public String calculateRiskLevelFromGlucoseData(Double glucoseValue, String glucoseType, List<Symptom> symptoms) {
         String riskLevel = null;
-        List<Symptom> bgSymptoms = symptoms.stream().filter(symptom -> !Objects.isNull(symptom.getType()) && symptom.getType().equals(Constants.DIABETES)).collect(Collectors.toList());
+        List<Symptom> bgSymptoms = symptoms.stream().filter(symptom -> !Objects.isNull(symptom.getType()) && symptom.getType().equals(Constants.DIABETES)).toList();
         boolean isRedRiskSymptoms = bgSymptoms.stream().anyMatch(obj -> !Objects.isNull(obj.getCategory()) && obj.getCategory().equals(Constants.RED_RISK));
         if (Objects.isNull(glucoseValue)) {
             return null;
@@ -276,40 +276,6 @@ public class RiskAlgorithm {
         } else if ((avgSystolic >= minSystolic && avgSystolic < maxSystolic) &&
                 (avgDiastolic >= minDiastolic && avgDiastolic < maxDiastolic)) {
             riskLevel = Constants.LOW;
-        }
-        return riskLevel;
-    }
-
-    /**
-     * <p>
-     * This function calculates the risk level based on average systolic and diastolic blood pressure,
-     * existing risk level, and threshold values.
-     * </p>
-     *
-     * @param avgSystolic        {@link Integer} The average systolic blood pressure of a patient is given
-     * @param avgDiastolic       {@link Integer} The average diastolic blood pressure of a patient is given
-     * @param existingRiskLevel  {@link String} The current risk level of the patient, which is a String value is given
-     * @param systolicThreshold  {@link int} The systolic blood pressure threshold used to determine the risk level is given
-     * @param diastolicThreshold {@link int} The diastolic blood pressure threshold used to determine the risk level
-     *                           of a patient is given
-     * @param riskLevel          {@link String} The initial risk level before the method is called is given
-     * @return {@link String} The method is returning a String variable named "riskLevel" is reurned
-     */
-    private String calculateRiskLevel(Double avgSystolic, Double avgDiastolic, String existingRiskLevel,
-                                      int systolicThreshold, int diastolicThreshold, String riskLevel) {
-        if (avgSystolic <= systolicThreshold && avgDiastolic <= diastolicThreshold) {
-            riskLevel = Constants.LOW;
-        }
-
-        if (((avgSystolic >= 141 && avgSystolic <= 160) || (avgDiastolic >= 91 && avgDiastolic <= 99))
-                && StringUtils.equals(existingRiskLevel, Constants.HIGH)) {
-            riskLevel = Constants.MODERATE;
-        }
-
-        if ((avgSystolic > systolicThreshold && avgSystolic <= 179) || (avgDiastolic > diastolicThreshold
-                && avgDiastolic <= 109 && (StringUtils.equals(existingRiskLevel, Constants.MODERATE)
-                || StringUtils.equals(existingRiskLevel, Constants.LOW)))) {
-            riskLevel = Constants.MODERATE;
         }
         return riskLevel;
     }

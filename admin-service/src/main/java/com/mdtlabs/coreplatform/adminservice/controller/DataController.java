@@ -52,6 +52,7 @@ public class DataController {
     }
 
     private final UnitService unitService;
+    String logMessage = "In Data Controller, getting villages list" ;
 
     /**
      * Handles the request to retrieve a list of villages based on the criteria specified in {@link DataRequestDTO}.
@@ -66,7 +67,7 @@ public class DataController {
      */
     @PostMapping("/villages-list")
     public SuccessResponse<VillageDTO> getVillages(@RequestBody DataRequestDTO request) {
-        Logger.logInfo("In Data Controller, getting villages list");
+        Logger.logInfo(logMessage);
         List<VillageDTO> villages = dataService.getVillages(request);
 
         return new SuccessResponse<>(SuccessCode.GET_VILLAGE_LIST, villages,
@@ -79,7 +80,6 @@ public class DataController {
      * This method is used to get list of chiefdoms.
      * </p>
      *
-     * @param requestObject - request dto
      * @return List of ChiefdomDTO Entities.
      */
     @PostMapping("/chiefdom-list")
@@ -98,7 +98,6 @@ public class DataController {
      * This method is used to get list of districts.
      * </p>
      *
-     * @param requestObject - request dto
      * @return List of DistrictDTO Entities.
      */
     @PostMapping("/district-list")
@@ -195,7 +194,7 @@ public class DataController {
      */
     @PostMapping("/villages-by-ids")
     public List<VillageDTO> getVillagesByIds(@RequestBody List<Long> ids) {
-        Logger.logInfo("In Data Controller, getting villages list");
+        Logger.logInfo(logMessage);
         return dataService.getVillagesByIds(ids);
     }
 
@@ -275,7 +274,7 @@ public class DataController {
      */
     @PostMapping("/unlinked-villages-list")
     public SuccessResponse<VillageDTO> getUnlinkedVillages(@RequestBody DataRequestDTO request) {
-        Logger.logInfo("In Data Controller, getting villages list");
+        Logger.logInfo(logMessage);
         List<VillageDTO> villages = dataService.getUnlinkedVillages(request);
         return new SuccessResponse<>(SuccessCode.GET_VILLAGE_LIST, villages, HttpStatus.OK);
     }
@@ -290,7 +289,7 @@ public class DataController {
      */
     @PostMapping("/healthfacility/unlinked-villages-list")
     public SuccessResponse<VillageDTO> getUserVillageList(@RequestBody SearchRequestDTO request) {
-        Logger.logInfo("In Data Controller, getting villages list");
+        Logger.logInfo(logMessage);
         List<VillageDTO> villages = dataService.getVillagesWithoutUsers(request);
         return new SuccessResponse<>(SuccessCode.GET_VILLAGE_LIST, villages, HttpStatus.OK);
     }

@@ -537,6 +537,7 @@ public class Constants extends ca.uhn.fhir.rest.api.Constants {
     public static final String PRESCRIPTION_PRESCRIBED_HISTORY = "MedicationRequest?encounter=%s&_sort=-_id";
     public static final String INVESTIGATION_BY_ENCOUNTER = "DiagnosticReport?encounter=%s&_sort=-issued&_include" +
             "=DiagnosticReport:performer";
+    public static final String STATUS_NOT_CANCELLED = "&status:not=cancelled";
     public static final String GET_LATEST_MEDICATION_REQUEST_PERFORMER_BY_PATIENT = "MedicationRequest?subject=%s&_sort=-authoredon&_count=1&_include=MedicationRequest:intended-performer";
     public static final String SEARCH_RELATED_PERSON_DETAILS_USING_ENCOUNTER = "Encounter?participant=Participant/%s&_sort=-_lastUpdated&_count=1&_include=Encounter:subject&_include=Encounter:participant&_include=Encounter:location&_revinclude=Observation:encounter&_revinclude=QuestionnaireResponse:encounter";
     public static final String SEARCH_RELATED_PERSON_DETAILS_USING_ENCOUNTER_TYPE = "Encounter?identifier=type|%s&participant=Participant/%s&_sort=-_lastUpdated&_count=1&_include=Encounter:subject&_include=Encounter:participant&_include=Encounter:location&_revinclude=Observation:encounter&_revinclude=QuestionnaireResponse:encounter";
@@ -637,8 +638,9 @@ public class Constants extends ca.uhn.fhir.rest.api.Constants {
     public static final String INCLUDE_PATIENT_ORGANIZATION = "&_include=Patient:organization";
 
 
-    public static final String GET_PRESCRIPTION_VISIT_ENCOUNTER_QUERY = "Encounter?_sort=-date&subject=Patient/%s&identifier=%s";
+    public static final String GET_PRESCRIPTION_VISIT_ENCOUNTER_QUERY = "Encounter?_sort=date&subject=Patient/%s&identifier=%s";
     public static final String GET_PRESCRIPTION_ENCOUNTER_QUERY = "Encounter?_sort=-date&subject=Patient/%s&identifier=%s&_count=9999";
+    public static final String GET_INVESTIGATION_ASC_ENCOUNTER_QUERY = "Encounter?_sort=date&subject=Patient/%s&identifier=%s&_count=9999";
     public static final String GET_INVESTIGATION_ENCOUNTER_QUERY = "Encounter?_sort=-date&subject=Patient/%s&identifier=%s&_count=9999";
     public static final String MEDICATION_REQUEST_HISTORY = "MedicationRequest/%s/_history?_count=9999";
     public static final String INVESTIGATION_HISTORY = "DiagnosticReport/%s/_history?_count=9999";
@@ -809,10 +811,10 @@ public class Constants extends ca.uhn.fhir.rest.api.Constants {
     public static final String FILTER_CVD_RISK_LEVEL = "&_has:Observation:patient:cvd-risk=";
     public static final String FILTER_ASSESSMENT_DATE = "&_has:Appointment:patient:next-bp-assessment-date=";
     public static final String FILTER_MEDICAL_REVIEW_DATE = "&_has:Appointment:patient:next-medical-review-date=";
-    public static final String SORT_HIGH_LOW_BG = "&_sort=patient.risk-level,-blood-glucose,-_lastUpdated";
-    public static final String SORT_HIGH_LOW_BP = "&_sort=patient.risk-level,-average-systolic,-_lastUpdated";
-    public static final String SORT_ASSESSMENT_DATE = "&_sort=patient.risk-level,-next-bp-assessment-date,-_lastUpdated";
-    public static final String SORT_MEDICAL_REVIEW_DATE = "&_sort=patient.risk-level,-next-medical-review-date,-_lastUpdated";
+    public static final String SORT_HIGH_LOW_BG = "&_sort=-blood-glucose,-_lastUpdated";
+    public static final String SORT_HIGH_LOW_BP = "&_sort=-average-systolic,-_lastUpdated";
+    public static final String SORT_ASSESSMENT_DATE = "&_sort=-next-bp-assessment-date,-_lastUpdated";
+    public static final String SORT_MEDICAL_REVIEW_DATE = "&_sort=-next-medical-review-date,-_lastUpdated";
     public static final String SORT_RED_RISK = "&_sort=risk-level,-_lastUpdated";
     public static final String SORT_RED_RISK_PATIENT_LINK = "&_sort=patient.risk-level,-_lastUpdated";
     public static final String INCLUDE_APPOINTMENT_PATIENT = "&_include=Appointment:patient";
@@ -863,6 +865,7 @@ public class Constants extends ca.uhn.fhir.rest.api.Constants {
 
     }
 
+    public static final List<String> FREQUENCIES = List.of(FREQUENCY_BP_CHECK, FREQUENCY_BG_CHECK, FREQUENCY_HBA1C_CHECK, FREQUENCY_MEDICAL_REVIEW, FREQUENCY_CHO_CHECK);
     public static final String BG_PROVISIONAL_FREQUENCY_NAME = "Physician Approval Pending";
     public static final String MEDICAL_REVIEW_FREQUENCY = "Medical Review Frequency";
     public static final String BP_CHECK_FREQUENCY = "Blood Pressure Check Frequency";
@@ -955,6 +958,7 @@ public class Constants extends ca.uhn.fhir.rest.api.Constants {
 
     public static final String VALUE = "value";
     public static final String NAME = "name";
+    public static final String DISPLAY_VALUE = "displayValue";
     public static final String SIGNATURE = "signature";
     public static final String ASSESSMENT_TYPE_SCREENING = "screening";
     public static final String ASSESSMENT_TYPE_ASSESSMENT = "assessment";
@@ -1021,7 +1025,7 @@ public class Constants extends ca.uhn.fhir.rest.api.Constants {
     public static final String LAST_UPDATED_LT_PARAM = "&_lastUpdated=lt%s&_sort=-_lastUpdated&_revinclude=Patient:link";
 
     //Medical review history
-    public static final String GET_LATEST_ENCOUNTER_BY_PERIOD = "Encounter?subject=%s&identifier=%s&identifier=%s&_sort=-date&_count=99999999";
+    public static final String GET_LATEST_ENCOUNTER_BY_PERIOD = "Encounter?subject=%s&identifier=%s&identifier=%s&_sort=date&_count=999999999";
     public static final String GET_LATEST_ENCOUNTER_BY_IDENTIFIER = "Encounter?subject=%s&identifier=%s&_sort=-date&_count=99999999";
     public static final String GET_ENCOUNTER_BY_PART_OF = "Encounter?part-of=%s&_sort=part-of&status:not=cancelled";
     public static final String OBSERVATION_REV_INCLUDE_ENCOUNTER_IDS = GET_ENCOUNTER_ID + "&_revinclude=Observation:encounter&_count=9999999";

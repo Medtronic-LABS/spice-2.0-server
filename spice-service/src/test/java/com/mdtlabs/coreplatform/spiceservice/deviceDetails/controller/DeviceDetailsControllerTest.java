@@ -1,12 +1,7 @@
 package com.mdtlabs.coreplatform.spiceservice.deviceDetails.controller;
 
-import com.mdtlabs.coreplatform.commonservice.common.model.dto.DeviceDetailsDTO;
-import com.mdtlabs.coreplatform.commonservice.common.model.entity.DeviceDetails;
-import com.mdtlabs.coreplatform.spiceservice.common.TestConstants;
-import com.mdtlabs.coreplatform.spiceservice.common.TestDataProvider;
-import com.mdtlabs.coreplatform.spiceservice.devicedetails.controller.DeviceDetailsController;
-import com.mdtlabs.coreplatform.spiceservice.devicedetails.service.DeviceDetailsService;
-import com.mdtlabs.coreplatform.spiceservice.message.SuccessResponse;
+import java.util.Map;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -15,16 +10,18 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import org.modelmapper.ModelMapper;
-import org.springframework.http.HttpStatus;
 
-import java.util.Map;
+import static org.mockito.Mockito.*;
 
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.when;
+import com.mdtlabs.coreplatform.commonservice.common.model.dto.DeviceDetailsDTO;
+import com.mdtlabs.coreplatform.commonservice.common.model.entity.DeviceDetails;
+import com.mdtlabs.coreplatform.spiceservice.common.TestConstants;
+import com.mdtlabs.coreplatform.spiceservice.devicedetails.controller.DeviceDetailsController;
+import com.mdtlabs.coreplatform.spiceservice.devicedetails.service.DeviceDetailsService;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class DeviceDetailsControllerTest {
+class DeviceDetailsControllerTest {
 
     @InjectMocks
     private DeviceDetailsController deviceDetailsController;
@@ -40,6 +37,7 @@ public class DeviceDetailsControllerTest {
         DeviceDetailsDTO deviceDetailsDTO = new DeviceDetailsDTO();
         when(deviceDetailsService.validateDeviceDetails(modelMapper.map(deviceDetailsDTO, DeviceDetails.class))).thenReturn(Map.of());
         deviceDetailsController.validateDeviceDetails(deviceDetailsDTO);
+        verify(deviceDetailsService, atLeastOnce()).validateDeviceDetails(modelMapper.map(deviceDetailsDTO, DeviceDetails.class));
     }
 
     @Test
@@ -48,5 +46,6 @@ public class DeviceDetailsControllerTest {
         DeviceDetails deviceDetails = new DeviceDetails();
         when(deviceDetailsService.getDeviceByRefId(refId)).thenReturn(deviceDetails);
         deviceDetailsController.getDeviceByRefId(refId);
+        verify(deviceDetailsService, atLeastOnce()).getDeviceByRefId(refId);
     }
 }

@@ -1,15 +1,9 @@
 package com.mdtlabs.coreplatform.spiceservice.patient.controller;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.mdtlabs.coreplatform.commonservice.common.contexts.SelectedAppTypeContextHolder;
-import com.mdtlabs.coreplatform.spiceservice.common.Constants;
-import com.mdtlabs.coreplatform.spiceservice.common.TestConstants;
-import com.mdtlabs.coreplatform.spiceservice.common.TestDataProvider;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,6 +17,9 @@ import org.springframework.http.ResponseEntity;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
+import com.mdtlabs.coreplatform.commonservice.common.contexts.SelectedAppTypeContextHolder;
+import com.mdtlabs.coreplatform.spiceservice.common.Constants;
+import com.mdtlabs.coreplatform.spiceservice.common.dto.*;
 import com.mdtlabs.coreplatform.spiceservice.message.SuccessResponse;
 import com.mdtlabs.coreplatform.spiceservice.patient.service.PatientService;
 

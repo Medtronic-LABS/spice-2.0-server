@@ -1,7 +1,10 @@
 package com.mdtlabs.coreplatform.spiceservice.patientpsychology.controller;
 
 import com.mdtlabs.coreplatform.spiceservice.common.dto.PsychologyDTO;
+import com.mdtlabs.coreplatform.spiceservice.message.SuccessResponse;
 import com.mdtlabs.coreplatform.spiceservice.patientpsychology.service.PatientPsychologyService;
+
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -17,7 +20,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class PatientPsychologyControllerTest {
+class PatientPsychologyControllerTest {
     @InjectMocks
     private PatientPsychologyController patientPsychologyController;
     @Mock
@@ -30,23 +33,24 @@ public class PatientPsychologyControllerTest {
         psychologyDTOList.add(request);
 
         when(patientPsychologyService.getPsychologyDataByUserIdAndRelatedPersonId(request)).thenReturn(psychologyDTOList);
-        patientPsychologyController.getPsychologyNotes(request);
+        SuccessResponse<PsychologyDTO> result = patientPsychologyController.getPsychologyNotes(request);
+        Assertions.assertNotNull(result);
     }
 
     @Test
     void savePsychologyNotes() {
         PsychologyDTO request = new PsychologyDTO();
-        List<PsychologyDTO> psychologyDTOList = new ArrayList<>();
-        psychologyDTOList.add(request);
         when(patientPsychologyService.savePsychologyData(request)).thenReturn(request);
-        patientPsychologyController.savePsychologyNotes(request);
+        SuccessResponse<PsychologyDTO> response = patientPsychologyController.savePsychologyNotes(request);
+        Assertions.assertNotNull(response);
     }
 
     @Test
     void updatePsychologyNotes() {
         PsychologyDTO request = new PsychologyDTO();
         when(patientPsychologyService.updatePsychologyData(request)).thenReturn(request);
-        patientPsychologyController.updatePsychologyNotes(request);
+        SuccessResponse<PsychologyDTO> response = patientPsychologyController.updatePsychologyNotes(request);
+        Assertions.assertNotNull(response);
     }
 
     @Test
@@ -54,6 +58,7 @@ public class PatientPsychologyControllerTest {
         PsychologyDTO request = new PsychologyDTO();
 
         when(patientPsychologyService.removePsychologyDataById(request)).thenReturn(request);
-        patientPsychologyController.removePsychologyNotes(request);
+        SuccessResponse<PsychologyDTO> response = patientPsychologyController.removePsychologyNotes(request);
+        Assertions.assertNotNull(response);
     }
 }

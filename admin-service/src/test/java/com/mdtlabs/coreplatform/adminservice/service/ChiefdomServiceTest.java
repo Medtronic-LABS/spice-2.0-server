@@ -314,7 +314,8 @@ class ChiefdomServiceTest {
 
     @Test
     void testGetChiefdomDetailsThrowsDataNotAcceptableException() {
-        assertThrows(DataNotAcceptableException.class, () -> chiefdomService.getChiefdomDetails(new SearchRequestDTO()));
+        SearchRequestDTO request = new SearchRequestDTO();
+        assertThrows(DataNotAcceptableException.class, () -> chiefdomService.getChiefdomDetails(request));
     }
 
     @Test
@@ -330,9 +331,11 @@ class ChiefdomServiceTest {
     void testCreateChiefdomThrowsDataConflictException() {
         Chiefdom chiefdom = new Chiefdom();
         chiefdom.setName("sample");
+        List<Village> villages = new ArrayList<>();
+
         when(chiefdomRepository
                 .findByNameIgnoreCaseAndIsDeletedFalse(chiefdom.getName().strip())).thenReturn(new Chiefdom());
-        assertThrows(DataConflictException.class, () -> chiefdomService.createChiefdom(chiefdom, new ArrayList<>()));
+        assertThrows(DataConflictException.class, () -> chiefdomService.createChiefdom(chiefdom, villages));
     }
 
     @Test

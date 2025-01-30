@@ -55,34 +55,10 @@ public class ComplianceConverter {
         for (ComplianceDTO compliance : complianceDTOs) {
             Observation.ObservationComponentComponent complianceComponent =
                     new Observation.ObservationComponentComponent();
-            switch (compliance.getName()) {
-                case MetaCodeConstants.RAN_OUT_OF_MEDICATION -> complianceComponent.setCode(fhirUtils.setCodes(
-                        MetaCodeConstants.RAN_OUT_OF_MEDICATION_KEY));
-                case MetaCodeConstants.MEDICATION_CAUSED_SIDE_EFFECTS -> complianceComponent.setCode(fhirUtils.setCodes(
-                        MetaCodeConstants.MEDICATION_CAUSED_SIDE_EFFECTS_KEY));
-                case MetaCodeConstants.STARTED_TAKING_MEDICATION_BUT_STOPPED ->
-                        complianceComponent.setCode(fhirUtils.setCodes(
-                                MetaCodeConstants.STARTED_TAKING_MEDICATION_BUT_STOPPED_KEY));
-                case MetaCodeConstants.TOOK_ALL_MEDICATION -> complianceComponent.setCode(fhirUtils.setCodes(
-                        MetaCodeConstants.TOOK_ALL_MEDICATION_KEY));
-                case MetaCodeConstants.COULD_NOT_AFFORD_PAY_FOR_MEDICATION ->
-                        complianceComponent.setCode(fhirUtils.setCodes(
-                                MetaCodeConstants.COULD_NOT_AFFORD_PAY_FOR_MEDICATION_KEY));
-                case MetaCodeConstants.NOT_PRESCRIBED_ANY_MEDICATION -> complianceComponent.setCode(fhirUtils.setCodes(
-                        MetaCodeConstants.NOT_PRESCRIBED_ANY_MEDICATION_KEY));
-                case MetaCodeConstants.MISSED_A_LOT_OF_MEDICATION -> complianceComponent.setCode(fhirUtils.setCodes(
-                        MetaCodeConstants.MISSED_A_LOT_OF_MEDICATION_KEY));
-                case MetaCodeConstants.MISSED_SOME_MEDICATION -> complianceComponent.setCode(fhirUtils.setCodes(
-                        MetaCodeConstants.MISSED_SOME_MEDICATION_KEY));
-                case MetaCodeConstants.DID_NOT_TAKE_ANY_MEDICATION -> complianceComponent.setCode(fhirUtils.setCodes(
-                        MetaCodeConstants.DID_NOT_TAKE_ANY_MEDICATION_KEY));
-                case MetaCodeConstants.OTHER -> {
-                    complianceComponent.setCode(fhirUtils.setCodes(
-                            MetaCodeConstants.OTHER_KEY));
-                    if (Objects.nonNull(compliance.getOtherCompliance())) {
-                        complianceComponent.setValue(new StringType(compliance.getOtherCompliance()));
-                    }
-                }
+            complianceComponent.setCode(fhirUtils.setCodes(compliance.getValue()));
+            if (MetaCodeConstants.OTHER_KEY.equals(compliance.getValue())
+                    && Objects.nonNull(compliance.getOtherCompliance())) {
+                complianceComponent.setValue(new StringType(compliance.getOtherCompliance()));
             }
             complianceObservation.addComponent(complianceComponent);
         }

@@ -1,7 +1,6 @@
 package com.mdtlabs.coreplatform.spiceservice.common.dto;
 
 import lombok.Data;
-import org.springframework.beans.factory.annotation.Value;
 
 /**
  * <p>

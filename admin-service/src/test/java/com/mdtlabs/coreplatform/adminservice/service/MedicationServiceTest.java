@@ -8,9 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import com.mdtlabs.coreplatform.adminservice.model.dto.ClassificationDTO;
 import com.mdtlabs.coreplatform.adminservice.model.entity.Classification;
@@ -267,47 +265,6 @@ class MedicationServiceTest {
         //then
         assertThrows(DataConflictException.class, () -> medicationService.updateMedication(medicationDTO));
     }
-
-    // @Test
-    // void throwDataNotAcceptableException() {
-    //     //given
-    //     MedicationDTO medicationDTO = TestDataProvider.getMedicationDTO();
-    //     MedicationDTO medicationValidation = new MedicationDTO();
-    //     SearchRequestDTO requestDTO = TestDataProvider.getSearchRequestDTO();
-    //     Medication medication = TestDataProvider.getMedication();
-    //     medication.setId(TestConstants.ONE);
-    //     medication.setCountryId(TestConstants.TWO);
-
-    //     Medication existingMedication = TestDataProvider.getMedication();
-    //     existingMedication.setName("Dolo");
-
-    //     // Medication secondMedication = TestDataProvider.getMedication();
-    //     MedicationDTO secondMedication = TestDataProvider.getMedicationDTO();
-
-    //     secondMedication.setId(TestConstants.TWO);
-    //     Medication existingSecondMedication = TestDataProvider.getMedication();
-    //     existingSecondMedication.setId(TestConstants.TWO);
-    //     existingSecondMedication.setCountryId(TestConstants.TWO);
-    //     List<MedicationDTO> medications = new ArrayList<>();
-    //     medications.add(medicationDTO);
-    //     medications.add(medicationDTO);
-    //     //when
-    //     when(medicationRepository.getMedicationByMandatoryFields(
-    //             medication.getClassificationId(), medication.getBrandId(), medication.getDosageFormId(),
-    //             medication.getCountryId(), medication.getName(), medication.getTenantId())).thenReturn(medication);
-    //     when(medicationRepository
-    //             .findByIdAndIsDeletedFalseAndTenantId(TestConstants.ONE, medication.getTenantId())).thenReturn(existingMedication);
-    //     when(medicationRepository
-    //             .findByIdAndIsDeletedFalseAndTenantId(TestConstants.TWO, medication.getTenantId())).thenReturn(existingSecondMedication);
-
-    //     //then
-    //     assertThrows(DataNotAcceptableException.class, () -> medicationService.getAllMedications(requestDTO));
-    //     // assertThrows(DataNotAcceptableException.class, () -> medicationService.deleteMedicationById(requestDTO));
-    //     assertThrows(DataNotAcceptableException.class, () -> medicationService.updateMedication(medicationDTO));
-    //     assertThrows(DataNotAcceptableException.class, () -> medicationService.updateMedication(secondMedication));
-    //     assertThrows(DataNotAcceptableException.class, () -> medicationService.updateMedication(medicationValidation));
-    //     assertThrows(DataNotAcceptableException.class, () -> medicationService.createMedication(medications));
-    // }
 
     @Test
     void getMedicationByName() {

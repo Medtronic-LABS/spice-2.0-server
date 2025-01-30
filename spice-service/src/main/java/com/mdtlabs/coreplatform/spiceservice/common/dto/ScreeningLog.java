@@ -24,7 +24,7 @@ public class ScreeningLog {
 
     private boolean isInitialReview;
 
-    private Boolean IsPregnant;
+    private Boolean isPregnant;
 
     private String isPregnancyRisk;
 

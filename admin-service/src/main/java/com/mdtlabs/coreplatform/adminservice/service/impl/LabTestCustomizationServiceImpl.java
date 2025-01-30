@@ -40,13 +40,10 @@ public class LabTestCustomizationServiceImpl implements LabTestCustomizationServ
 
     private final LabTestCustomizationRepository labTestCustomizationRepository;
 
-    private final FhirServiceApiInterface fhirServiceApiInterface;
-
     private final ModelMapper mapper = new ModelMapper();
 
-    public LabTestCustomizationServiceImpl(LabTestCustomizationRepository labTestCustomizationRepository, FhirServiceApiInterface fhirServiceApiInterface) {
+    public LabTestCustomizationServiceImpl(LabTestCustomizationRepository labTestCustomizationRepository) {
         this.labTestCustomizationRepository = labTestCustomizationRepository;
-        this.fhirServiceApiInterface = fhirServiceApiInterface;
     }
 
     /**

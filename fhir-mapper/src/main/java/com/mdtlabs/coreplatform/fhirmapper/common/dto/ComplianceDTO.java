@@ -17,4 +17,6 @@ public class ComplianceDTO {
 	private String name;
 
 	private String otherCompliance;
+
+	private String value;
 }

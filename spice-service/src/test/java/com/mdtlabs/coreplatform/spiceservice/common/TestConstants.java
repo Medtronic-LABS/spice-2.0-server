@@ -55,7 +55,7 @@ public class TestConstants {
     public static final String MEDICAL_REVIEW = "medicalReview";
     public static final String RECOVERED = "Recovered";
     public static final String MALARIA_CRITERIA = "malariaCriteria";
-    public static final String DIARRHEA__CRITERIA = "diarrheaCriteria";
+    public static final String DIARRHEA_CRITERIA = "diarrheaCriteria";
     public static final String PNEUMONIA_CRITERIA = "pneumoniaCriteria";
     public static final String MUAC_CRITERIA = "muacCriteria";
     public static final String ESCALATION_CRITERIA = "escalationCriteria";

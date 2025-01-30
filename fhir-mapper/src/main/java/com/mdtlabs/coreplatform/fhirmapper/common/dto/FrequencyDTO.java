@@ -8,7 +8,7 @@ import lombok.Data;
  * @author Karthick M created on Aug 13, 2024
  */
 @Data
-public class FrequencyDTO {
+public class FrequencyDTO implements Cloneable {
 
     private String name;
 
@@ -22,5 +22,14 @@ public class FrequencyDTO {
 
     private String title;
 
-    private Integer displayOrder;    
+    private Integer displayOrder;
+
+    @Override
+    public FrequencyDTO clone() {
+        try {
+            return (FrequencyDTO) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

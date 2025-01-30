@@ -2,7 +2,6 @@ package com.mdtlabs.coreplatform.spiceservice;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,7 +25,7 @@ public class AwsConfig {
     private String region;
 
     @Value("${cloud.aws.environment}")
-    private String aws_environment;
+    private String awsEnvironment;
 
     /**
      * Generates an Amazon S3 client based on the environment.
@@ -37,7 +36,7 @@ public class AwsConfig {
      */
     @Bean
     public AmazonS3 amazonS3Client() {
-        if (Constants.AWS_ENVIRONMENT_EKS.equalsIgnoreCase(aws_environment)) {
+        if (Constants.AWS_ENVIRONMENT_EKS.equalsIgnoreCase(awsEnvironment)) {
             return AmazonS3ClientBuilder.standard()
                     .withRegion(region)
                     .withCredentials(WebIdentityTokenCredentialsProvider.create())

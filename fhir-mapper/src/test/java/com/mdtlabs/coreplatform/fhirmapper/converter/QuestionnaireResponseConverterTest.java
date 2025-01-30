@@ -184,7 +184,7 @@ class QuestionnaireResponseConverterTest {
         when(restApiUtil.getBatchRequest(anyString())).thenReturn(bundle);
 
         //then
-        Observation response = questionnaireResponseConverter.processMentalHealthDetails(mentalHealthObservationDTO);
+        Observation response = questionnaireResponseConverter.processMentalHealthDetails(mentalHealthObservationDTO, null, null);
         Assertions.assertNotNull(response);
     }
 

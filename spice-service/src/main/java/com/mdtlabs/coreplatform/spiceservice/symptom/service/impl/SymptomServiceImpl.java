@@ -2,7 +2,6 @@ package com.mdtlabs.coreplatform.spiceservice.symptom.service.impl;
 
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,7 +39,7 @@ public class SymptomServiceImpl implements SymptomService {
         if (getConstantsInstance().getSymptoms().isEmpty()) {
             getConstantsInstance().setSymptoms(symptomRepository.findByIsDeletedFalseAndIsActiveTrue());
         }
-        return getConstantsInstance().getSymptoms().stream().filter(obj -> ids.contains(obj.getId())).collect(Collectors.toList());
+        return getConstantsInstance().getSymptoms().stream().filter(obj -> ids.contains(obj.getId())).toList();
     }
 
     /**

@@ -367,7 +367,7 @@ public class MedicalReviewController {
      * @return A SuccessResponse indicating the result of the summary creation operation.
      */
     @PostMapping("/ncd/summary-create")
-    public SuccessResponse createSummary(@RequestBody NCDMedicalReviewDTO request) {
+    public SuccessResponse<Map<String, String>> createSummary(@RequestBody NCDMedicalReviewDTO request) {
         medicalReviewService.createSummary(request);
         return new SuccessResponse<>(SuccessCode.CREATE_SUMMARY, HttpStatus.CREATED);
     }
@@ -482,7 +482,7 @@ public class MedicalReviewController {
      * @param request The NCDMedicalReviewDTO object containing the details of the medical review to be summarized.
      */
     @PostMapping("/ncd/date/update")
-    public SuccessResponse updateAppointmentDate(@RequestBody NCDMedicalReviewDTO request) {
+    public SuccessResponse<Map<String, String>> updateAppointmentDate(@RequestBody NCDMedicalReviewDTO request) {
         medicalReviewService.updateNCDAppointment(request);
         return new SuccessResponse<>(SuccessCode.APPOINTMENT_UPDATED, HttpStatus.CREATED);
     }

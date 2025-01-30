@@ -1,3 +1,406 @@
+INSERT INTO public.country_customization (form_input,"type",category,is_default,tenant_id,country_id,created_by,updated_by,is_deleted,is_active,culture_id,clinical_workflow_id) VALUES
+	 ('<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      html,
+      body {
+        max-width: 100%;
+        overflow-x: hidden;
+      }
+      .requlartext {
+        font-size: 16px;
+        font-family: "Inter";
+        font-weight: 400;
+        line-height: 1.6;
+      }
+      .boldtext {
+        font-size: 16px;
+        font-family: "Inter";
+        font-weight: 700;
+        line-height: 1.6;
+      }
+      a {
+        word-wrap: break-word;
+      }
+      .bold-text {
+        font-weight: bold;
+        padding-bottom: 10px;
+      }
+      ul {
+        margin: 0px;
+      } /* Extra small devices (phones, 600px and down) */
+      @media only screen and (max-width: 600px) {
+        .requlartext {
+          font-size: 16px;
+          font-family: "Inter";
+          font-weight: 400;
+          line-height: 1.6;
+        }
+        .boldtext {
+          font-size: 16px;
+          font-family: "Inter";
+          font-weight: 700;
+          line-height: 1.6;
+        }
+      } /* Small devices (portrait tablets and large phones, 600px and up) */
+      @media only screen and (min-width: 600px) {
+        .requlartext {
+          font-size: 20px;
+          font-family: "Inter";
+          font-weight: 400;
+          line-height: 1.6;
+        }
+        .boldtext {
+          font-size: 20px;
+          font-family: "Inter";
+          font-weight: 700;
+          line-height: 1.6;
+        }
+      } /* Medium devices (landscape tablets, 768px and up) */
+      @media only screen and (min-width: 768px) {
+        .requlartext {
+          font-size: 20px;
+          font-family: "Inter";
+          font-weight: 400;
+          line-height: 1.6;
+        }
+        .boldtext {
+          font-size: 20px;
+          font-family: "Inter";
+          font-weight: 700;
+          line-height: 1.6;
+        }
+      } /* Large devices (laptops/desktops, 992px and up) */
+      @media only screen and (min-width: 992px) {
+        .requlartext {
+          font-size: 20px;
+          font-family: "Inter";
+          font-weight: 400;
+          line-height: 1.6;
+        }
+        .boldtext {
+          font-size: 20px;
+          font-family: "Inter";
+          font-weight: 700;
+          line-height: 1.6;
+        }
+      } /* Extra large devices (large laptops and desktops, 1200px and up) */
+      @media only screen and (min-width: 1200px) {
+        .requlartext {
+          font-size: 20px;
+          font-family: "Inter";
+          font-weight: 400;
+          line-height: 1.6;
+        }
+        .boldtext {
+          font-size: 20px;
+          font-family: "Inter";
+          font-weight: 700;
+          line-height: 1.6;
+        }
+      }
+    </style>
+  </head>
+  <body
+    contenteditable="true"
+    spellcheck="false"
+    style="min-height: 233px"
+    data-new-gr-c-s-loaded="14.1154.0"
+    data-new-gr-c-s-check-loaded="14.1154.0"
+    data-gr-ext-installed=""
+  >
+    <div class="requlartext">
+      The healthcare worker will be accepting the terms &amp; conditions on
+      behalf of the screening participant.
+    </div>
+    <div class="boldtext">
+      <div class="bold-text">
+        The SMART Health Project SPICE™ Patient Consent and Notification
+        Background:
+      </div>
+    </div>
+    <div class="requlartext">
+      <div>
+        Sierra Leone is heavily impacted by primary care conditions such as
+        malaria, maternal and child mortality, TB, HIV, and non-communicable
+        diseases (NCDs), which are significant health concerns in Sub-Saharan
+        Africa. You are invited to join the Smart Health SPICE™ program, which
+        integrates community and primary care to manage the leading causes of
+        death in Sierra Leone.
+      </div>
+      <div>
+        Managing your health condition, attending clinic appointments, getting
+        prescriptions, and adhering to your treatment plan can be challenging.
+        It can also be difficult for healthcare providers, including doctors,
+        Community Health Officers (CHOs), and midwife nurses, to monitor your
+        health status and medication information over time. The Smart Health
+        program introduces a new method to enhance clinical care for patients
+        with TB, lower respiratory infections, malaria, diabetes, hypertension,
+        and antenatal care. This program aims to track your health data over
+        time, present it clearly to your healthcare provider, and empower you
+        with more information about your health status, ultimately improving
+        care and reducing related complications and challenges.
+      </div>
+      <div>
+        <br />
+        <span class="boldtext">Program Procedures</span>
+        <div>
+          As a participant in this program, you will:
+          <ul>
+            <li>
+              Be requested to visit the PHU/hospital for enrolment into the
+              program. You will be informed about the program and if you agree
+              to participate, will be enrolled into the Smart Health SPICE
+              system.
+            </li>
+            <li>Receive educational information about Health Status.</li>
+            <li>
+              Be asked to comply with the follow-up plan your health care
+              provider provides you to the best of your ability.
+            </li>
+            <li>Regularly have follow up visit, per your follow-up plan.</li>
+            <li>
+              Attend hospital/PHU medical reviews to see your health care
+              provider, per your follow-up plan.
+            </li>
+            <li>
+              Receive and review short message service (SMS) messages with
+              information from your health care provider.
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div>
+        <br />
+        <span class="boldtext">Risk(s):</span>
+        <div>
+          The program may face delays or inaccuracies in information reaching
+          your Healthcare provider potentially affecting your care. To reduce
+          this risk, the software has been thoroughly tested for accuracy and
+          functionality, with system checks to ensure your information is sent
+          correctly. If you need to visit the PHU/hospital, your healthcare
+          provider will be notified via SPICE and will follow up with you. It''s
+          important to provide accurate contact information (i.e. telephone
+          number) and update it if it changes.
+        </div>
+      </div>
+      <div>
+        <br />
+        <span class="boldtext">Benefit(s):</span>
+
+        <div>
+          <ul>
+            <li>
+              You may gain better understanding of your condition and how to
+              improve your health.
+            </li>
+            <li>
+              You will receive follow-ups and clear, actionable information to
+              help manage your health condition.
+            </li>
+            <li>
+              Data collected from the program can benefit future patients or
+              family members with similar health conditions.
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div>
+        <br />
+        <span class="boldtext"
+          >Confidentiality/ Use of Personal Information:</span
+        >
+
+        <div>
+          While participating in this program the following information will be
+          collected:
+          <ul>
+            <li>
+              Identifying information (age, gender, phone number) and medical
+              data and health information from you and from your medical records
+              as prepared by your healthcare provider including treatment and
+              examination notes and other health related information.
+            </li>
+            <li>
+              You will be assigned to a program ID that will be used for unique
+              identification and to protect data privacy.
+            </li>
+            <li>
+              Your doctor, CHO, Midwife, nurse, pharmacist, may have direct
+              access to your personal information.
+            </li>
+            <li>
+              As an enrolled participant in the program, your personal
+              information will be transferred to the United States as part of
+              processing, with computing support from the software team in
+              India. The program team will have your personal SPICE information
+              processed manually or by computer including the use of internet or
+              of cloud computing. By enrolling in the program, you agree to the
+              said transfer, storage and processing of your personal
+              information. Data results from the program may be published but
+              will not disclose your name or any other identifying
+              characteristics. No personal information will be used to market to
+              you without your consent.
+            </li>
+            <li>
+              Your de-identified medical information may also be used for
+              additional research, educational purpose, publications, population
+              health review, future health studies, development of new medical
+              products or procedures, or for obtaining future approvals for
+              health systems. In addition, the program team may also be required
+              by law or by a court order. There is no patient portal to access
+              your personal information collected as part of this program, but
+              this information can be requested directly Ministry of Health The
+              program will handle your personal information in accordance with
+              appropriate confidentiality standards and all applicable data
+              protection and privacy laws.
+            </li>
+          </ul>
+        </div>
+        <div>
+          <br />
+          <span class="boldtext">Participation:</span>
+
+          <div>
+            Whether you take part in this program is upto you. IF you choose to
+            join the program, you may stop at any time, and this will not affect
+            your current medical care.
+          </div>
+          <div>
+            Please notify your Healthcare provider if you would like to
+            withdraw.
+          </div>
+          <div>
+            You may also choose not to answer any question you find
+            uncomfortable or private during the program. There will be no
+            consequence, loss of benefit or care to you if you choose to leave
+            the program. Your collected data may be used as part of the program,
+            unless you request otherwise. Program team members from may reach
+            out to you via SMS or calls to ask about your experience or in
+            follow-up to missed assessment or medical reviews as part of
+            tele-counseling services. You may notify them if you wish to not
+            receive any calls or SMS.
+          </div>
+        </div>
+        <div>
+          <br />
+          <span class="boldtext">Compensation:</span>
+
+          <div style="text-decoration: underline">
+            You will not receive any compensation for participating in this
+            program.
+          </div>
+        </div>
+        <div>
+          <br />
+          <span class="boldtext">SMS and Calls:</span>
+
+          <div>
+            By signing up for the program, you are accepting to receive SMS
+            messages and calls used for communication of messages from your
+            healthcare provider, or instructions to pick up filled
+            prescriptions, visit the facility for further assessment. SMS
+            messages from the software application will not be used for
+            marketing purposes. If you wish to stop receiving the SMS messages,
+            kindly inform your doctor or nurse.
+          </div>
+        </div>
+        <div>
+          <br />
+          <span class="boldtext">Secondary use of data:</span>
+
+          <div>
+            Your de-identified medical information may be combined with data
+            from other program participants and used by the program team for
+            research, marketing, or publication purposes, or to inform on the
+            performance of the SPICE system. Additionally, your de-identified
+            medical information along with other patients may also be used by
+            program stakeholders such as the Ministry of Health and
+            County/Regional health teams, as part of their assessment of overall
+            patient population health and to evaluate trends.
+          </div>
+          <div>
+            Identifying information will be removed from individual patient
+            records before sharing with program stakeholders to protect patient
+            privacy.
+          </div>
+          <div>
+            Consent for the secondary uses of program data is separate from your
+            medical treatment and does not affect your care.
+          </div>
+        </div>
+        <div>
+          <br />
+          <span class="boldtext">Contacts:</span>
+
+          <div>
+            If you have any questions concerning this program, please do not
+            hesitate to contact your healthcare provider or
+            <a href="mailto:support@medtroniclabs.org"
+              >support@medtroniclabs.org</a
+            >
+          </div>
+          <div>
+            If you have any question concerning your personal data, please do
+            not hesitate to contact your healthcare provider or
+            <a href="mailto:data.protection@medtroniclabs.org"
+              >data.protection@medtroniclabs.org</a
+            >
+          </div>
+        </div>
+        <div>
+          <br />
+          <span class="boldtext">Statement of the person giving consent:</span>
+          <ul>
+            <li>
+              I have read the information on this program or have had it
+              translated into a language I understand. I have also talked it
+              over to my satisfaction.
+            </li>
+            <li>I understand that my participation is voluntary.</li>
+            <li>
+              I know enough about the purpose, methods, risks and benefits of
+              the program to decide that I want to take part in it.
+            </li>
+            <li>
+              I understand that I may freely stop being part of this program at
+              any time without having to explain myself.
+            </li>
+            <li>
+              I understand and agree that, as part of the program, the program
+              team shall collect my personal information which may be disclosed
+              to doctors, nurses, pharmacists, and BP/Glucose checkers, and
+              other parties that are involved in the program as well as other
+              third parties.
+            </li>
+            <li>
+              I understand that the program may be modified, ammended or
+              terminated at any time with or without notice.
+            </li>
+            <li>
+              I understand and agree that the program team will store my
+              personal information for a period of up to ten (10) years after
+              the conclusion of the program.
+            </li>
+            <li>
+              If I request a copy of this consent and notification form to keep
+              for myself, I shall provide an email address to receive it.
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <p>
+      <grammarly-desktop-integration
+        data-grammarly-shadow-root="true"
+      ></grammarly-desktop-integration
+      ><br />
+    </p>
+  </body>
+</html>','household','Consent_form',true,NULL,1,1,1,false,true,1,NULL);
+
 INSERT INTO
     public.form_meta (
         form_input,

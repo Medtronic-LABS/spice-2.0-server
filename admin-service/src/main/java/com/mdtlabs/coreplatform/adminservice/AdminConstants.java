@@ -1,7 +1,5 @@
 package com.mdtlabs.coreplatform.adminservice;
 
-import lombok.NoArgsConstructor;
-
 /**
  * <p>
  * The AdminConstants class contains constants for various field names used in a admin service.
@@ -9,8 +7,9 @@ import lombok.NoArgsConstructor;
  *
  * @author Divya S
  */
-@NoArgsConstructor
+
 public class AdminConstants {
+    private AdminConstants() {}
 
     public static final String COUNTRY = "country";
     public static final String DISTRICT = "district";

@@ -2,11 +2,6 @@ package com.mdtlabs.coreplatform.spiceservice.staticdata.service;
 
 import java.util.*;
 
-import com.mdtlabs.coreplatform.commonservice.common.model.dto.UserContextDTO;
-import com.mdtlabs.coreplatform.commonservice.common.model.entity.ClinicalWorkflow;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.RegionCustomizationDTO;
-
-import com.mdtlabs.coreplatform.spiceservice.staticdata.repository.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,13 +18,11 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -39,64 +32,20 @@ import com.mdtlabs.coreplatform.commonservice.common.contexts.UserSelectedTenant
 import com.mdtlabs.coreplatform.commonservice.common.model.dto.MetaDataDTO;
 import com.mdtlabs.coreplatform.commonservice.common.model.dto.SearchRequestDTO;
 import com.mdtlabs.coreplatform.commonservice.common.model.dto.UserResponseDTO;
-import com.mdtlabs.coreplatform.commonservice.common.model.entity.BaseEntity;
-import com.mdtlabs.coreplatform.commonservice.common.model.entity.CountryCustomization;
-import com.mdtlabs.coreplatform.commonservice.common.model.entity.Culture;
-import com.mdtlabs.coreplatform.spiceservice.common.model.DosageFrequency;
-import com.mdtlabs.coreplatform.commonservice.common.model.entity.HealthFacility;
-import com.mdtlabs.coreplatform.commonservice.common.model.entity.Program;
-import com.mdtlabs.coreplatform.commonservice.common.model.entity.WorkflowCustomization;
+import com.mdtlabs.coreplatform.commonservice.common.model.entity.*;
 import com.mdtlabs.coreplatform.spiceservice.apiinterface.AdminServiceApiInterface;
 import com.mdtlabs.coreplatform.spiceservice.apiinterface.UserServiceApiInterface;
 import com.mdtlabs.coreplatform.spiceservice.common.Constants;
 import com.mdtlabs.coreplatform.spiceservice.common.TestConstants;
 import com.mdtlabs.coreplatform.spiceservice.common.TestDataProvider;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.DiseaseCategoryDTO;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.ExaminationDTO;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.FormMetaDTO;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.HealthFacilityDTO;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.MedicalReviewStaticDataDTO;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.MenuDTO;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.MetaDTO;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.MetaFormDTO;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.ObstetricExaminationDTO;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.PresentingComplaintsDTO;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.StaticMetaDataResponseDTO;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.StaticUserDataResponseDTO;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.SystemicExaminationDTO;
-import com.mdtlabs.coreplatform.spiceservice.common.model.Comorbidity;
-import com.mdtlabs.coreplatform.spiceservice.common.model.Complaints;
-import com.mdtlabs.coreplatform.spiceservice.common.model.Complication;
-import com.mdtlabs.coreplatform.spiceservice.common.model.CurrentMedication;
-import com.mdtlabs.coreplatform.spiceservice.common.model.Diagnosis;
-import com.mdtlabs.coreplatform.spiceservice.common.model.DiseaseCategory;
-import com.mdtlabs.coreplatform.spiceservice.common.model.DosageForm;
-import com.mdtlabs.coreplatform.spiceservice.common.model.Examination;
-import com.mdtlabs.coreplatform.spiceservice.common.model.FormMeta;
-import com.mdtlabs.coreplatform.spiceservice.common.model.FormMetaUi;
-import com.mdtlabs.coreplatform.spiceservice.common.model.Frequency;
-import com.mdtlabs.coreplatform.spiceservice.common.model.FrequencyType;
-import com.mdtlabs.coreplatform.spiceservice.common.model.Lifestyle;
-import com.mdtlabs.coreplatform.spiceservice.common.model.MedicalCompliance;
-import com.mdtlabs.coreplatform.spiceservice.common.model.Menu;
-import com.mdtlabs.coreplatform.spiceservice.common.model.Message;
-import com.mdtlabs.coreplatform.spiceservice.common.model.Meta;
-import com.mdtlabs.coreplatform.spiceservice.common.model.ModelQuestions;
-import com.mdtlabs.coreplatform.spiceservice.common.model.NutritionLifestyle;
-import com.mdtlabs.coreplatform.spiceservice.common.model.ObstetricExamination;
-import com.mdtlabs.coreplatform.spiceservice.common.model.PhysicalExamination;
-import com.mdtlabs.coreplatform.spiceservice.common.model.PresentingComplaints;
-import com.mdtlabs.coreplatform.spiceservice.common.model.Reason;
-import com.mdtlabs.coreplatform.spiceservice.common.model.RiskAlgorithm;
-import com.mdtlabs.coreplatform.spiceservice.common.model.Symptom;
-import com.mdtlabs.coreplatform.spiceservice.common.model.SystemicExaminations;
-import com.mdtlabs.coreplatform.spiceservice.common.model.Unit;
+import com.mdtlabs.coreplatform.spiceservice.common.dto.*;
+import com.mdtlabs.coreplatform.spiceservice.common.model.*;
+import com.mdtlabs.coreplatform.spiceservice.staticdata.repository.*;
 import com.mdtlabs.coreplatform.spiceservice.staticdata.service.impl.StaticDataServiceImpl;
-import org.springframework.test.util.ReflectionTestUtils;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class StaticDataServiceTest {
+class StaticDataServiceTest {
 
     @InjectMocks
     private StaticDataServiceImpl staticDataService;
@@ -228,7 +177,6 @@ public class StaticDataServiceTest {
     @Test
     void testSetCost() {
         String meta = Constants.COST;
-        ;
 
         staticDataService.setOtherMetas(staticData, meta, metaDatas);
 
@@ -402,7 +350,6 @@ public class StaticDataServiceTest {
                 UserContextHolder.getUserDto().getClient(), Constants.CONSENT_FORM)).thenReturn(new ArrayList<>(Arrays.asList(regionCustomizationDTO)));
 
         when(menuRepository.findByRoleNameAndIsActiveTrueAndIsDeletedFalse(UserContextHolder.getUserDto().getRoles().get(0).getName())).thenReturn(menu);
-//        when(metaRepository.findByCategoryAndIsDeletedFalseAndIsActiveTrue(Constants.MEDICATION_FREQUENCY)).thenReturn(List.of(new Meta()));
         StaticUserDataResponseDTO actualResponse = staticDataService.getUserStaticData();
         Assertions.assertNotNull(actualResponse);
     }
@@ -877,7 +824,7 @@ public class StaticDataServiceTest {
     }
 
     @Test
-    public void testFindCulture() {
+    void testFindCulture() {
         Culture culture = new Culture();
         culture.setName("sample");
         when(cultureRepository.findByNameIgnoreCase("sample")).thenReturn(culture);

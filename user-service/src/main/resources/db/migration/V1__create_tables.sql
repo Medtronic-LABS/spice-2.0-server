@@ -116,6 +116,7 @@ CREATE TABLE health_facility(
     fhir_id VARCHAR,
     culture_id BIGINT,
     FOREIGN KEY (culture_id) REFERENCES culture(id),
+    org_unit_id VARCHAR,
     created_by BIGINT NOT NULL,
     updated_by BIGINT NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
@@ -415,6 +416,8 @@ CREATE TABLE meta_code_details (
     observation_type VARCHAR,
     resource_property VARCHAR,
     resource_property_value VARCHAR,
+    form_name VARCHAR,
+    form_data_id VARCHAR,
     created_by BIGINT NOT NULL,
     updated_by BIGINT NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
@@ -598,6 +601,8 @@ CREATE TABLE call_register_detail (
     latitude VARCHAR(255),
     longitude VARCHAR(255),
     visited_facility_id VARCHAR(255),
+    other_reason VARCHAR(255),
+    other_visited_facility_name VARCHAR(255),
     created_by BIGINT NOT NULL,
     updated_by BIGINT NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
@@ -732,15 +737,15 @@ CREATE TABLE program (
 CREATE TABLE outbound_sms (
     id SERIAL PRIMARY KEY,
     username VARCHAR,
-    form_data_id BIGINT,
+    form_data_id VARCHAR,
     retry_attempts INT DEFAULT 0,
     phone_number VARCHAR,
     body VARCHAR,
     is_processed BOOLEAN DEFAULT false,
     notification_id BIGINT,
     tenant_id BIGINT,
-    created_by BIGINT NOT NULL,
-    updated_by BIGINT NOT NULL,
+    created_by BIGINT,
+    updated_by BIGINT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
     is_active BOOLEAN DEFAULT true,
@@ -753,15 +758,15 @@ CREATE TABLE outbound_email (
     is_processed BOOLEAN,
     "to" VARCHAR,
     retry_attempts INT,
-    form_data_id BIGINT,
+    form_data_id VARCHAR,
     form_name VARCHAR,
     type VARCHAR,
     body VARCHAR,
     subject VARCHAR,
     cc VARCHAR,
     bcc VARCHAR,
-    created_by BIGINT NOT NULL,
-    updated_by BIGINT NOT NULL,
+    created_by BIGINT,
+    updated_by BIGINT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
     is_active BOOLEAN DEFAULT true,
@@ -1317,8 +1322,8 @@ CREATE TABLE message (
     is_deleted BOOLEAN DEFAULT false
 );
 
-CREATE OR REPLACE PROCEDURE get_household_sequence_by_village_id(
-    IN village_id BIGINT,
+CREATE PROCEDURE getHouseholdSequenceByVillageId(
+    IN villageId BIGINT,
     OUT sequence BIGINT
 )
 LANGUAGE plpgsql
@@ -1327,18 +1332,18 @@ BEGIN
     -- Update the sequence count for the given household
     UPDATE village
     SET household_sequence = household_sequence + 1
-    WHERE id = village_id;
+    WHERE id = villageId;
 
     -- Retrieve the updated sequence count into the OUT parameter
     SELECT household_sequence
     INTO sequence
     FROM village
-    WHERE id = village_id;
+    WHERE id = villageId;
 END;
 $procedure$;
 
-CREATE PROCEDURE get_member_sequence_by_village_id(
-    IN village_id BIGINT,
+CREATE PROCEDURE getMemberSequenceByVillageId(
+    IN villageId BIGINT,
     OUT sequence BIGINT
 )
 LANGUAGE plpgsql
@@ -1347,13 +1352,13 @@ BEGIN
     -- Update the sequence count for the given village
     UPDATE village
     SET member_sequence = member_sequence + 1
-    WHERE id = village_id;
+    WHERE id = villageId;
 
     -- Retrieve the updated sequence count into the OUT parameter
     SELECT member_sequence
     INTO sequence
     FROM village
-    WHERE id = village_id;
+    WHERE id = villageId;
 END;
 $procedure$;
 

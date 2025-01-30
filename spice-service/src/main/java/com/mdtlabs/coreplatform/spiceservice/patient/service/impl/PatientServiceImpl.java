@@ -462,8 +462,8 @@ public class PatientServiceImpl implements PatientService {
         double z = (Math.pow((weight / m), l) - Constants.ONE) / (l * s);
 
         double sD3pos = m * Math.pow((Constants.ONE + l * s * Constants.THREE), (Constants.ONE / l));
-        double SD2pos = m * Math.pow((Constants.ONE + l * s * Constants.TWO), (Constants.ONE / l));
-        double SD23pos = sD3pos - SD2pos;
+        double sD2pos = m * Math.pow((Constants.ONE + l * s * Constants.TWO), (Constants.ONE / l));
+        double sD23pos = sD3pos - sD2pos;
 
         double sD3neg = m * Math.pow((Constants.ONE + l * s * Constants.NEGATIVE_THREE), (Constants.ONE / l));
         double sD2neg = m * Math.pow((Constants.ONE + l * s * Constants.NEGATIVE_TWO), (Constants.ONE / l));
@@ -473,7 +473,7 @@ public class PatientServiceImpl implements PatientService {
 
         // Adjust z-score if it exceeds bounds
         if (z > 3) {
-            zAdjusted = Constants.THREE + ((weight - sD3pos) / SD23pos);
+            zAdjusted = Constants.THREE + ((weight - sD3pos) / sD23pos);
         } else if (z < Constants.NEGATIVE_THREE) {
             zAdjusted = Constants.NEGATIVE_THREE + ((weight - sD3neg) / sD23neg);
         }

@@ -1,23 +1,19 @@
 package com.mdtlabs.coreplatform.spiceservice.household.service.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mdtlabs.coreplatform.commonservice.common.CommonUtil;
-import com.mdtlabs.coreplatform.spiceservice.apiinterface.FhirServiceApiInterface;
-import com.mdtlabs.coreplatform.spiceservice.common.Constants;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.HouseholdMemberDTO;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.HouseholdMemberSequenceDTO;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.HouseholdSequenceDTO;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.RequestDTO;
-import com.mdtlabs.coreplatform.spiceservice.householdmemberlink.service.HouseholdMemberLinkService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.mdtlabs.coreplatform.spiceservice.common.dto.HouseholdDTO;
-import com.mdtlabs.coreplatform.spiceservice.household.service.HouseholdService;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import org.springframework.stereotype.Service;
+
+import com.mdtlabs.coreplatform.commonservice.common.CommonUtil;
+import com.mdtlabs.coreplatform.spiceservice.apiinterface.FhirServiceApiInterface;
+import com.mdtlabs.coreplatform.spiceservice.common.Constants;
+import com.mdtlabs.coreplatform.spiceservice.common.dto.HouseholdDTO;
+import com.mdtlabs.coreplatform.spiceservice.common.dto.HouseholdMemberDTO;
+import com.mdtlabs.coreplatform.spiceservice.common.dto.RequestDTO;
+import com.mdtlabs.coreplatform.spiceservice.household.service.HouseholdService;
+import com.mdtlabs.coreplatform.spiceservice.householdmemberlink.service.HouseholdMemberLinkService;
 
 /**
  * <p>

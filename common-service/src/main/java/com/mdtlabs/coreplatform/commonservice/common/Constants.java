@@ -497,6 +497,7 @@ public final class Constants {
     public static final String FHIR_MAPPER_SERVICE = "FHIR_MAPPER_SERVICE";
     public static final String CQL_SERVICE = "CQL_SERVICE";
     public static final String CFR_SERVICE = "CFR_SERVICE";
+    public static final String CONNECT_SERVICE = "CONNECT_SERVICE";
     public static final String OPEN_URI = "OPEN_URI";
     public static final String API_PERMISSION = "API_PERMISSION";
     public static final String API_PERMISSION_KEY = "api_permission";
@@ -510,6 +511,7 @@ public final class Constants {
     public static final String ADMIN_SERVICE_OPENAPI_TITLE="Admin Service API";
     public static final String USER_SERVICE_OPENAPI_TITLE="User Service API";
     public static final String CFR_SERVICE_OPENAPI_TITLE="Cfr Service API";
+    public static final String CONNECT_SERVICE_OPENAPI_TITLE="Connect Service API";
     public static final String OPEN_API_VERSION="1.0.0";
     public static final String DISTRICT_ID="districtId";
     public static final String DISTRICT_IDS = "districtIds";

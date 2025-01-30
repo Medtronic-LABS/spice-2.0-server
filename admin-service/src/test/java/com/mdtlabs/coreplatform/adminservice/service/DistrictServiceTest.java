@@ -22,7 +22,6 @@ import com.mdtlabs.coreplatform.commonservice.common.model.entity.District;
 import com.mdtlabs.coreplatform.commonservice.common.model.entity.HealthFacility;
 import com.mdtlabs.coreplatform.commonservice.common.model.entity.Organization;
 import com.mdtlabs.coreplatform.commonservice.common.model.dto.ResponseListDTO;
-import com.mdtlabs.coreplatform.commonservice.common.model.entity.User;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -38,6 +37,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -57,7 +57,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class DistrictServiceTest {
+class DistrictServiceTest {
     
     @InjectMocks
     DistrictServiceImpl districtService;
@@ -76,6 +76,9 @@ public class DistrictServiceTest {
 
     @Mock
     private ChiefdomServiceImpl chiefdomService;
+
+    @Mock
+    private RedisTemplate<String, String> redisTemplate;
 
 
     @Test
@@ -185,7 +188,6 @@ public class DistrictServiceTest {
     void testGetDistrictDetails() {
         //given
         String searchTerm = "test";
-        List<User> users = List.of(TestDataProvider.getUser());
         SearchRequestDTO searchRequestDTO = TestDataProvider.getSearchRequestDto(searchTerm, Constants.ZERO,
                 TestConstants.TEN);
         searchRequestDTO.setTenantId(TestConstants.ONE);
@@ -283,12 +285,12 @@ public class DistrictServiceTest {
                 tenantIds, districtRequestDTO.getIsActive(), healthFacilityFhirIds, TestConstants.CLIENT);
         doNothing().when(userApiInterface).activateOrDeactivateUser(TestConstants.TEST_TOKEN, TestConstants.ONE,
                 tenantIds, districtRequestDTO.getIsActive(), TestConstants.CLIENT);
+        when(redisTemplate.delete(Constants.ORGANIZATION_REDIS_KEY)).thenReturn(null);
 
         //then
         Boolean isActivatedOrDeactivated = districtService.activateOrDeactivateDistrict(districtRequestDTO);
-        TestCommonMethods.cleanUp();
-        assertNotNull(isActivatedOrDeactivated);
         assertTrue(isActivatedOrDeactivated);
+        TestCommonMethods.cleanUp();
     }
 
     @Test
@@ -298,7 +300,6 @@ public class DistrictServiceTest {
         SearchRequestDTO searchRequestDTO = TestDataProvider.getSearchRequestDto(searchTerm, Constants.ZERO,
                 TestConstants.TEN);
         Page<District> pages = new PageImpl<>(TestDataProvider.getDistricts());
-        List<DistrictDTO> districtDTOs = pages.stream().map(page -> modelMapper.map(page, DistrictDTO.class)).toList();
         Pageable pageable = PageRequest.of(Constants.ZERO, TestConstants.TEN, (Constants.BOOLEAN_FALSE ?
                 Sort.by(Constants.UPDATED_AT)
                         .ascending() : Sort.by(Constants.UPDATED_AT).descending()));

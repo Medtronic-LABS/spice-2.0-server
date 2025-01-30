@@ -18,7 +18,6 @@ import com.mdtlabs.coreplatform.spiceservice.common.dto.NCDMedicalReviewDTO;
 import com.mdtlabs.coreplatform.spiceservice.common.dto.NCDMedicalReviewHistoryDTO;
 import com.mdtlabs.coreplatform.spiceservice.common.dto.NcdMedicalReviewResponse;
 import com.mdtlabs.coreplatform.spiceservice.common.dto.PatientStatusDTO;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.PsychologyDTO;
 import com.mdtlabs.coreplatform.spiceservice.common.dto.RequestDTO;
 import com.mdtlabs.coreplatform.spiceservice.common.dto.UnderFiveIccmDTO;
 import com.mdtlabs.coreplatform.spiceservice.common.dto.MedicalReviewPregnancyDTO;

@@ -138,6 +138,7 @@ public class PrescriptionRequestController {
      * @param requestDTO The {@link RequestDTO} containing the patient's ID.
      * @return A {@link PrescriptionHistoryDTO} containing the prescribed details for the patient.
      */
+    @ConfigureAppType
     @PostMapping("/prescribed-details")
     public PrescriptionHistoryDTO getPrescribedDetails(@RequestBody RequestDTO requestDTO) {
         if (Constants.NON_COMMUNITY.equals(SelectedAppTypeContextHolder.get())) {

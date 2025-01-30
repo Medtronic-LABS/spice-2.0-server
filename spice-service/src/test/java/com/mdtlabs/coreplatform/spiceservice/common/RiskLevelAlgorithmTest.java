@@ -11,7 +11,7 @@ import org.mockito.quality.Strictness;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class RiskLevelAlgorithmTest {
+class RiskLevelAlgorithmTest {
     @InjectMocks
     RiskLevelAlgorithm riskLevelAlgorithm;
 

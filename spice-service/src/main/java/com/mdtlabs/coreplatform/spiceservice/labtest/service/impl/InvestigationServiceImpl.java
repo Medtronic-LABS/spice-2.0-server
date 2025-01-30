@@ -6,7 +6,6 @@ import java.util.Map;
 import com.mdtlabs.coreplatform.commonservice.common.model.dto.SearchRequestDTO;
 import com.mdtlabs.coreplatform.spiceservice.apiinterface.AdminServiceApiInterface;
 import com.mdtlabs.coreplatform.spiceservice.common.dto.LabTestCustomizationDTO;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mdtlabs.coreplatform.commonservice.common.CommonUtil;

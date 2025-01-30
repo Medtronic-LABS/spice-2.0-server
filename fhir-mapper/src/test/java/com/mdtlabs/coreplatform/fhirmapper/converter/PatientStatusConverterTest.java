@@ -74,7 +74,7 @@ class PatientStatusConverterTest {
         String patientId = TestDataProvider.getPatient().getId();
 
         //then
-        patientStatusConverter.setReference(condition, patientId, null);
+        patientStatusConverter.setReference(condition, patientId, null, null);
         Assertions.assertNotNull(condition.getSubject());
     }
 
@@ -85,7 +85,7 @@ class PatientStatusConverterTest {
         String patientId = null;
 
         //then
-        patientStatusConverter.setReference(condition, patientId, null);
+        patientStatusConverter.setReference(condition, patientId, null, null);
         Assertions.assertNotNull(condition.getSubject());
     }
 

@@ -752,6 +752,7 @@ public class FhirAssessmentMapper {
                 String value = category.getText();
                 if (Objects.nonNull(fhirUtils.getCodeDetails().get(value))) {
                     categoryMap.put(Constants.NAME, fhirUtils.getCodeDetails().get(value).getText());
+                    categoryMap.put(Constants.DISPLAY_VALUE, fhirUtils.getText(value));
                 } else {
                     String name = value.replaceAll(Constants.WORD_SPACE_REGEX, "$1 $2").toLowerCase();
                     name = name.substring(Constants.ZERO, Constants.ONE).toUpperCase() + name.substring(Constants.ONE);

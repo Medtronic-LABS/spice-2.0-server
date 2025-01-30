@@ -14,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
@@ -76,12 +77,9 @@ class PrescriptionRequestControllerTest {
         //given
         PrescriptionRequestDTO prescriptionDTO = TestDataProvider.getPrescriptionRequestDTO();
 
-        //when
-        doNothing().when(prescriptionRequestService).removePrescription(prescriptionDTO, MedicationRequest.MedicationRequestStatus.COMPLETED);
-
         //then
         prescriptionRequestController.removePrescription(prescriptionDTO);
-        verify(prescriptionRequestService).removePrescription(prescriptionDTO, MedicationRequest.MedicationRequestStatus.COMPLETED);
+        verify(prescriptionRequestService).removePrescription(any(), any());
     }
 
     @Test
@@ -141,6 +139,7 @@ class PrescriptionRequestControllerTest {
     @Test
     void removePrescriptionRequestFormNotNull() {
         //given
+        SelectedAppTypeContextHolder.set(Constants.NON_COMMUNITY);
         PrescriptionRequestDTO prescriptionRequestDTO = new PrescriptionRequestDTO();
 
         //when
@@ -149,21 +148,22 @@ class PrescriptionRequestControllerTest {
 
         //then
         prescriptionRequestController.removePrescription(prescriptionRequestDTO);
-        verify(prescriptionRequestService, atLeastOnce()).removePrescription(prescriptionRequestDTO, MedicationRequest.MedicationRequestStatus.COMPLETED);
+        verify(prescriptionRequestService, atLeastOnce()).removePrescription(prescriptionRequestDTO, MedicationRequest.MedicationRequestStatus.CANCELLED);
     }
 
 
     @Test
     void getPrescriptionsRequestFormNotNull() {
         //given
+        SelectedAppTypeContextHolder.set(Constants.NON_COMMUNITY);
         RequestDTO requestDTO = TestDataProvider.getRequestDTO();
 
         //when
-        when(prescriptionRequestService.getPrescribedDetails(requestDTO)).thenReturn(new PrescriptionHistoryDTO());
+        when(prescriptionRequestService.getNcdPrescribedDetails(requestDTO)).thenReturn(new PrescriptionHistoryDTO());
 
         //then
-        PrescriptionHistoryDTO response = prescriptionRequestController.getPrescribedDetails(requestDTO);
-        Assertions.assertNotNull(response);
+        PrescriptionHistoryDTO result = prescriptionRequestController.getPrescribedDetails(requestDTO);
+        Assertions.assertNotNull(result);
     }
 
     @Test

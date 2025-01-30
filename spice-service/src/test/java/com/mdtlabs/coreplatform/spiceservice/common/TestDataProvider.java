@@ -1,27 +1,14 @@
 package com.mdtlabs.coreplatform.spiceservice.common;
 
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mdtlabs.coreplatform.commonservice.common.model.dto.UserContextDTO;
-import com.mdtlabs.coreplatform.commonservice.common.model.dto.*;
-import com.mdtlabs.coreplatform.commonservice.common.util.DateUtil;
-import com.mdtlabs.coreplatform.spiceservice.common.dto.*;
 import org.mockito.MockedStatic;
 import org.modelmapper.ModelMapper;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.mockStatic;
 
 import com.mdtlabs.coreplatform.commonservice.common.CommonUtil;
@@ -29,55 +16,17 @@ import com.mdtlabs.coreplatform.commonservice.common.contexts.AppTypesContextHol
 import com.mdtlabs.coreplatform.commonservice.common.contexts.UserContextHolder;
 import com.mdtlabs.coreplatform.commonservice.common.contexts.UserSelectedTenantContextHolder;
 import com.mdtlabs.coreplatform.commonservice.common.contexts.UserTenantsContextHolder;
-import com.mdtlabs.coreplatform.commonservice.common.model.dto.CultureDTO;
-import com.mdtlabs.coreplatform.commonservice.common.model.dto.MetaDataDTO;
 import com.mdtlabs.coreplatform.commonservice.common.model.dto.SearchRequestDTO;
-import com.mdtlabs.coreplatform.commonservice.common.model.dto.SmsDTO;
-import com.mdtlabs.coreplatform.commonservice.common.model.dto.UserDTO;
-import com.mdtlabs.coreplatform.commonservice.common.model.dto.UserResponseDTO;
-import com.mdtlabs.coreplatform.commonservice.common.model.dto.VillageDTO;
-import com.mdtlabs.coreplatform.commonservice.common.model.entity.Chiefdom;
-import com.mdtlabs.coreplatform.commonservice.common.model.entity.ClinicalWorkflow;
-import com.mdtlabs.coreplatform.commonservice.common.model.entity.Country;
-import com.mdtlabs.coreplatform.commonservice.common.model.entity.CountryCustomization;
-import com.mdtlabs.coreplatform.commonservice.common.model.entity.District;
-import com.mdtlabs.coreplatform.commonservice.common.model.entity.HealthFacility;
-import com.mdtlabs.coreplatform.commonservice.common.model.entity.Organization;
-import com.mdtlabs.coreplatform.commonservice.common.model.entity.PatientTransfer;
-import com.mdtlabs.coreplatform.commonservice.common.model.entity.RedRiskNotification;
-import com.mdtlabs.coreplatform.commonservice.common.model.entity.Role;
-import com.mdtlabs.coreplatform.commonservice.common.model.entity.SMSTemplate;
-import com.mdtlabs.coreplatform.commonservice.common.model.entity.Timezone;
-import com.mdtlabs.coreplatform.commonservice.common.model.entity.User;
-import com.mdtlabs.coreplatform.commonservice.common.model.entity.Village;
-import com.mdtlabs.coreplatform.commonservice.common.model.entity.WorkflowCustomization;
+import com.mdtlabs.coreplatform.commonservice.common.model.dto.*;
+import com.mdtlabs.coreplatform.commonservice.common.model.entity.*;
 import com.mdtlabs.coreplatform.commonservice.common.model.enumeration.PatientTransferStatus;
+import com.mdtlabs.coreplatform.commonservice.common.util.DateUtil;
+import com.mdtlabs.coreplatform.spiceservice.common.dto.*;
 import com.mdtlabs.coreplatform.spiceservice.common.dto.HealthFacilityDTO.ChiefdomDTO;
 import com.mdtlabs.coreplatform.spiceservice.common.enumeration.AppointmentType;
 import com.mdtlabs.coreplatform.spiceservice.common.enumeration.CallStatus;
-import com.mdtlabs.coreplatform.spiceservice.common.model.CallRegister;
-import com.mdtlabs.coreplatform.spiceservice.common.model.CallRegisterDetail;
-import com.mdtlabs.coreplatform.spiceservice.common.model.Comorbidity;
-import com.mdtlabs.coreplatform.spiceservice.common.model.Complaints;
-import com.mdtlabs.coreplatform.spiceservice.common.model.Complication;
-import com.mdtlabs.coreplatform.spiceservice.common.model.CurrentMedication;
-import com.mdtlabs.coreplatform.spiceservice.common.model.CustomizedModule;
-import com.mdtlabs.coreplatform.spiceservice.common.model.Diagnosis;
-import com.mdtlabs.coreplatform.spiceservice.common.model.DiseaseCategory;
-import com.mdtlabs.coreplatform.spiceservice.common.model.DiseaseCondition;
-import com.mdtlabs.coreplatform.spiceservice.common.model.DosageForm;
-import com.mdtlabs.coreplatform.spiceservice.common.model.DosageFrequency;
-import com.mdtlabs.coreplatform.spiceservice.common.model.Frequency;
-import com.mdtlabs.coreplatform.spiceservice.common.model.FrequencyType;
-import com.mdtlabs.coreplatform.spiceservice.common.model.Lifestyle;
-import com.mdtlabs.coreplatform.spiceservice.common.model.MedicalCompliance;
-import com.mdtlabs.coreplatform.spiceservice.common.model.Menu;
-import com.mdtlabs.coreplatform.spiceservice.common.model.ModelQuestions;
-import com.mdtlabs.coreplatform.spiceservice.common.model.NutritionLifestyle;
-import com.mdtlabs.coreplatform.spiceservice.common.model.PhysicalExamination;
-import com.mdtlabs.coreplatform.spiceservice.common.model.Reason;
 import com.mdtlabs.coreplatform.spiceservice.common.model.RiskAlgorithm;
-import com.mdtlabs.coreplatform.spiceservice.common.model.Symptom;
+import com.mdtlabs.coreplatform.spiceservice.common.model.*;
 
 public class TestDataProvider {
     public static ModelMapper modelMapper = new ModelMapper();
@@ -170,8 +119,8 @@ public class TestDataProvider {
     }
 
     public static void getMessageValidatorMock() {
-        messageFormat.when(() -> MessageFormat.format("Invalid token.", TestConstants.ARGUMENT, TestConstants.MESSAGE)).thenReturn("message");
-        messageFormat.when(() -> MessageFormat.format("Invalid token.", TestConstants.ARGUMENT)).thenReturn("message");
+        messageFormat.when(() -> MessageFormat.format("Invalid token: {0}, message: {1}", TestConstants.ARGUMENT, TestConstants.MESSAGE)).thenReturn("message");
+        messageFormat.when(() -> MessageFormat.format("Invalid token: {0} ", TestConstants.ARGUMENT)).thenReturn("message");
     }
 
     public static void cleanUp() {
@@ -214,7 +163,7 @@ public class TestDataProvider {
         Role role = new Role();
         role.setId(TestConstants.ONE);
         role.setName(TestConstants.ROLE_PROVIDER);
-        role.setLevel(1000l);
+        role.setLevel(1000L);
         role.setSuiteAccessName("mobile");
         return role;
     }
@@ -251,20 +200,12 @@ public class TestDataProvider {
         response.setMenu(new Menu());
         response.setUserProfile(getUserResponseDTO());
         response.setVillages(List.of(getVillage()));
-        // response.setClincalWorkflowIds(Set.of(1l));
         return response;
     }
 
     public static UserResponseDTO getUserResponseDTO() {
         UserResponseDTO userResponseDTO = new ModelMapper().map(getUserDTO(), UserResponseDTO.class);
         userResponseDTO.setVillages(List.of(new VillageDTO()));
-        // userResponseDTO.setFirstName(null);
-        // userResponseDTO.setLastName(null);
-        // userResponseDTO.setGender(null);
-        // userResponseDTO.setSuiteAccess(null);
-        // userResponseDTO.setOrganizations(getSetOrganizations());
-
-        // userResponseDTO.setRoles(Set.of(getRole()));
         return userResponseDTO;
     }
 
@@ -276,7 +217,6 @@ public class TestDataProvider {
         village.setDistrictId(1l);
         village.setId(1l);
         village.setName("village1");
-//        village.setVillagecode("012");
         return village;
     }
 
@@ -699,14 +639,20 @@ public class TestDataProvider {
         switch (type) {
             case TestConstants.ICCM:
                 assessmentDetailsDTO.setIccm(getICCMDTODetails());
+                break;
             case Constants.ANC:
                 assessmentDetailsDTO.setAnc(getAncDTODetails());
+                break;
             case Constants.PNC_MOTHER:
                 assessmentDetailsDTO.setPncMother(getPncMotherDTODetails());
+                break;
             case Constants.CHILDHOOD_VISIT:
                 assessmentDetailsDTO.setPncChild(getPncChildDTODetails());
+                break;
             case Constants.PNC_CHILD_REVIEW:
                 assessmentDetailsDTO.setPncNeonatal(getPncNeonatalDTODetails());
+                break;
+            default : break;
         }
         return assessmentDetailsDTO;
     }
@@ -838,8 +784,7 @@ public class TestDataProvider {
 
     public static SignsAndSymptomsDTO getSignsAndSymptomsDetails() {
         SignsAndSymptomsDTO signsAndSymptomsDTO = new SignsAndSymptomsDTO();
-        signsAndSymptomsDTO.setSymptoms(Arrays.asList("No Symptoms"));
-//        signsAndSymptomsDTO.setSymptoms(Arrays.asList("Chest Pain"));
+        signsAndSymptomsDTO.setSymptoms(List.of("No Symptoms"));
         return signsAndSymptomsDTO;
     }
 
