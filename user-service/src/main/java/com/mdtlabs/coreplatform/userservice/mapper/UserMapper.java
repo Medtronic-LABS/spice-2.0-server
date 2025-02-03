@@ -61,7 +61,12 @@ public class UserMapper {
         existingUser.setCountryCode(user.getCountryCode());
         existingUser.setPhoneNumber(user.getPhoneNumber());
         existingUser.setDesignation(user.getDesignation());
-        existingUser.setTenantId(user.getTenantId());
+        if(Objects.isNull(existingUser.getTenantId())) {
+            existingUser.setTenantId(user.getTenantId());
+        }
+        if (Objects.nonNull(user.getCulture())) {
+            existingUser.setCulture(user.getCulture());
+        }
         if (!Objects.isNull(user.getVillages())) {
             existingUser.setVillages(user.getVillages());
         }

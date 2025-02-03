@@ -399,7 +399,6 @@ class OrganizationServiceTest {
         when(userSupervisorRepository.findByUserIdAndIsDeletedFalseAndIsActiveTrue(request.getId())).thenReturn(userSupervisor);
         response = organizationService.addAdmin(request);
         assertNotNull(response);
-
         Assertions.assertNotNull(response);
 
 
@@ -559,6 +558,8 @@ class OrganizationServiceTest {
         request.setSupervisorId(1L);
         user.setFhirId("1");
         when(userService.createUser(user, false)).thenReturn(user);
+        User supervisor = TestDataProvider.getUser();
+        when(userService.getUserById(TestConstants.ONE)).thenReturn(supervisor);
         UserResponseDTO mockResponse = organizationService.updateAdmin(request);
         Assertions.assertNotNull(mockResponse);
 
@@ -612,6 +613,8 @@ class OrganizationServiceTest {
 
         request.setSupervisorId(1L);
         user.setFhirId("1");
+        User supervisor = TestDataProvider.getUser();
+        when(userService.getUserById(TestConstants.ONE)).thenReturn(supervisor);
         when(userService.createUser(user, false)).thenReturn(user);
         UserResponseDTO mockResponse = organizationService.updateAdmin(request);
         Assertions.assertNotNull(mockResponse);

@@ -627,11 +627,9 @@ public class StaticDataServiceImpl implements StaticDataService {
     }
 
     /**
-     * Set Meta Data in Redis
-     *
-     * @return List of meta data
+     * {@inheritDoc}
      */
-    private Map<String, List<MetaDataDTO>> setMetaDateCache() {
+    public Map<String, List<MetaDataDTO>> setMetaDateCache() {
 
         Map<String, List<MetaDataDTO>> valuesMap = redisTemplate.opsForValue().get(Constants.META);
         if (Objects.isNull(valuesMap)) {
@@ -950,7 +948,7 @@ public class StaticDataServiceImpl implements StaticDataService {
      */
     public MenuDTO getMenu(SearchRequestDTO searchRequestDTO) {
         if (Objects.nonNull(searchRequestDTO.getRoleName()) && !searchRequestDTO.getRoleName().isEmpty()) {
-            return modelMapper.map(getMenuByRoleName(searchRequestDTO.getRoleName(), searchRequestDTO.getCountryId(),
+            return modelMapper.map(getMenuByRoleName(searchRequestDTO.getRoleName(), null,
                     searchRequestDTO.getAppTypes()), MenuDTO.class);
         }
         return new MenuDTO();
@@ -967,26 +965,9 @@ public class StaticDataServiceImpl implements StaticDataService {
      */
     private Menu getMenuByRoleName(String roleName, Long countryId, List<String> appTypes) {
         List<Menu> menus = menuRepository.getMenuByRole(roleName, countryId);
-        String appType;
-
-        if (Objects.nonNull(appTypes)) {
-            if (appTypes.size() == Constants.ONE) {
-                appType = appTypes.getFirst();
-            } else {
-                appType = Constants.NON_COMMUNITY;
-            }
-        } else {
-            appType = null;
-        }
         return menus.stream()
-                .filter(sideMenu -> (Objects.nonNull(countryId) && countryId.equals(sideMenu.getCountryId())))
                 .findFirst()
-                .orElse(menus.stream()
-                        .filter(sideMenu -> Objects.isNull(sideMenu.getCountryId())
-                                && (Objects.isNull(appType) || Objects.isNull(sideMenu.getAppTypes())
-                                || sideMenu.getAppTypes().contains(appType)))
-                        .findFirst()
-                        .orElse(new Menu()));
+                        .orElse(new Menu());
     }
 
     /**

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
@@ -165,9 +166,9 @@ public class HealthFacilityServiceImpl implements HealthFacilityService {
             }
             List<ClinicalWorkflow> clinicalWorkflows = clinicalWorkflowService.getWorkflowsByIds(workflowIds);
             List<ClinicalWorkflow> healthFacilityclinicalWorkflows = clinicalWorkflows.stream().filter(workflow ->
-                    workflow.getModuleType().equals(Constants.CLINICAL)).toList();
+                    workflow.getModuleType().equals(Constants.CLINICAL)).collect(Collectors.toList());
             List<ClinicalWorkflow> healthFacilitycustomizedWorkflows = clinicalWorkflows.stream().filter(workflow ->
-                    workflow.getModuleType().equals(Constants.CUSTOMIZED)).toList();
+                    workflow.getModuleType().equals(Constants.CUSTOMIZED)).collect(Collectors.toList());
             healthFacility.setClinicalWorkflows(healthFacilityclinicalWorkflows);
             if (!healthFacilitycustomizedWorkflows.isEmpty()) {
                 healthFacility.setCustomizedWorkflows(healthFacilitycustomizedWorkflows);

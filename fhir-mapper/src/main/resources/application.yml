@@ -15,6 +15,8 @@ spring:
     url: ${DATABASE_URL}
     username: ${DATABASE_USERNAME}
     password: ${DATABASE_PASSWORD}
+    hikari:
+      maximum-pool-size: ${DB_MAX_POOL_SIZE:10}
   redis:
     host: ${REDIS_HOST}
     port: ${REDIS_PORT}
@@ -22,11 +24,11 @@ spring:
 springdoc:
   packagesToScan: com.mdtlabs.coreplatform.fhirmapper
   swagger-ui:
-    enabled: ${SWAGGER_ENABLED:false}
+    enabled: false
     configUrl: /fhir/swagger-ui/v3/api-docs/swagger-config
     url: /fhir/swagger-ui/v3/api-docs
   api-docs:
-    enabled: ${SWAGGER_ENABLED:false}
+    enabled: false
     path: /fhir/swagger-ui/v3/api-docs
   
 app:

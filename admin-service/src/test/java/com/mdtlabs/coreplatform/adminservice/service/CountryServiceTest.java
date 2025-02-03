@@ -53,11 +53,9 @@ class CountryServiceTest {
     @Test
     void createCountry() {
         CountryRequestDTO requestDTO = TestDataProvider.getCountryRequestDTO();
-        Country country = TestDataProvider.getCountry();
         List<Country> countries = new ArrayList<>();
         when(countryRepository.findByPhoneNumberCodeOrNameIgnoreCaseAndIsActiveTrueAndIsDeletedFalse(requestDTO.getPhoneNumberCode(), requestDTO.getName().strip())).thenReturn(countries);
 
-        when(countryRepository.save(country)).thenReturn(country);
         Country response = countryService.createCountry(requestDTO);
         assertNotNull(response);
         countries = List.of(TestDataProvider.getCountry());

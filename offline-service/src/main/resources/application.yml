@@ -15,6 +15,8 @@ spring:
     url: ${DATABASE_URL}
     username : ${DATABASE_USERNAME}
     password : ${DATABASE_PASSWORD}
+    hikari:
+      maximum-pool-size: ${DB_MAX_POOL_SIZE:10}
   servlet:
     multipart:
       max-file-size: 15MB
@@ -53,9 +55,9 @@ spring:
 springdoc:
   packagesToScan: com.mdtlabs.coreplatform.offlineservice
   swagger-ui:
-    enabled: ${SWAGGER_ENABLED:false}
+    enabled: false
   api-docs:
-    enabled: ${SWAGGER_ENABLED:false}
+    enabled: false
 
 app:
   url: http://localhost
@@ -80,11 +82,8 @@ app:
 
 cloud:
   aws:
-    credentials:
-      access-key: ${AWS_ACCESS_KEY}
-      secret-key: ${AWS_SECRET_KEY}
     region:
-      static: ${AWS_REGION}
+      static: ${SERVER_REGION}
     stack:
       auto: false
     sqs:
@@ -96,7 +95,7 @@ cloud:
         responseQueue: ${SQS_RESPONSE_QUEUE_NAME}
     s3:
       bucket:
-        name: ${S3_BUCKET_NAME}
+        name: ${BUCKET_NAME}
         consent-form-folder: ${CONSENT_FORM_BUCKET_FOLDER}
     environment: ${AWS_ENVIRONMENT}
   minio:

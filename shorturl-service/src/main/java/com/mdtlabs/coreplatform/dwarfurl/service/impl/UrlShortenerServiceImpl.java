@@ -15,9 +15,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.view.RedirectView;
 
+import java.security.SecureRandom;
 import java.util.Date;
 import java.util.Objects;
-import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -35,7 +35,7 @@ public class UrlShortenerServiceImpl implements UrlShortenerService {
     private static final Pattern URL_PATTERN = Pattern.compile(Constants.URL_REGEX, Pattern.CASE_INSENSITIVE);
     private final String domain;
     private final UrlShortenerRepository urlShortenerRepository;
-    private final Random random = new Random();
+    private final SecureRandom random = new SecureRandom();
 
     /**
      * Constructor for UrlShortenerServiceImpl.

@@ -5,6 +5,8 @@ import java.util.Map;
 
 import static java.util.Map.entry;
 
+import java.util.HashMap;
+
 
 /**
  * <p>
@@ -485,6 +487,22 @@ public final class Constants {
     public static final String GENDER = "gender";
     public static final String OTHER = "other";
     public static final String ID = "id";
+    public static final String FHIR_ID = "fhirId";
+    public static final String SUITE_ACCESS = "suiteAccess";
+    public static final String TIMEZONE_ID = "timezoneId";
+    public static final String OFFSET = "offset";
+    public static final String DESCRIPTION = "description";
+    public static final String DESIGNATION_ID = "designationId";
+    public static final String DESIGNATION_NAME = "designationName";
+    public static final String CULTURE_ID = "cultureId";
+    public static final String CULTURE_NAME = "cultureName";
+    public static final String CULTURE_CODE = "cultureCode";
+    public static final String COUNTRY_NAME = "countryName";
+    public static final String PHONE_NUMBER_CODE = "phoneNumberCode";
+    public static final String COUNTRY_TENANT_ID = "countryTenantId";
+    public static final String UNIT_MEASUREMENT = "unitMeasurement";
+    public static final String REGION_CODE = "regionCode";
+    
     public static final String CLINICAL = "clinical";
 
     public static final String IS_PASSWORD_SET = "isPasswordSet";
@@ -619,11 +637,51 @@ public final class Constants {
     public static final String RED_RISK_PATIENT = "isRedRiskPatient";
     public static final String BMI = "bmi";
     public static final String PREGNANCY_DETAILS = "pregnancyDetails";
+    public static final String DISTRICT_TENANT_ID = "districtTenantId";
+    public static final String DISTRICT_PARENT_ORGANIZATION_ID = "districtParentOrgId";
+    public static final String DISTRICT_NAME = "districtName";
+    public static final String CHIEFDOM_TENANT_ID = "chiefdomTenantId";
+    public static final String CHIEFDOM_PARENT_ORGANIZATION_ID = "chiefdomParentOrgId";
+    public static final String CHIEFDOM_NAME = "chiefdomName";
+    public static final String CHIEFDOM_DISTRICT_TENANT_ID = "chiefdomDistrictTenantId";
+    public static final String CHIEFDOM_DISTRICT_ID = "chiefdomDistrictId";
+    public static final String CHIEFDOM_DISTRICT_NAME = "chiefdomDistrictName";
+    public static final String CHIEFDOM_DISTRICT_PARENT_ORGANIZATION_ID = "chiefdomDistrictParentOrgId";
+    public static final String HEALTH_FACILITY_DISTRICT_TENANT_ID = "healthFacilityDistrictTenantId";
+    public static final String HEALTH_FACILITY_DISTRICT_ID = "healthFacilityDistrictId";
+    public static final String HEALTH_FACILITY_DISTRICT_PARENT_ORGANIZATION_ID = "healthFacilityDistrictParentOrgId";
+    public static final String HEALTH_FACILITY_DISTRICT_NAME = "healthFacilityDistrictName";
+    public static final String HEALTH_FACILITY_CHIEFDOM_TENANT_ID = "healthFacilityChiefdomTenantId";
+    public static final String HEALTH_FACILITY_CHIEFDOM_ID = "healthFacilityChiefdomId";
+    public static final String HEALTH_FACILITY_CHIEFDOM_PARENT_ORGANIZATION_ID = "healthFacilityChiefdomParentOrgId";
+    public static final String HEALTH_FACILITY_CHIEFDOM_NAME = "healthFacilityChiefdomName";
+    public static final String HEALTH_FACILITY_PARENT_ORGANIZATION_ID = "healthFacilityParentOrgId";
+    public static final String HEALTH_FACILITY_TENANT_ID = "healthFacilityTenantId";
+    public static final String HEALTH_FACILITY_NAME = "healthFacilityName";
+    public static final String INSIGHT_USER_ORGANIZATION_ID = "insightUserOrganizationId";
+    public static final String INSIGHT_USER_ORGANIZATION_NAME = "insightUserOrganizationName";
+    public static final String INSIGHT_USER_ORGANIZATION_FORM_DATA_ID = "insightUserOrganizationFormDataId";
+    public static final String INSIGHT_USER_ORGANIZATION_FORM_NAME = "insightUserOrganizationFormName";
+    public static final String INSIGHT_USER_ORGANIZATION_PARENT_ORGANIZATION_ID = "insightUserOrganizationParentOrganizationId";
+    public static final String REPORT_USER_ORGANIZATION_ID = "reportUserOrganizationId";
+    public static final String REPORT_USER_ORGANIZATION_NAME = "reportUserOrganizationName";
+    public static final String REPORT_USER_ORGANIZATION_FORM_DATA_ID = "reportUserOrganizationFormDataId";
+    public static final String REPORT_USER_ORGANIZATION_FORM_NAME = "reportUserOrganizationFormName";
+    public static final String REPORT_USER_ORGANIZATION_PARENT_ORGANIZATION_ID = "reportUserOrganizationParentOrganizationId";
 
     public static final String OSM_CITY_NAME_URL = "https://nominatim.openstreetmap" +
             ".org/search?format=json&accept-language=en&q=";
     public static final String ADDRESSTYPE = "addresstype";
     public static final String DISPLAY_NAME = "display_name";
     public static final String PLACE_ID = "place_id";
+
+    public static final Map<String, Object> COUNTRY_DEFAULT_DISPLAY_VALUES = new HashMap<>();
+
+    static {
+        COUNTRY_DEFAULT_DISPLAY_VALUES.put("region", Map.of("p", "Regions", "s" , "Region"));
+        COUNTRY_DEFAULT_DISPLAY_VALUES.put("district", Map.of("p", "Counties",  "s", "County"));
+        COUNTRY_DEFAULT_DISPLAY_VALUES.put("chiefdom", Map.of("p", "Sub Counties", "s", "Sub County"));
+        COUNTRY_DEFAULT_DISPLAY_VALUES.put("healthFacility", Map.of("p", "Health Facilities", "s", "Health Facility"));
+    }
 
 }

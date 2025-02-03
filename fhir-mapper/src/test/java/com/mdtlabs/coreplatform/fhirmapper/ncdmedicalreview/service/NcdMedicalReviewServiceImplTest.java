@@ -380,6 +380,7 @@ class NcdMedicalReviewServiceImplTest {
         CurrentMedicationDetailsDTO currentMedicationDetailsDTO = new CurrentMedicationDetailsDTO();
         Set<MedicalReviewMetaDTO> medicationSet = new HashSet<>();
         MedicalReviewMetaDTO medicalReviewMetaDTO = new MedicalReviewMetaDTO();
+        medicalReviewMetaDTO.setId(TestConstants.ONE);
         medicationSet.add(medicalReviewMetaDTO);
         currentMedicationDetailsDTO.setMedications(medicationSet);
         ncdMedicalReviewDTO.getInitialMedicalReview().setCurrentMedications(currentMedicationDetailsDTO);
@@ -413,6 +414,7 @@ class NcdMedicalReviewServiceImplTest {
         CurrentMedicationDetailsDTO currentMedicationDetailsDTO = new CurrentMedicationDetailsDTO();
         Set<MedicalReviewMetaDTO> medicationSet = new HashSet<>();
         MedicalReviewMetaDTO medicalReviewMetaDTO = new MedicalReviewMetaDTO();
+        medicalReviewMetaDTO.setId(TestConstants.ONE);
         medicationSet.add(medicalReviewMetaDTO);
         currentMedicationDetailsDTO.setMedications(medicationSet);
         ncdMedicalReviewDTO.getInitialMedicalReview().setCurrentMedications(currentMedicationDetailsDTO);

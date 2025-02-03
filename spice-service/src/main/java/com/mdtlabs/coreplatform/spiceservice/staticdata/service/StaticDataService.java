@@ -1,6 +1,7 @@
 package com.mdtlabs.coreplatform.spiceservice.staticdata.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.mdtlabs.coreplatform.commonservice.common.model.dto.MetaDataDTO;
 import com.mdtlabs.coreplatform.commonservice.common.model.dto.SearchRequestDTO;
@@ -164,4 +165,12 @@ public interface StaticDataService {
      * @return List<Frequency>
      */
     List<MetaDataDTO> getMessageMetaData();
+
+    /**
+     * Returns a map where each key is a string and each value is a list of objects.
+     *
+     * @return A Map where the keys are Strings and the values are Lists of objects.
+     */
+    Map<String, List<MetaDataDTO>> setMetaDateCache();
+
 }

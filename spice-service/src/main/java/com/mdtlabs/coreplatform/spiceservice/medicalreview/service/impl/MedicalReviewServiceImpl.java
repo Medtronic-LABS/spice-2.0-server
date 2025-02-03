@@ -578,6 +578,7 @@ public class MedicalReviewServiceImpl implements MedicalReviewService {
      */
     @Override
     public void updateNCDAppointment(NCDMedicalReviewDTO request) {
+        createMedicalReviewCallRegister(request);
         fhirServiceApiInterface.updateNCDAppointment(CommonUtil.getAuthToken(), CommonUtil.getClient(), request);
     }
 

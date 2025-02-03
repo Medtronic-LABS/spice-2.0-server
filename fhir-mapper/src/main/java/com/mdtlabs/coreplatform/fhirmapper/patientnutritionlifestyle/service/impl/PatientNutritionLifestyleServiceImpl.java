@@ -370,7 +370,7 @@ public class PatientNutritionLifestyleServiceImpl implements PatientNutritionLif
         patientNutritionLifestyle.setReferredDate(observation.getIssued());
         patientNutritionLifestyle.setAssessedDate(observation.getEffectiveDateTimeType().getValue());
         patientNutritionLifestyle.setLifestyles(observation.getComponent().stream()
-                .map(component -> component.getValueStringType().getValue()).collect(Collectors.toSet()));
+                .map(component -> fhirUtils.getText(component.getCode().getText())).collect(Collectors.toSet()));
         for (Reference reference : observation.getPerformer()) {
             if (reference.getReference().contains(ResourceType.Practitioner.toString())) {
                 String practitionerId = reference.getReferenceElement().getIdPart();

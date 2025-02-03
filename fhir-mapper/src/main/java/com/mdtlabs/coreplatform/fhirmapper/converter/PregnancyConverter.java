@@ -201,68 +201,12 @@ public class PregnancyConverter {
             Observation.ObservationComponentComponent pregnancySymptomComponent =
                     new Observation.ObservationComponentComponent();
 
-            switch (pregnancySymptomDTO.getName()) {
-                case MetaCodeConstants.VAGINAL_BLEEDING ->
-                        pregnancySymptomComponent.setCode(fhirUtils.setCodes(
-                                MetaCodeConstants.VAGINAL_BLEEDING_KEY));
-
-                case MetaCodeConstants.CONVULSIONS ->
-                        pregnancySymptomComponent.setCode(fhirUtils.setCodes(
-                                MetaCodeConstants.CONVULSIONS_KEY));
-
-                case MetaCodeConstants.HEADACHE ->
-                        pregnancySymptomComponent.setCode(fhirUtils.setCodes(
-                                MetaCodeConstants.HEADACHE_KEY));
-
-                case MetaCodeConstants.BLURRED_VISION_DIFFICULTY_SEEING_CLEARLY ->
-                        pregnancySymptomComponent.setCode(fhirUtils.setCodes(
-                                MetaCodeConstants.BLURRED_VISION_DIFFICULTY_SEEING_CLEARLY_KEY));
-
-                case MetaCodeConstants.REDUCED_ABSENT_BABY_MOVEMENTS ->
-                        pregnancySymptomComponent.setCode(fhirUtils.setCodes(
-                                MetaCodeConstants.REDUCED_ABSENT_BABY_MOVEMENTS_KEY));
-
-                case MetaCodeConstants.FATIGUE_FEELING_TIRED_FEELING_ILL_WEAK ->
-                        pregnancySymptomComponent.setCode(fhirUtils.setCodes(
-                                MetaCodeConstants.FATIGUE_FEELING_TIRED_FEELING_ILL_WEAK_KEY));
-
-                case MetaCodeConstants.DIFFICULTY_BREATHING_FAST_BREATHING_COUGH_CHEST_PAIN ->
-                        pregnancySymptomComponent.setCode(fhirUtils.setCodes(
-                                MetaCodeConstants.DIFFICULTY_BREATHING_FAST_BREATHING_COUGH_CHEST_PAIN_KEY));
-
-                case MetaCodeConstants.BREAKING_OF_WATER ->
-                        pregnancySymptomComponent.setCode(fhirUtils.setCodes(
-                                MetaCodeConstants.BREAKING_OF_WATER_KEY));
-
-                case MetaCodeConstants.PAIN_IN_THE_ABDOMEN ->
-                        pregnancySymptomComponent.setCode(fhirUtils.setCodes(
-                                MetaCodeConstants.PAIN_IN_THE_ABDOMEN_KEY));
-
-                case MetaCodeConstants.FEVER_HOTNESS_OF_BODY ->
-                        pregnancySymptomComponent.setCode(fhirUtils.setCodes(
-                                MetaCodeConstants.FEVER_HOTNESS_OF_BODY_KEY));
-
-                case MetaCodeConstants.SWELLING_OF_THE_LEGS_HANDS_FACE ->
-                        pregnancySymptomComponent.setCode(fhirUtils.setCodes(
-                                MetaCodeConstants.SWELLING_OF_THE_LEGS_HANDS_FACE_KEY));
-
-                case MetaCodeConstants.PAINFUL_BURNING_FEELING_WHEN_PASSING_URINE ->
-                        pregnancySymptomComponent.setCode(fhirUtils.setCodes(
-                                MetaCodeConstants.PAINFUL_BURNING_FEELING_WHEN_PASSING_URINE_KEY));
-
-                case MetaCodeConstants.VAGINAL_DISCHARGE_ITCHINESS ->
-                        pregnancySymptomComponent.setCode(fhirUtils.setCodes(
-                                MetaCodeConstants.VAGINAL_DISCHARGE_ITCHINESS_KEY));
-
-                case MetaCodeConstants.NO_SYMPTOMS ->
-                        pregnancySymptomComponent.setCode(fhirUtils.setCodes(
-                                MetaCodeConstants.NO_SYMPTOMS_KEY));
-
-                case MetaCodeConstants.OTHER ->
-                        pregnancySymptomComponent.setCode(fhirUtils.setCodes(
-                                MetaCodeConstants.OTHER_KEY));
-
-                default -> Logger.logInfo(pregnancySymptomDTO.getName());
+            pregnancySymptomComponent.setCode(fhirUtils.setCodes(pregnancySymptomDTO.getValue()));
+            if (MetaCodeConstants.OTHER_KEY.equals(pregnancySymptomDTO.getOtherSymptom())) {
+                pregnancySymptomComponent.setCode(fhirUtils.setCodes(MetaCodeConstants.OTHER_KEY));
+                if (Objects.nonNull(pregnancySymptomDTO.getOtherSymptom())) {
+                    pregnancySymptomComponent.setValue(new StringType(pregnancySymptomDTO.getOtherSymptom()));
+                }
             }
             observation.addComponent(pregnancySymptomComponent);
         }

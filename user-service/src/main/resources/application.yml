@@ -36,11 +36,11 @@ spring:
 springdoc:
   packagesToScan: com.mdtlabs.coreplatform.userservice
   swagger-ui:
-    enabled: ${SWAGGER_ENABLED:false}
+    enabled: false
     configUrl: /user/swagger-ui/v3/api-docs/swagger-config
     url: /user/swagger-ui/v3/api-docs
   api-docs:
-    enabled: ${SWAGGER_ENABLED:false}
+    enabled: false
     path: /user/swagger-ui/v3/api-docs
 
 app:

@@ -399,7 +399,7 @@ public class InvestigationServiceImpl implements InvestigationService {
                     .setValue(labTest.getTestName());
             diagnosticReport.setIssued(labTest.getRecommendedOn());
             diagnosticReport.setSubject(new Reference(labTest.getPatientId()));
-            diagnosticReport.setEncounter(new Reference(String.format(FhirConstants.ENCOUNTER_ID, encounterId)));
+            diagnosticReport.setEncounter(new Reference(encounterId));
             diagnosticReport.addPerformer().setDisplay(labTest.getRecommendedName())
                     .setReference(Constants.FHIR_RESOURCE_PRACTITIONER.concat(Constants.FORWARD_SLASH)
                             .concat(labTest.getRecommendedBy()));
@@ -434,7 +434,7 @@ public class InvestigationServiceImpl implements InvestigationService {
         String uuid = fhirUtils.getUniqueId();
         Observation observation = new Observation();
         if (StringUtil.isNotBlank(encounterId)) {
-            observation.setEncounter(new Reference(String.format(FhirConstants.ENCOUNTER_ID, encounterId)));
+            observation.setEncounter(new Reference(encounterId));
         }
         observation.setStatus(Observation.ObservationStatus.FINAL);
         observation.addIdentifier()

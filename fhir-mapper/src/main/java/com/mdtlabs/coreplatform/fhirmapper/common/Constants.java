@@ -1067,6 +1067,9 @@ public class Constants extends ca.uhn.fhir.rest.api.Constants {
     public static final String ENCOUNTER_TYPE_MENTAL_HEALTH = "mentalhealth";
     public static final String PARAM_SORT_ASC = "_sort:asc";
     public static final String PARAM_SORT_DESC = "_sort:desc";
+    public static final String GESTATIONAL_DIABETES_MELLITUS = "gestationalDiabetesMellitus";
+    public static final String PRE_ECLAMPSIA = "preEclampsia";
+    public static final String ECLAMPSIA = "eclampsia";
 
     private Constants() {
 

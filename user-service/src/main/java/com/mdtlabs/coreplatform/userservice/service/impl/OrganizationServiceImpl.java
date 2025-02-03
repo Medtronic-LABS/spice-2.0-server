@@ -412,6 +412,9 @@ public class OrganizationServiceImpl implements OrganizationService {
                     request.getReportUserOrganizationIds()));
         }
         if (!Objects.isNull(request.getSupervisorId())) {
+            User supervisor = userService.getUserById(request.getSupervisorId());
+            supervisor.getOrganizations().add(organization);
+            userService.saveUser(supervisor);
             updateSupervisorForUser(user.getId(), request.getSupervisorId());
         }
         if (Objects.nonNull(user.getFhirId())) {
@@ -722,6 +725,9 @@ public class OrganizationServiceImpl implements OrganizationService {
             throw new SpiceValidation(2021);
         }
         userMapper.setExistingUser(userRequest, user);
+        if (Objects.isNull(user.getTenantId())) {
+            user.setTenantId(userRequest.getTenantId());
+        }
         validateRoles(user.getRoles().stream().map(Role::getName).collect(Collectors.toSet()),
                 roles.stream().map(Role::getName).collect(Collectors.toSet()), user);
         setUserRoleAndSuiteAccess(user, organization, roles);

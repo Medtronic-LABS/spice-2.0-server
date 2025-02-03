@@ -15,7 +15,6 @@ public class Constants {
     public static final int FIFTY_FIVE = 55;
     public static final int SIXTY_ONE = 61;
     public static final Long DAY_TO_MINUTES = 1440L;
-    public static final String SECRET_KEY = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
     public static final String URL_REGEX = "^(?:(?:(?:https?|ftp):)?\\/\\/)" +
             "(?:\\S+(?::\\S*)?@)?" +
             "(?:(?!(?:10|127)(?:\\.\\d{1,3}){3})(?!(?:169\\.254|192\\.168)(?:\\.\\d{1,3}){2})(?!172\\.(?:1[6-9]|2\\d|3[0-1])(?:\\.\\d{1,3}){2})" +

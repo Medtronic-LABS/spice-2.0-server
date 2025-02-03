@@ -3,6 +3,7 @@ package com.mdtlabs.coreplatform.fhirmapper.converter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import org.hl7.fhir.r4.model.Bundle;
@@ -10,8 +11,11 @@ import org.hl7.fhir.r4.model.DateTimeType;
 import org.hl7.fhir.r4.model.Observation;
 import org.hl7.fhir.r4.model.StringType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
+import com.mdtlabs.coreplatform.commonservice.common.model.dto.MetaDataDTO;
+import com.mdtlabs.coreplatform.commonservice.common.model.entity.MetaCodeDetails;
 import com.mdtlabs.coreplatform.fhirmapper.common.Constants;
 import com.mdtlabs.coreplatform.fhirmapper.common.FhirIdentifierConstants;
 import com.mdtlabs.coreplatform.fhirmapper.common.constants.MetaCodeConstants;
@@ -33,10 +37,14 @@ import com.mdtlabs.coreplatform.fhirmapper.common.utils.FhirUtils;
 public class SymptomConverter {
     private final FhirUtils fhirUtils;
 
+    private final RedisTemplate<String, Map<String, List<MetaDataDTO>>> metaRedisTemplate;
+
     @Autowired
-    public SymptomConverter(FhirUtils fhirUtils) {
+    public SymptomConverter(FhirUtils fhirUtils, RedisTemplate<String, Map<String, List<MetaDataDTO>>> metaRedisTemplate) {
         this.fhirUtils = fhirUtils;
+        this.metaRedisTemplate = metaRedisTemplate;
     }
+
 
     /**
      * Converts symptom to FHIR Observation entity.
@@ -127,9 +135,40 @@ public class SymptomConverter {
         for (Bundle.BundleEntryComponent bundleEntryComponent : bundle.getEntry()) {
             Observation observation = ((Observation) bundleEntryComponent.getResource());
             for (Observation.ObservationComponentComponent observationComponent : observation.getComponent()) {
-                symptoms.add(fhirUtils.getText(observationComponent.getCode().getText()));
+                String text = getSymptomText(observationComponent.getCode().getText(), isBpLog ?
+                        Constants.HYPERTENSION : Constants.DIABETES);
+                if (Objects.nonNull(text)) {
+                    symptoms.add(text);
+                }
             }
         }
         return symptoms;
+    }
+    
+    /**
+     * key and type.
+     *
+     * @param key  to retrieve the corresponding text or display value.
+     * @param type to specify the type of the symptom for which you want to retrieve the text.
+     * @return returns a `String` value, specifically the display value of a
+     * symptom based on the provided key and type parameters.
+     */
+    public String getSymptomText(String key, String type) {
+        MetaCodeDetails codeDetails = fhirUtils.getCodeDetails().get(key);
+        Map<String, List<MetaDataDTO>> valuesMap = metaRedisTemplate.opsForValue().get(Constants.META);
+        if (Objects.nonNull(valuesMap) && !valuesMap.isEmpty()) {
+            if (Objects.isNull(codeDetails)
+                    || Objects.isNull(codeDetails.getFormName())
+                    || !valuesMap.containsKey(codeDetails.getFormName())) {
+                codeDetails = new MetaCodeDetails();
+                codeDetails.setFormName(Constants.META);
+            }
+            for (MetaDataDTO metaDataDTO : valuesMap.get(codeDetails.getFormName())) {
+                if (key.equals(metaDataDTO.getValue()) && type.equals(metaDataDTO.getType())) {
+                    return metaDataDTO.getDisplayValue();
+                }
+            }
+        }
+        return null;
     }
 }

@@ -1657,9 +1657,9 @@ class PatientServiceImplTest {
         Bundle bundle = new Bundle();
         bundle.addEntry().setResource(relatedPerson);
         Condition condition = new Condition();
-        condition.setIdentifier(List.of(new Identifier().setValue("Diabetes")));
+        condition.setIdentifier(List.of(new Identifier().setValue("Diabetes").setSystem(FhirIdentifierConstants.PATIENT_DIAGNOSIS_NCD_IDENTIFIER_SYSTEM_URL)));
         Condition hypertensionCondition = new Condition();
-        hypertensionCondition.setIdentifier(List.of(new Identifier().setValue("Hypertension")));
+        hypertensionCondition.setIdentifier(List.of(new Identifier().setValue("Hypertension").setSystem(FhirIdentifierConstants.PATIENT_DIAGNOSIS_PREGNANCY_IDENTIFIER_URL)));
         Bundle conditionBundle = new Bundle();
         conditionBundle.addEntry().setResource(condition);
         conditionBundle.addEntry().setResource(hypertensionCondition);
@@ -1672,6 +1672,7 @@ class PatientServiceImplTest {
         when(encounterConverter.createEncounter((Patient) any(), any(), any(), any(), any())).thenReturn(encounter);
         when(restApiUtil.getBatchRequest("Observation?code:text=pregnancy&status=preliminary&performer=RelatedPerson/null&_sort=-date&_count=1")).thenReturn(TestDataProvider.getObservationBundle());
         when(restApiUtil.getBatchRequest("Condition?identifier=Pregnancy&asserter=RelatedPerson/null")).thenReturn(conditionBundle);
+        when(restApiUtil.getBatchRequest("Condition?subject=Patient/Patient/urn:uuid:null&verification-status:code=confirmed&_count=9999")).thenReturn(conditionBundle);
 
         //then
         PregnancyDetailsDTO result = patientService.createPregnancyDetails(pregnancyDetailsDTO);

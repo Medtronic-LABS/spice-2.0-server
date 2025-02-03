@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 
 import io.micrometer.common.util.StringUtils;
 import org.hl7.fhir.r4.model.Address;
@@ -739,14 +740,18 @@ public class FhirAssessmentMapper {
     public ConfirmDiagnosisDTO mapToDiagnosis(Bundle bundle) {
         ConfirmDiagnosisDTO confirmDiagnosisDTO = new ConfirmDiagnosisDTO();
         List<Map<String, String>> diagnosis = new ArrayList<>();
-        String notes = null;
+        AtomicReference<String> notes = new AtomicReference<>();
         List<String> mentalHealthLevels = new ArrayList<>();
         for (Bundle.BundleEntryComponent resource : bundle.getEntry()) {
             Condition condition = (Condition) resource.getResource();
             List<CodeableConcept> categories = condition.getCategory();
-            notes = (Objects.nonNull(condition.getNote()) &&
-                    !condition.getNote().isEmpty())
-                    ? condition.getNote().getFirst().getText() : null;
+            condition.getIdentifier().forEach(identifier -> {
+                if (identifier.getSystem().equals(FhirIdentifierConstants.PATIENT_DIAGNOSIS_OTHER_IDENTIFIER_URL)) {
+                    notes.set((Objects.nonNull(condition.getNote()) &&
+                            !condition.getNote().isEmpty())
+                            ? condition.getNote().getFirst().getText() : null);
+                }
+            });
             categories.forEach(category -> {
                 Map<String, String> categoryMap = new HashMap<>();
                 String value = category.getText();
@@ -770,7 +775,7 @@ public class FhirAssessmentMapper {
         }
         confirmDiagnosisDTO.setDiagnosis(diagnosis);
         confirmDiagnosisDTO.setIsConfirmDiagnosis(Boolean.TRUE);
-        confirmDiagnosisDTO.setDiagnosisNotes(notes);
+        confirmDiagnosisDTO.setDiagnosisNotes(notes.get());
         confirmDiagnosisDTO.setMentalHealthLevels(mentalHealthLevels);
         return confirmDiagnosisDTO;
     }

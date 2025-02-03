@@ -2,9 +2,12 @@ package com.mdtlabs.coreplatform.spiceservice.common.model;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.hibernate.annotations.Type;
 
+import com.mdtlabs.coreplatform.commonservice.common.CommonUtil;
+import com.mdtlabs.coreplatform.commonservice.common.contexts.UserContextHolder;
 import com.mdtlabs.coreplatform.commonservice.common.model.entity.BaseEntity;
 import com.mdtlabs.coreplatform.spiceservice.common.FieldConstants;
 import com.mdtlabs.coreplatform.spiceservice.common.TableConstants;
@@ -40,11 +43,22 @@ public class Menu extends BaseEntity {
 
     @Type(value = JsonBinaryType.class)
     @Column(name = FieldConstants.JSON_DISPLAY_VALUES)
-    private Map<String, Object> jsonDisplayValues;
+    private Map<String, List<Map<String, Object>>> jsonDisplayValues;
 
     @Column(name =  FieldConstants.COUNTRY_ID)
     private Long countryId;
 
     @Column(name = FieldConstants.APP_TYPES, columnDefinition = "text[]")
     private List<String> appTypes;
+
+    public List<Map<String, Object>> getMenus() {
+        List<Map<String, Object>> menus = this.menus;
+        if (CommonUtil.isCultureCodeNull()) {
+            if (!Objects.isNull(this.menus) && Objects.nonNull(this.jsonDisplayValues)
+                    && this.jsonDisplayValues.containsKey(UserContextHolder.getUserDto().getCulture().getCode())) {
+                menus = this.jsonDisplayValues.get(UserContextHolder.getUserDto().getCulture().getCode());
+            }
+        }
+        return menus;
+    }
 }

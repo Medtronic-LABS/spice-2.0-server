@@ -119,7 +119,6 @@ class UserServiceTest {
     @Mock
     private OrganizationUtil organizationUtil;
 
-
     @Mock
     private FhirServiceApiInterface fhirServiceApiInterface;
 
@@ -170,8 +169,8 @@ class UserServiceTest {
         User userResponse = userService.createUser(userRequest, true);
         User userResponseNotValidating = userService.createUser(userRequest, false);
         TestDataProvider.cleanUp();
-        Assertions.assertNotNull(userResponse);
-        Assertions.assertNotNull(userResponseNotValidating);
+        assertNotNull(userResponse);
+        assertNotNull(userResponseNotValidating);
     }
 
     @Test
@@ -205,7 +204,7 @@ class UserServiceTest {
         emailTemplateResponse = ResponseEntity.ok(emailTemplate);
         when(notificationApiInterface.getEmailTemplate(any(), any())).thenReturn(emailTemplateResponse);
         response = userService.forgetPassword(TestConstants.USER_NAME, Constants.SPICE, null, null);
-        Assertions.assertNotNull(response);
+        assertNotNull(response);
 
         user.setForgetPasswordCount(0);
 
@@ -213,7 +212,7 @@ class UserServiceTest {
         userInfo.put(Constants.USERNAME, user.getUsername());
         when(userRepository.save(user)).thenReturn(user);
         response = userService.forgetPassword(TestConstants.USER_NAME, Constants.SPICE, null, null);
-        Assertions.assertNotNull(response);
+        assertNotNull(response);
         Assertions.assertEquals(Boolean.FALSE, response);
 
         // for sms send
@@ -236,7 +235,7 @@ class UserServiceTest {
         when(shortUrlInterface.shortenURL(any())).thenReturn(responseEntity);
         user.setShortenUrl("shortenurl");
         response = userService.forgetPassword(TestConstants.USER_NAME, Constants.SPICE, Constants.SMS, "mob");
-        Assertions.assertNotNull(response);
+        assertNotNull(response);
     }
 
     @Test
@@ -302,7 +301,7 @@ class UserServiceTest {
         when(userRepository.findByForgetPasswordShortTokenAndIsDeletedFalseAndIsActiveTrue(requestToken)).thenReturn(user);
 
         User response = userService.verifyJwtToken(requestToken);
-        Assertions.assertNotNull(response);
+        assertNotNull(response);
 
         jwt = Jwts.builder().claims(userInfo).
                 signWith(Keys.hmacShaKeyFor(apiKeySecretBytes), signatureAlgorithm).id(user.getId().toString()).expiration(DateUtil.addMinutesToCurrentDate(-1)).issuedAt(new Date()).issuer(Constants.ISSUER);
@@ -340,7 +339,7 @@ class UserServiceTest {
         when(userRepository.save(user)).thenReturn(user);
         Boolean response = userService.updatePassword(requestToken, userInfo);
 
-        Assertions.assertNotNull(response);
+        assertNotNull(response);
         Assertions.assertEquals(Boolean.TRUE, response);
     }
 
@@ -489,12 +488,12 @@ class UserServiceTest {
 
         when(userRepository.findByIdInAndIsDeletedAndIsActive(ids, false, true)).thenReturn(users);
         List<User> response = userService.getUsersByIds(ids);
-        Assertions.assertNotNull(response);
+        assertNotNull(response);
         Assertions.assertEquals(users, response);
 
         when(userRepository.findByIdInAndIsDeletedAndIsActive(ids, false, true)).thenReturn(null);
         response = userService.getUsersByIds(ids);
-        Assertions.assertNotNull(response);
+        assertNotNull(response);
         Assertions.assertEquals(new ArrayList<>(), response);
     }
 
@@ -508,7 +507,7 @@ class UserServiceTest {
         when(userRepository.findByIdAndIsDeletedFalseAndIsActiveTrue(id)).thenReturn(user);
 
         User response = userService.getUserById(id);
-        Assertions.assertNotNull(response);
+        assertNotNull(response);
         Assertions.assertEquals(user, response);
     }
 
@@ -734,7 +733,7 @@ class UserServiceTest {
         TestDataProvider.getStaticMock();
         assertThrows(DataNotAcceptableException.class, () -> userService.updateOrganizationUser(userRequest));
 
-        userRequest.setId(1l);
+        userRequest.setId(1L);
         User user = TestDataProvider.getUser();
 
         when(userRepository.findByIdAndIsDeletedFalseAndIsActiveTrue(userRequest.getId())).thenReturn(user);
@@ -753,24 +752,27 @@ class UserServiceTest {
         SearchRequestDTO request = TestDataProvider.getSearchRequestDTO();
         request.setTenantIds(List.of(TestConstants.ONE));
         request.setIsSiteUsers(Constants.BOOLEAN_TRUE);
-
+        request.setIsFacilityUsersOnly(Constants.BOOLEAN_TRUE);
         Page<User> userPage = new PageImpl<>(List.of(TestDataProvider.getUser()));
         Map<String, List<RoleResponseDTO>> roleGroup = Map.of(Constants.GROUP_NAME_SPICE, List.of(TestDataProvider.getRoleResponse(Constants.ROLE_REGION_ADMIN),
                 TestDataProvider.getRoleResponse(Constants.ROLE_DISTRICT_ADMIN),
                 TestDataProvider.getRoleResponse(Constants.ROLE_CHIEFDOM_ADMIN)));
+        Map<Long, List<Long>> tenantMap = Map.of(1l, List.of(2l, 3l));
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, Object> userMap = objectMapper.convertValue(TestDataProvider.getUser(), Map.class);
+        userMap.put(Constants.SUITE_ACCESS, "value");
+        userMap.put(Constants.ROLE_REDIS_KEY, "role");
+        Page<Map<String, Object>> users = new PageImpl<>(List.of(userMap));
         when(roleService.getRoleGroups(request)).thenReturn(roleGroup);
         when(userRepository.getUsers(any(), any(), any(), any(), any(), any())).thenReturn(userPage);
-
+        when(organizationUtil.getParentChildTenantMap()).thenReturn(tenantMap);
+        when(userRepository.getUsersnative(any(), any(), any(), any(), any(), any(),anyBoolean(),any())).thenReturn(users);
         ResponseListDTO<UserResponseDTO> response = userService.getUsersByTenants(request);
         assertNotNull(response);
-        Sort.Order updatedAtOrder = new Sort.Order(DESC, Constants.U_UPDATED_AT);
-        Sort.Order idOrder = new Sort.Order(DESC, Constants.USER_ID_PARAM);
-        Sort sort = Sort.by(updatedAtOrder, idOrder);
         OrganizationDetailsDTO organizationDetailsDTO = new OrganizationDetailsDTO(TestConstants.ONE, Constants.FORM_NAME_CHIEFDOM, TestConstants.ONE, TestConstants.COUNTRY_NAME, TestConstants.ONE,
                 TestConstants.ONE, TestConstants.ONE, TestConstants.USER_NAME, TestConstants.ONE, TestConstants.ONE, TestConstants.ONE, TestConstants.USER_NAME, TestConstants.ONE, TestConstants.ONE);
         organizationDetailsDTO.setFormName(Constants.FORM_NAME_CHIEFDOM);
-        when(userRepository.getOrganizationsByUsers(List.of(1L), sort)).thenReturn(null);
-
         request.setUserBased(true);
         TestDataProvider.init();
         TestDataProvider.getStaticMock();
@@ -779,7 +781,7 @@ class UserServiceTest {
 
         request.setUserBased(false);
         request.setTenantBased(true);
-        request.setTenantId(1l);
+        request.setTenantId(1L);
         response = userService.getUsersByTenants(request);
         assertNotNull(response);
         response = userService.getUsersByTenants(request);
@@ -1367,7 +1369,7 @@ class UserServiceTest {
 
         //then
         UserResponseDTO userDTO = userService.validateUser(requestData);
-        Assertions.assertNull(userDTO);
+        assertNull(userDTO);
     }
 
     @Test
@@ -1441,7 +1443,7 @@ class UserServiceTest {
         when(userRepository.getUsersMappedToPeerSupervisor(UserContextHolder.getUserDto().getId())).thenReturn(null);
         User user = TestDataProvider.getUser();
         when(userRepository.getUsersMappedToPeerSupervisor(UserContextHolder.getUserDto().getId())).thenReturn(List.of(user));
-        Assertions.assertNotNull(userService.getUserVillagesOfPeerSupervisor());
+        assertNotNull(userService.getUserVillagesOfPeerSupervisor());
 
         TestDataProvider.cleanUp();
     }
@@ -1459,7 +1461,7 @@ class UserServiceTest {
 
         List<UserVillageDTO> response = userService.getUserVillagesOfPeerSupervisorWithPagination(request);
 
-        Assertions.assertNull(response);
+        assertNull(response);
     }
 
     @Test
@@ -1472,7 +1474,7 @@ class UserServiceTest {
 
         when(modelMapper.map(userPreferences, UserPreferencesDTO.class)).thenReturn(request);
         UserPreferencesDTO response = userService.saveUserPreferences(request);
-        Assertions.assertNotNull(response);
+        assertNotNull(response);
     }
 
     @Test
@@ -1482,7 +1484,7 @@ class UserServiceTest {
         when(userPreferencesRepository.getPreferencesByType(1l,
                 Constants.PERFORMANCE_MONITORING)).thenReturn(userPreferences);
         when(modelMapper.map(userPreferences, UserPreferencesDTO.class)).thenReturn(userPreferencesDTO);
-        Assertions.assertNotNull(userService.getUserPreferencesById(1l));
+        assertNotNull(userService.getUserPreferencesById(1l));
     }
 
     @Test
@@ -1541,7 +1543,7 @@ class UserServiceTest {
 
         //then
         Boolean response = userService.activateDeactivateUser(tenantIds, isActive);
-        Assertions.assertNotNull(response);
+        assertNotNull(response);
         TestDataProvider.cleanUp();
     }
 
@@ -1552,7 +1554,7 @@ class UserServiceTest {
         requestObject.setSearchTerm(Constants.USER_SEARCH_TERM);
         //then
         Map<String, Object> result = userService.getLockedUsers(requestObject);
-        Assertions.assertNotNull(result);
+        assertNotNull(result);
         TestDataProvider.cleanUp();
     }
 
@@ -1570,7 +1572,7 @@ class UserServiceTest {
         when(userRepository.findByIdAndIsDeletedFalseAndIsActiveTrue(123L)).thenReturn(user);
 
         Map<String, Object> result = userService.getLockedUsers(requestObject);
-        Assertions.assertNotNull(result);
+        assertNotNull(result);
         userContextHolder.close();
     }
 
@@ -1583,7 +1585,7 @@ class UserServiceTest {
 
         //then
         Map<String, Object> result = userService.getLockedUsers(requestObject);
-        Assertions.assertNotNull(result);
+        assertNotNull(result);
     }
 
     @Test
@@ -1599,7 +1601,7 @@ class UserServiceTest {
         when(userRepository.getLockedUsers("searchTerm", TestDataProvider.getSearchRequestDTO().getTenantIds(), pageable )).thenReturn(lockedUsers);
         //then
         Map<String, Object> result = userService.getLockedUsers(requestObject);
-        Assertions.assertNotNull(result);
+        assertNotNull(result);
     }
 
     @Test
@@ -1612,7 +1614,7 @@ class UserServiceTest {
         when(userRepository.findUsersByRoleIdS(roleIds, requestDto.getTenantId(), requestDto.getSearchTerm())).thenReturn(users);
         //then
         List<User> result = userService.getUserListByRole(requestDto);
-        Assertions.assertNotNull(result);
+        assertNotNull(result);
         TestDataProvider.cleanUp();
     }
 
@@ -1620,7 +1622,7 @@ class UserServiceTest {
     void updateSuperAdmin_ThrowsException() {
         UserSuperAdminDto userDto = new UserSuperAdminDto();
         userDto.setId(null);
-        Assertions.assertThrows(DataNotAcceptableException.class, () -> userService.updateSuperAdmin(userDto));
+        assertThrows(DataNotAcceptableException.class, () -> userService.updateSuperAdmin(userDto));
     }
 
 }

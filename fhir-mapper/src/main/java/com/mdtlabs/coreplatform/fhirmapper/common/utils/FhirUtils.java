@@ -478,25 +478,7 @@ public class FhirUtils {
      */
     public String getText(String key) {
         MetaCodeDetails codeDetails = getCodeDetails().get(key);
-        Map<String, List<MetaDataDTO>> valuesMap = metaRedisTemplate.opsForValue().get(Constants.META);
-        if (Objects.isNull(valuesMap) || valuesMap.isEmpty()) {
-            spiceServiceApiInterface.setMetaData(CommonUtil.getAuthToken(), CommonUtil.getClient());
-        }
-        if (Objects.nonNull(valuesMap) && !valuesMap.isEmpty()) {
-            if (Objects.isNull(codeDetails)
-                    || Objects.isNull(codeDetails.getFormName())
-                    || !valuesMap.containsKey(codeDetails.getFormName())) {
-                codeDetails = new MetaCodeDetails();
-                codeDetails.setFormName(Constants.META);
-            }
-            for (MetaDataDTO metaDataDTO : valuesMap.get(codeDetails.getFormName())) {
-                if (key.equals(metaDataDTO.getValue())) {
-                    codeDetails.setText(metaDataDTO.getDisplayValue());
-                    break;
-                }
-            }
-        }
-        return Objects.nonNull(codeDetails) ? codeDetails.getText() : key;
+        return (Objects.nonNull(codeDetails) && Objects.nonNull(codeDetails.getText())) ? codeDetails.getText() : key;
     }
 
     /**

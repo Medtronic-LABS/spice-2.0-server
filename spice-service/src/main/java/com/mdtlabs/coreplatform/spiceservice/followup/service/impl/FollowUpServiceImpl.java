@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 import org.modelmapper.Conditions;
@@ -140,11 +141,13 @@ public class FollowUpServiceImpl implements FollowUpService {
         List<CallRegister> oldCallRegisters
                 = callRegisterRepository.findByMemberIdAndTypeAndIsDeletedFalseAndIsCompletedFalse(
                 callRegister.getMemberId(), callRegister.getType());
+        AtomicReference<String> villageId = new AtomicReference<>();
         callRegister.setIsInitiated(updateOldCallRegister ? Constants.BOOLEAN_FALSE : Constants.BOOLEAN_TRUE);
         if (!oldCallRegisters.isEmpty() && updateOldCallRegister) {
             oldCallRegisters.forEach(oldCallRegister -> {
                 oldCallRegister.setDeleted(Boolean.TRUE);
                 oldCallRegister.setIsCompleted(Boolean.TRUE);
+                villageId.set(oldCallRegister.getVillageId());
                 if (Objects.isNull(callRegister.getNextBPAssessmentDate())) {
                     callRegister.setNextBPAssessmentDate(oldCallRegister.getNextBPAssessmentDate());
                 }
@@ -157,6 +160,9 @@ public class FollowUpServiceImpl implements FollowUpService {
 
         if (Boolean.TRUE.equals(updateOldCallRegister)) {
             callRegister.setIsCompleted(Constants.BOOLEAN_FALSE);
+            if(Objects.nonNull(villageId.get())) {
+                callRegister.setVillageId(villageId.get());
+            }
         } else {
             if (followUpCallAttempts == callRegister.getAttempts()) {
                 throw new DataNotAcceptableException(23105);
