@@ -14,6 +14,7 @@ import com.mdtlabs.coreplatform.adminservice.apiinterface.UserServiceApiInterfac
 import com.mdtlabs.coreplatform.adminservice.repository.CountryRepository;
 import com.mdtlabs.coreplatform.adminservice.service.CountryService;
 import com.mdtlabs.coreplatform.commonservice.common.CommonUtil;
+import com.mdtlabs.coreplatform.commonservice.common.Constants;
 import com.mdtlabs.coreplatform.commonservice.common.contexts.UserContextHolder;
 import com.mdtlabs.coreplatform.commonservice.common.exception.BadRequestException;
 import com.mdtlabs.coreplatform.commonservice.common.exception.DataConflictException;
@@ -56,6 +57,7 @@ public class CountryServiceImpl implements CountryService {
             throw new DataConflictException(19001, request.getName());
         }
         Country country = mapper.map(request, Country.class);
+        country.setDisplayValues(Constants.COUNTRY_DEFAULT_DISPLAY_VALUES);
         countryRepository.save(country);
         return country;
     }

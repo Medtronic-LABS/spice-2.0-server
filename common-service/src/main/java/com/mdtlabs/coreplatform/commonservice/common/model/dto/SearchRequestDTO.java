@@ -92,6 +92,8 @@ public class SearchRequestDTO extends PaginateDTO {
 
 	private Boolean isSiteUsers;
 
+	private Boolean isFacilityUsersOnly;
+
 	private Long parentRegionId;
 
     private boolean isNonNcdWorkflowEnabled;

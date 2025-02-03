@@ -14,6 +14,8 @@ spring:
       url: ${DATABASE_URL}
       username : ${DATABASE_USERNAME}
       password : ${DATABASE_PASSWORD}
+      hikari:
+        maximum-pool-size: ${DB_MAX_POOL_SIZE:10}
    servlet:
       multipart:
          max-file-size: 15MB
@@ -54,8 +56,6 @@ app:
    enable-sms-notification-twilio: ${ENABLE_SMS_NOTIFICATION_TWILIO}
    enable-sms-notification-sns: ${ENABLE_SMS_NOTIFICATION_SNS}
    enable-sms-notification-digimiles: ${ENABLE_SMS_NOTIFICATION_DIGIMILES}
-   aws-access-key: ${AWS_ACCESS_KEY}
-   aws-secret-key: ${AWS_SECRET_KEY}
    aws-region: ${SERVER_REGION}
    digimiles-url: ${DIGIMILES_SMS_URL}
    digimiles-username: ${DIGIMILES_SMS_USERNAME}
@@ -75,9 +75,9 @@ app:
 springdoc:
   packagesToScan: com.mdtlabs.coreplatform.notificationservice
   swagger-ui:
-    enabled: ${SWAGGER_ENABLED:false}
+    enabled: false
   api-docs:
-    enabled: ${SWAGGER_ENABLED:false}
+    enabled: false
    
 spicelog:
   fileName: './log/SpiceApplicationLog.log'

@@ -242,7 +242,7 @@ public class PatientConverter {
                     .setText(request.getBioData().getLandmark()));
         }
         if (!Objects.isNull(request.getBioMetrics())) {
-            patient.setGender(Enumerations.AdministrativeGender.fromCode(request.getBioMetrics().getGender()));
+            patient.setGender(Enumerations.AdministrativeGender.fromCode(request.getBioMetrics().getGender().toLowerCase()));
             patient.setBirthDate(request.getBioMetrics().getDateOfBirth());
         }
         patient.setActive(true);
@@ -401,7 +401,7 @@ public class PatientConverter {
         relatedPerson.setName(List.of(commonConverter.createHumanName(request.getBioData().getFirstName(),
                 request.getBioData().getMiddleName(), request.getBioData().getLastName(), request.getBioData().getInitial())));
         if (!Objects.isNull(request.getBioMetrics())) {
-            relatedPerson.setGender(Enumerations.AdministrativeGender.fromCode(request.getBioMetrics().getGender()));
+            relatedPerson.setGender(Enumerations.AdministrativeGender.fromCode(request.getBioMetrics().getGender().toLowerCase()));
             relatedPerson.setBirthDate(request.getBioMetrics().getDateOfBirth());  // if age given data should be calculated.
         }
         relatedPerson.setActive(true);

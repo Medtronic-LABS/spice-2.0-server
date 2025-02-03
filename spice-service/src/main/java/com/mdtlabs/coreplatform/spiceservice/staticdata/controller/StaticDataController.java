@@ -76,6 +76,18 @@ public class StaticDataController {
     }
 
     /**
+     * Set metadata cache and returns a success response with
+     * static metadata.
+     *
+     * @return A SuccessResponse object containing a StaticMetaDataResponseDTO object is being returned.
+     */
+    @PostMapping("/set-meta-data-cache")
+    public SuccessResponse<StaticMetaDataResponseDTO> setMetaData() {
+        return new SuccessResponse<>(SuccessCode.GET_USER_STATIC_DATA,
+                staticDataService.setMetaDateCache(), HttpStatus.OK);
+    }
+
+    /**
      * It provides end point to get the static meta data for both above and under 5Y patients.
      *
      * @return SuccessResponse<List < StaticMetaDataResponseDTO>> Response of the end point.

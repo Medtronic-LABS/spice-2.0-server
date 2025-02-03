@@ -11,4 +11,6 @@ import lombok.Data;
 public class PregnancySymptomDTO {
     private String name;
     private double id;
+    private String value;
+    private String otherSymptom;
 }

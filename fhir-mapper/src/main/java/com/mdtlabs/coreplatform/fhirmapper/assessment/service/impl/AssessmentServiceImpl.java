@@ -2100,32 +2100,32 @@ public class AssessmentServiceImpl implements AssessmentService {
 
         if (Objects.nonNull(treatmentPlanResponseDTO.getBpCheckFrequency())) {
             TreatmentPlanFrequencyDTO treatmentPlanFrequencyDTO = new TreatmentPlanFrequencyDTO();
-            treatmentPlanFrequencyDTO.setLabel(Constants.BP_CHECK_FREQUENCY);
-            treatmentPlanFrequencyDTO.setValue(treatmentPlanResponseDTO.getBpCheckFrequency());
+            treatmentPlanFrequencyDTO.setLabel(fhirUtils.getText(Constants.BP_CHECK_FREQUENCY));
+            treatmentPlanFrequencyDTO.setValue(fhirUtils.getText(treatmentPlanResponseDTO.getBpCheckFrequency()));
             assessmentTreatmentPlan.getTreatmentPlan().add(treatmentPlanFrequencyDTO);
         }
         if (Objects.nonNull(treatmentPlanResponseDTO.getBgCheckFrequency())) {
             TreatmentPlanFrequencyDTO treatmentPlanFrequencyDTO = new TreatmentPlanFrequencyDTO();
-            treatmentPlanFrequencyDTO.setLabel(Constants.BG_CHECK_FREQUENCY);
-            treatmentPlanFrequencyDTO.setValue(treatmentPlanResponseDTO.getBgCheckFrequency());
+            treatmentPlanFrequencyDTO.setLabel(fhirUtils.getText(Constants.BG_CHECK_FREQUENCY));
+            treatmentPlanFrequencyDTO.setValue(fhirUtils.getText(treatmentPlanResponseDTO.getBgCheckFrequency()));
             assessmentTreatmentPlan.getTreatmentPlan().add(treatmentPlanFrequencyDTO);
         }
         if (Objects.nonNull(treatmentPlanResponseDTO.getMedicalReviewFrequency())) {
             TreatmentPlanFrequencyDTO treatmentPlanFrequencyDTO = new TreatmentPlanFrequencyDTO();
-            treatmentPlanFrequencyDTO.setLabel(Constants.MEDICAL_REVIEW_FREQUENCY);
-            treatmentPlanFrequencyDTO.setValue(treatmentPlanResponseDTO.getMedicalReviewFrequency());
+            treatmentPlanFrequencyDTO.setLabel(fhirUtils.getText(Constants.MEDICAL_REVIEW_FREQUENCY));
+            treatmentPlanFrequencyDTO.setValue(fhirUtils.getText(treatmentPlanResponseDTO.getMedicalReviewFrequency()));
             assessmentTreatmentPlan.getTreatmentPlan().add(treatmentPlanFrequencyDTO);
         }
         if (Objects.nonNull(treatmentPlanResponseDTO.getHba1cCheckFrequency())) {
             TreatmentPlanFrequencyDTO treatmentPlanFrequencyDTO = new TreatmentPlanFrequencyDTO();
-            treatmentPlanFrequencyDTO.setLabel(Constants.HBA1C_CHECK_FREQUENCY);
-            treatmentPlanFrequencyDTO.setValue(treatmentPlanResponseDTO.getHba1cCheckFrequency());
+            treatmentPlanFrequencyDTO.setLabel(fhirUtils.getText(Constants.HBA1C_CHECK_FREQUENCY));
+            treatmentPlanFrequencyDTO.setValue(fhirUtils.getText(treatmentPlanResponseDTO.getHba1cCheckFrequency()));
             assessmentTreatmentPlan.getTreatmentPlan().add(treatmentPlanFrequencyDTO);
         }
         if (Objects.nonNull(treatmentPlanResponseDTO.getChoCheckFrequency())) {
             TreatmentPlanFrequencyDTO treatmentPlanFrequencyDTO = new TreatmentPlanFrequencyDTO();
-            treatmentPlanFrequencyDTO.setLabel(Constants.CHO_CHECK_FREQUENCY);
-            treatmentPlanFrequencyDTO.setValue(treatmentPlanResponseDTO.getChoCheckFrequency());
+            treatmentPlanFrequencyDTO.setLabel(fhirUtils.getText(Constants.CHO_CHECK_FREQUENCY));
+            treatmentPlanFrequencyDTO.setValue(fhirUtils.getText(treatmentPlanResponseDTO.getChoCheckFrequency()));
             assessmentTreatmentPlan.getTreatmentPlan().add(treatmentPlanFrequencyDTO);
         }
         if (Objects.nonNull(treatmentPlanResponseDTO.getCarePlanId())) {

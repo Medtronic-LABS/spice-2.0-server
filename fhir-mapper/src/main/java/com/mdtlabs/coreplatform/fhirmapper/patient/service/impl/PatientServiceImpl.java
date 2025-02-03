@@ -1951,9 +1951,11 @@ public class PatientServiceImpl implements PatientService {
                 || Constants.INVESTIGATION.equalsIgnoreCase(requestDTO.getType())
                 || Constants.NUTRITION_LIFESTYLE.equalsIgnoreCase(requestDTO.getType())
                 || Constants.DISPENSE.equalsIgnoreCase(requestDTO.getType()))) {
-            url = StringUtil.concatString(url, String.format(Constants.IDENTIFIER_QUERY,
-                    StringUtil.concatString(FhirIdentifierConstants.ORGANIZATION_ID_SYSTEM_URL,
-                            Constants.VERTICAL_BAR, requestDTO.getSiteId())));
+            url = StringUtil.concatString(url, Constants.IDENTIFIER_QUERY);
+            List<String> siteIds = Arrays.stream(requestDTO.getSiteId().split(","))
+                    .map(id -> StringUtil.concatString(FhirIdentifierConstants.ORGANIZATION_ID_SYSTEM_URL,
+                            Constants.VERTICAL_BAR, String.valueOf(id))).toList();
+            url = String.format(url, String.join(Constants.COMMA, siteIds));
         }
         if (Objects.nonNull(requestDTO.getCountryId())
                 && (Constants.REGISTRATION.equalsIgnoreCase(requestDTO.getType()))) {
@@ -2519,7 +2521,6 @@ public class PatientServiceImpl implements PatientService {
         Bundle relatedPersonBundle = restApiUtil.getBatchRequest(url);
         RelatedPerson relatedPerson = (RelatedPerson) relatedPersonBundle.getEntry().getFirst().getResource();
         Patient patient = null;
-
         if (Objects.nonNull(pregnancyDetailsDTO.getPatientReference())) {
             patient = restApiUtil.getPatientById(StringUtil.concatString(fhirServerUrl, FhirConstants.PATIENT,
                     Constants.FORWARD_SLASH, pregnancyDetailsDTO.getPatientReference()));
@@ -2529,8 +2530,24 @@ public class PatientServiceImpl implements PatientService {
         if (Objects.nonNull(pregnancyDetailsDTO.getNcdPatientStatus())) {
             createPatientStatus(pregnancyDetailsDTO, bundle);
         }
-
         if (Objects.nonNull(pregnancyDetailsDTO.getActualDeliveryDate())) {
+            Bundle conditionBundle = restApiUtil.getBatchRequest(String.format(Constants.CONDITION_QUERY_VERIFICATION_STATUS, pregnancyDetailsDTO.getPatientReference()));
+            for (Bundle.BundleEntryComponent resource : conditionBundle.getEntry()) {
+                Condition condition = (Condition) resource.getResource();
+                condition.getIdentifier().forEach(identifier -> {
+                    if (identifier.getSystem().equals(FhirIdentifierConstants.PATIENT_DIAGNOSIS_NCD_IDENTIFIER_SYSTEM_URL)) {
+                        Condition ncdCondition = removeNCDDiagnosis(condition);
+                        commonConverter.setConditionInBundle(bundle, ncdCondition,
+                                FhirConstants.PATIENT_STATUS_DIABETES_IDENTIFIER_URL, Boolean.TRUE,
+                                pregnancyDetailsDTO.getProvenance());
+                    } else if (identifier.getSystem().equals(FhirIdentifierConstants.PATIENT_DIAGNOSIS_PREGNANCY_IDENTIFIER_URL)) {
+                        Condition maternalHealthCondition = removeMaternalHealthDiagnosis(condition);
+                        commonConverter.setConditionInBundle(bundle, maternalHealthCondition,
+                                FhirConstants.PATIENT_STATUS_DIABETES_IDENTIFIER_URL, Boolean.TRUE,
+                                pregnancyDetailsDTO.getProvenance());
+                    }
+                });
+            }
             pregnancyDetailsDTO.setIsPregnant(Boolean.FALSE);
             pregnancyDetailsDTO.setIsPregnancyRisk(Boolean.FALSE);
         }
@@ -2574,6 +2591,42 @@ public class PatientServiceImpl implements PatientService {
 
         restApiUtil.postBatchRequest(fhirServerUrl, restApiUtil.constructRequestEntity(bundle));
         return pregnancyDetailsDTO;
+    }
+
+    /**
+     * <p>
+     * Removes maternal health diagnoses from the given pregnancy details.
+     * </p>
+     *
+     * @param maternalHealthCondition The condition,
+     *                            including any maternal health diagnoses to be removed.
+     */
+    private Condition removeMaternalHealthDiagnosis(Condition maternalHealthCondition) {
+        maternalHealthCondition.setVerificationStatus(fhirUtils.setCodes(Constants.UNCONFIRMED));
+        return maternalHealthCondition;
+    }
+
+    /**
+     * <p>
+     * Removes NCD diagnoses from the given pregnancy details.
+     * </p>
+     *
+     * @param ncdCondition The condition,
+     *                            including any NCD diagnoses to be removed.
+     */
+    private Condition removeNCDDiagnosis(Condition ncdCondition) {
+        List<CodeableConcept> categories = ncdCondition.getCategory();
+        List<CodeableConcept> newCategories = new ArrayList<>();
+        categories.forEach(category -> {
+            if (!category.getText().equals(Constants.GESTATIONAL_DIABETES_MELLITUS)) {
+                newCategories.add(category);
+            }
+        });
+        ncdCondition.setCategory(newCategories);
+        if (newCategories.isEmpty()) {
+            ncdCondition.setVerificationStatus(fhirUtils.setCodes(Constants.UNCONFIRMED));
+        }
+        return ncdCondition;
     }
 
     /**

@@ -80,6 +80,7 @@ public class HelperService {
                 Files.delete(data.toPath());
             }
         } catch (IOException | MinioException | GeneralSecurityException e) {
+            Logger.logError(e);
             throw new SpiceValidation(1008, e.getMessage());
         }
     }
@@ -112,6 +113,7 @@ public class HelperService {
                     return location;
                 }
             } catch (IOException | MinioException | GeneralSecurityException e) {
+                Logger.logError(e);
                 throw new SpiceValidation(1008, e.getMessage());
             }
         });

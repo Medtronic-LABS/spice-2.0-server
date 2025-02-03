@@ -130,16 +130,7 @@ public class BpLogServiceImpl implements BpLogService {
 		if (Objects.isNull(requestData.getMemberId())) {
 			throw new DataNotFoundException(3000);
 		}
-		PatientBpLogsDTO patientBpLogsDTO = fhirServiceApiInterface.getBpLogList(CommonUtil.getAuthToken(), CommonUtil.getClient(), requestData);
-		List<String> symptoms = new ArrayList<>();
-		if(Objects.nonNull(patientBpLogsDTO) && Objects.nonNull(patientBpLogsDTO.getLatestBpLog()) &&
-				Objects.nonNull(patientBpLogsDTO.getLatestBpLog().getSymptoms())) {
-			List<Symptom> bpSymptoms = symptomRepository.findByNameInAndType(patientBpLogsDTO.getLatestBpLog().getSymptoms(), Constants.HYPERTENSION);
-			bpSymptoms.forEach(symptom ->
-				symptoms.add(symptom.getName()));
-			patientBpLogsDTO.getLatestBpLog().setSymptoms(symptoms);
-		}
-		return patientBpLogsDTO;
+        return fhirServiceApiInterface.getBpLogList(CommonUtil.getAuthToken(), CommonUtil.getClient(), requestData);
 	}
 
 

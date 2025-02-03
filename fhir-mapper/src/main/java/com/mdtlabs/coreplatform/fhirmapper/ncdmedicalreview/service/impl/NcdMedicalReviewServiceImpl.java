@@ -300,8 +300,8 @@ public class NcdMedicalReviewServiceImpl implements NcdMedicalReviewService {
      * @param request
      * @param bundle
      */
-    private void createCondition(String conditionName, String identifierValue, NCDMedicalReviewDTO request,
-                                 Bundle bundle) {
+    private Condition createCondition(String conditionName, String identifierValue, NCDMedicalReviewDTO request,
+                Bundle bundle) {
         Condition condition = new Condition();
         condition.addIdentifier().setSystem(FhirIdentifierConstants.CONDITION_TYPE_SYSTEM_URL).setValue(identifierValue);
         condition.setCode(fhirUtils.createCodeableConcept(conditionName));
@@ -317,6 +317,7 @@ public class NcdMedicalReviewServiceImpl implements NcdMedicalReviewService {
         String fullUrl = StringUtil.concatString(Constants.FHIR_BASE_URL, uuid);
         String url = StringUtil.concatString(String.valueOf(ResourceType.Condition), Constants.FORWARD_SLASH, Constants.FHIR_BASE_URL, uuid);
         fhirUtils.setBundle(url, fullUrl, Bundle.HTTPVerb.POST, condition, bundle, request.getProvenance());
+        return condition;   
     }
 
     /**
@@ -407,6 +408,7 @@ public class NcdMedicalReviewServiceImpl implements NcdMedicalReviewService {
             String observationUrl = addObservationToBundle(observation, bundle, request.getProvenance());
             currentMedicationDetails.getMedications().stream().forEach(medication -> {
                 MedicationStatement medicationStatement = createMedicationStatement(medication.getValue(), MetaCodeConstants.CURRUNT_MEDICATION, request, bundle);
+                medicationStatement.addIdentifier().setSystem(FhirIdentifierConstants.META_CURRENT_MEDICATION_ID).setValue(medication.getId().toString());
                 medicationStatement.addReasonReference(fhirUtils.getReferenceUrl(ResourceType.Observation, observationUrl));
             });
         }
@@ -449,9 +451,10 @@ public class NcdMedicalReviewServiceImpl implements NcdMedicalReviewService {
     private void createComorbidity(Set<MedicalReviewMetaDTO> comorbidities, NCDMedicalReviewDTO request, Bundle bundle) {
         if (!Objects.isNull(comorbidities)
                 && !comorbidities.isEmpty()) {
-            comorbidities.stream().forEach(comorbidity ->
-                    createCondition(comorbidity.getValue(), MetaCodeConstants.COMORBIDITIES, request, bundle)
-            );
+                comorbidities.stream().forEach(comobidity -> {
+                    Condition condition = createCondition(comobidity.getValue(), MetaCodeConstants.COMORBIDITIES, request, bundle);
+                    condition.addIdentifier().setSystem(FhirIdentifierConstants.META_COMORBIDITY_ID).setValue(comobidity.getId().toString());
+            }); 
         }
     }
 
@@ -465,9 +468,11 @@ public class NcdMedicalReviewServiceImpl implements NcdMedicalReviewService {
     private void createComplications(Set<MedicalReviewMetaDTO> complications, NCDMedicalReviewDTO request, Bundle bundle) {
         if (!Objects.isNull(complications)
                 && !complications.isEmpty()) {
-            complications.stream().forEach(complication ->
-                    createCondition(complication.getValue(), MetaCodeConstants.COMPLICATIONS, request, bundle)
-            );
+            complications.stream().forEach(complication -> {
+                Condition condition = createCondition(complication.getValue(), MetaCodeConstants.COMPLICATIONS, request, bundle);
+                condition.addIdentifier().setSystem(FhirIdentifierConstants.META_COMPLICATION_ID).setValue(complication.getId().toString());
+
+            });
         }
     }
 

@@ -576,7 +576,8 @@ class MedicationServiceTest {
     @Test
     void updateNCDAppointment() {
         NCDMedicalReviewDTO request = new NCDMedicalReviewDTO();
-
+        request.setProvenance(TestDataProvider.getProvenance());
+        request.getProvenance().setOrganizationId(TestConstants.STRING_ONE);
         doNothing().when(fhirServiceApiInterface).updateNCDAppointment("Bearer", "mob", request);
         medicalReviewService.updateNCDAppointment(request);
         verify(fhirServiceApiInterface, times(0)).updateNCDAppointment("Bearer", "mob", request);

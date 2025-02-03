@@ -95,4 +95,7 @@ public class FhirIdentifierConstants {
     private FhirIdentifierConstants() {
 
     }
+    public static final String META_COMORBIDITY_ID = StringUtil.concatString(BASE_URL, "comorbidity-id");
+    public static final String META_COMPLICATION_ID = StringUtil.concatString(BASE_URL, "complication-id");
+    public static final String META_CURRENT_MEDICATION_ID = StringUtil.concatString(BASE_URL, "current-medication-id");
 }

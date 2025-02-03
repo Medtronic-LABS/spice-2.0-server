@@ -61,11 +61,14 @@ import com.mdtlabs.coreplatform.commonservice.common.model.dto.UserSuperAdminDto
 import com.mdtlabs.coreplatform.commonservice.common.model.dto.UserVillageDTO;
 import com.mdtlabs.coreplatform.commonservice.common.model.dto.UserVillageResponseDTO;
 import com.mdtlabs.coreplatform.commonservice.common.model.dto.VillageDTO;
+import com.mdtlabs.coreplatform.commonservice.common.model.entity.Country;
 import com.mdtlabs.coreplatform.commonservice.common.model.entity.Culture;
+import com.mdtlabs.coreplatform.commonservice.common.model.entity.Designation;
 import com.mdtlabs.coreplatform.commonservice.common.model.entity.EmailTemplate;
 import com.mdtlabs.coreplatform.commonservice.common.model.entity.Organization;
 import com.mdtlabs.coreplatform.commonservice.common.model.entity.Role;
 import com.mdtlabs.coreplatform.commonservice.common.model.entity.SMSTemplate;
+import com.mdtlabs.coreplatform.commonservice.common.model.entity.Timezone;
 import com.mdtlabs.coreplatform.commonservice.common.model.entity.User;
 import com.mdtlabs.coreplatform.commonservice.common.model.entity.UserPreferences;
 import com.mdtlabs.coreplatform.commonservice.common.model.entity.UserSupervisor;
@@ -637,7 +640,7 @@ public class UserServiceImpl implements UserService {
         userRepository.saveAll(users);
     }
 
-    /**
+        /**
      * {@inheritDoc}
      */
     public List<User> getUsersByIds(List<Long> ids) {
@@ -700,25 +703,19 @@ public class UserServiceImpl implements UserService {
             response.setTotalCount(0L);
             return response;
         }
-        if (CommonUtil.isCommunityApp(request.getAppTypes())) {
+        if(CommonUtil.isCommunityApp(request.getAppTypes())) {
             Pageable pageable = Pagination.setPagination(request.getSkip(), request.getLimit(),
                     Constants.UPDATED_AT, Constants.BOOLEAN_FALSE);
+            List<Long> tenantIds = (Objects.nonNull(request.getTenantIds()) && !request.getTenantIds().isEmpty())
+                    ? request.getTenantIds() : null;
+            Long phoneNumber = CommonUtil.isAllNumeric(searchTerm) ? Long.valueOf(searchTerm) : null;
+            List<String> roles = (Objects.isNull(request.getRoleNames()) || request.getRoleNames().isEmpty())
+                    ? null : request.getRoleNames();
 
-            List<Long> tenantIds;
-            if (request.isUserBased()) {
-                tenantIds = UserTenantsContextHolder.get();
-            } else if (request.isTenantBased()) {
-                if (Objects.nonNull(request.getTenantId())) {
-                    tenantIds = List.of(request.getTenantId());
-                } else {
-                    tenantIds = request.getTenantIds();
-                }
-            } else {
-                tenantIds = null;
-            }
-
-            Page<User> users = userRepository.getUsers(Objects.isNull(tenantIds) ? null : new HashSet<>(tenantIds),
-                    searchTerm, request.getCountryId(), null, null, pageable);
+            Page<User> users = userRepository.getAllUsers(
+                    Objects.isNull(tenantIds) ? null : new HashSet<>(tenantIds),
+                    Objects.isNull(phoneNumber) ? searchTerm : null,
+                    request.getCountryId(), roles, pageable, phoneNumber);
             if (!Objects.isNull(users) && !users.isEmpty()) {
                 response.setData(modelMapper.map(users.stream().toList(), new TypeToken<List<UserResponseDTO>>() {
                 }.getType()));
@@ -732,6 +729,7 @@ public class UserServiceImpl implements UserService {
         Pageable pageable = Pagination.setPagination(request.getSkip(), request.getLimit(),
                 sorts);
         List<String> roleNames = null;
+        List<String> notInRoleNames = null;
         Map<String, List<RoleResponseDTO>> roleMap = roleService.getRoleGroups(request);
         List<RoleResponseDTO> roles = roleMap.get(Constants.GROUP_NAME_SPICE);
         if (Objects.nonNull(roleMap.get(Constants.GROUP_NAME_SPICE_INSIGHTS))) {
@@ -742,20 +740,28 @@ public class UserServiceImpl implements UserService {
         }
 
         List<String> suiteAccessList;
+        List<String> notInSuiteAccessList;
         if (Objects.nonNull(request.getIsSiteUsers())) {
             if (request.getIsSiteUsers().equals(Constants.BOOLEAN_TRUE)) {
                 suiteAccessList = new ArrayList<>(Arrays.asList(Constants.CLIENT_CFR_USER, Constants.CLIENT_SPICE_MOBILE, Constants.CLIENT_CFR));
+                notInSuiteAccessList = new ArrayList<>(Arrays.asList(Constants.CLIENT_CFR_ADMIN, Constants.CLIENT_ADMIN));
             } else {
                 suiteAccessList = new ArrayList<>(Arrays.asList(Constants.CLIENT_CFR_ADMIN, Constants.CLIENT_ADMIN, Constants.CLIENT_CFR));
+                notInSuiteAccessList = new ArrayList<>(Arrays.asList(Constants.CLIENT_CFR_USER, Constants.CLIENT_SPICE_MOBILE));
             }
         } else {
             suiteAccessList = new ArrayList<>(Arrays.asList(Constants.CLIENT_ADMIN, Constants.CLIENT_SPICE_MOBILE, Constants.CLIENT_CFR_ADMIN,
                     Constants.CLIENT_CFR_USER, Constants.CLIENT_CFR_QUICKSIGHT_ADMIN, Constants.CLIENT_CFR));
+            notInSuiteAccessList = new ArrayList<>();
         }
 
         if (Objects.nonNull(request.getIsSiteUsers())) {
             roleNames = roles.stream()
                     .filter(roleResponseDTO -> suiteAccessList.contains(roleResponseDTO.getSuiteAccessName()))
+                    .map(RoleResponseDTO::getName)
+                    .collect(Collectors.toList());
+            notInRoleNames = roles.stream()
+                    .filter(roleResponseDTO -> notInSuiteAccessList.contains(roleResponseDTO.getSuiteAccessName()))
                     .map(RoleResponseDTO::getName)
                     .toList();
         }
@@ -776,66 +782,342 @@ public class UserServiceImpl implements UserService {
         }
         Organization organization = Objects.nonNull(request.getTenantId()) ? organizationService.getOrganization(request.getTenantId()) : null;
         tenantIds = tenantIds.isEmpty() ? null : tenantIds;
-        boolean superAdminUsers = (Objects.nonNull(organization) && request.getCountryId().equals(organization.getFormDataId())) &&
+        Boolean superAdminUsers = (Objects.nonNull(organization) && request.getCountryId().equals(organization.getFormDataId())) &&
                 (Objects.nonNull(request.getIsSiteUsers()) && request.getIsSiteUsers().equals(Constants.BOOLEAN_FALSE))
                 && (Objects.nonNull(roleNames) && roleNames.contains(Constants.ROLE_SUPER_ADMIN))
                 ? Constants.BOOLEAN_TRUE : Constants.BOOLEAN_FALSE;
-        Page<User> users;
+        List<Role> rolesList = roleService.getAllRoles();
+        Map<String, Role> rolesMap = new HashMap<>();
+        rolesList.forEach(role -> rolesMap.put(role.getName(), role));
+        Page<Map<String, Object>> users;
         if (superAdminUsers) {
-            users = userRepository.getUsersWithSuperAdmins(tenantIds, searchTerm, roleNames, Constants.SUPER_USER_USERNAME, pageable);
+            users = userRepository.getUsersWithSuperAdminsNative(tenantIds.toArray(new Long[0]), searchTerm, (Objects.nonNull(roleNames) ? roleNames.toArray(new String[0]) : null),
+                    (Objects.nonNull(notInRoleNames) ? notInRoleNames.toArray(new String[0]) : null), Constants.SUPER_USER_USERNAME, pageable);
         } else {
-            users = userRepository.getUsers(tenantIds, searchTerm, null, roleNames, List.of(Constants.ROLE_REPORT_ADMIN, Constants.ROLE_FACILITY_REPORT_ADMIN), pageable);
+            users = userRepository.getUsersnative(tenantIds.toArray(new Long[0]), searchTerm, null, (Objects.nonNull(roleNames) ? roleNames.toArray(new String[0]) : null),
+                    (Objects.nonNull(notInRoleNames) ? notInRoleNames.toArray(new String[0]) : null),
+                    List.of(Constants.ROLE_REPORT_ADMIN, Constants.ROLE_FACILITY_REPORT_ADMIN).toArray(new String[0]), request.getIsFacilityUsersOnly(), pageable);
         }
-        List<User> usersList = users.stream().toList();
-        List<Long> userIds = new ArrayList<>();
-        Map<Long, User> usersMap = new HashMap<>();
-        List<User> usersResponseList = new ArrayList<>();
-        usersList.forEach(user -> {
-            userIds.add(user.getId());
-            usersMap.put(user.getId(), user);
-        });
-        Sort.Order updatedAtOrder = new Sort.Order(Sort.Direction.DESC, Constants.U_UPDATED_AT);
-        Sort.Order idOrder = new Sort.Order(Sort.Direction.DESC, Constants.USER_ID_PARAM);
-        Sort sort = Sort.by(updatedAtOrder, idOrder);
-        List<OrganizationDetailsDTO> organizationDetailsDTOs = userRepository.getOrganizationsByUsers(userIds, sort);
-        organizationDetailsDTOs.forEach(organizationDetailsDTO -> {
-            Set<Organization> organizations = new HashSet<>();
-            if (Constants.FORM_NAME_CHIEFDOM.equals(organizationDetailsDTO.getFormName())) {
-                Organization districtOrganization = new Organization();
-                districtOrganization.setId(organizationDetailsDTO.getChiefdomDistrictTenantId());
-                districtOrganization.setFormDataId(organizationDetailsDTO.getChiefdomDistrictId());
-                districtOrganization.setParentOrganizationId(organizationDetailsDTO.getChiefdomDistrictParentOrgId());
-                districtOrganization.setName(organizationDetailsDTO.getChiefdomDistrictName());
-                districtOrganization.setFormName(Constants.FORM_NAME_DISTRICT);
-                organizations.add(districtOrganization);
-            } else if (Constants.FORM_NAME_HEALTH_FACILITY.equals(organizationDetailsDTO.getFormName())) {
-                Organization districtOrganization = new Organization();
-                districtOrganization.setId(organizationDetailsDTO.getHealthFacilityDistrictTenantId());
-                districtOrganization.setFormDataId(organizationDetailsDTO.getHealthFacilityDistrictId());
-                districtOrganization.setParentOrganizationId(organizationDetailsDTO.getHealthFacilityDistrictParentOrgId());
-                districtOrganization.setName(organizationDetailsDTO.getHealthFacilityDistrictName());
-                districtOrganization.setFormName(Constants.FORM_NAME_DISTRICT);
-                Organization chiefdomOrganization = new Organization();
-                chiefdomOrganization.setId(organizationDetailsDTO.getHealthFacilityChiefdomTenantId());
-                chiefdomOrganization.setFormDataId(organizationDetailsDTO.getHealthFacilityChiefdomId());
-                chiefdomOrganization.setParentOrganizationId(organizationDetailsDTO.getHealthFacilityChiefdomParentOrgId());
-                chiefdomOrganization.setName(organizationDetailsDTO.getHealthFacilityChiefdomName());
-                chiefdomOrganization.setFormName(Constants.FORM_NAME_CHIEFDOM);
-                organizations.add(districtOrganization);
-                organizations.add(chiefdomOrganization);
-            }
-            User user = usersMap.get(organizationDetailsDTO.getUserId());
-            organizations.addAll(user.getOrganizations());
-            user.setOrganizations(organizations);
-            usersResponseList.add(user);
-
-        });
-        if (!Objects.isNull(users) && !users.isEmpty()) {
-            response.setData(modelMapper.map(usersResponseList, new TypeToken<List<UserResponseDTO>>() {
+        List<User> userList = new ArrayList<>();
+        List<Map<String, Object>> mappedResult = users.getContent().stream().toList();
+        setUsers(mappedResult, userList, rolesMap);
+        List<User> usersList = userList.stream().toList();
+        if (!Objects.isNull(userList) && !userList.isEmpty()) {
+            response.setData(modelMapper.map(usersList, new TypeToken<List<UserResponseDTO>>() {
             }.getType()));
             response.setTotalCount(users.getTotalElements());
         }
         return response;
+    }
+
+    /**
+     * <p>
+     * Populates a list of User objects using data from a list of row maps and assigns various attributes
+     * such as country, culture, designation, timezone, roles, and organizations to each User.
+     * </p>
+     *
+     * @param mappedResult a List of Maps, where each map represents a row of user data. Each map contains
+     *                     key-value pairs corresponding to user attributes (e.g., roles, country, timezone).
+     * @param testUsers    a List to which the created User objects will be added.
+     * @param roleMap      a Map where keys are role names (String) and values are Role objects, used to
+     *                     assign roles to the User objects.
+     *
+     * This method iterates over each map in the mappedResult list, creates a User object, and populates it
+     * with various fields such as personal details, roles, and organizations. The helper methods `setData`,
+     * `getCountry`, `getCulture`, `getDesignation`, `getTimezone`, `setRoles`, `setOrganization`,
+     * `setInsightUserOrganizations`, and `setReportUserOrganizations` are used to assign specific attributes
+     * to the User. Once all the attributes are set, the User is added to the `testUsers` list.
+     * - Each created User is added to the `testUsers` list, which is passed by reference.
+     */
+    private static void setUsers(List<Map<String, Object>> mappedResult, List<User> testUsers, Map<String, Role> roleMap) {
+        mappedResult.forEach(row -> {
+            User user = new User();
+            setData(row, user);
+            user.setCountry(getCountry(row));
+            user.setCulture(getCulture(row));
+            user.setDesignation(getDesignation(row));
+            user.setTimezone(getTimezone(row));
+            setRoles(roleMap, row, user);
+            setOrganization(row, user);
+            setInsightUserOrganizations(row, user);
+            setReportUserOrganizations(row, user);
+            testUsers.add(user);
+        });
+    }
+
+    /**
+     * <p>
+     * Sets the Report User Organization for the specified User object using data from the provided row map.
+     * </p>
+     *
+     * @param row   a Map containing the user-related organization data. Expected keys include:
+     *              - "reportUserOrganizationId" (Long or String) representing the organization's ID.
+     *              - "reportUserOrganizationName" (String) representing the organization's name.
+     *              - "reportUserOrganizationFormDataId" (Long or String) representing the form data ID.
+     *              - "reportUserOrganizationParentOrganizationId" (Long or String) representing the parent organization ID.
+     *              - "reportUserOrganizationFormName" (String) representing the organization's form name.
+     * @param user  the User object to which the Report User Organization will be assigned.
+     *
+     * The method creates an Organization object using data from the row map, setting the ID, name, form data ID,
+     * parent organization ID, and form name. If the "reportUserOrganizationId" is present in the row, the newly
+     * created organization is added to the User's Report User Organization list. If the ID is absent, an empty list
+     * is assigned instead.
+     * - The Report User Organization is stored as a list, even if it contains only a single organization.
+     */
+    private static void setReportUserOrganizations(Map<String, Object> row, User user) {
+        List<Organization> reportUserOrganizationList = new ArrayList<>();
+        Organization reportUserOrganization = new Organization();
+        reportUserOrganization.setId(Objects.nonNull(row.get(Constants.REPORT_USER_ORGANIZATION_ID)) ? Long.parseLong(String.valueOf(row.get(Constants.REPORT_USER_ORGANIZATION_ID))) : null);
+        reportUserOrganization.setName(String.valueOf(row.get(Constants.REPORT_USER_ORGANIZATION_NAME)));
+        reportUserOrganization.setFormDataId(Objects.nonNull(row.get(Constants.REPORT_USER_ORGANIZATION_FORM_DATA_ID)) ? Long.parseLong(String.valueOf(row.get(Constants.REPORT_USER_ORGANIZATION_FORM_DATA_ID))) : null);
+        reportUserOrganization.setParentOrganizationId(Objects.nonNull(row.get(Constants.REPORT_USER_ORGANIZATION_PARENT_ORGANIZATION_ID)) ? Long.parseLong(String.valueOf(row.get(Constants.REPORT_USER_ORGANIZATION_PARENT_ORGANIZATION_ID))) : null);
+        reportUserOrganization.setFormName(String.valueOf(row.get(Constants.REPORT_USER_ORGANIZATION_FORM_NAME)));
+        reportUserOrganizationList.add(reportUserOrganization);
+        user.setReportUserOrganization(Objects.nonNull(row.get(Constants.REPORT_USER_ORGANIZATION_ID)) ? reportUserOrganizationList : new ArrayList<>());
+    }
+
+    /**
+     * <p>
+     * Sets the Insight User Organization for the specified User object using data from the provided row map.
+     * </p>
+     *
+     * @param row   a Map containing the user-related organization data. Expected keys include:
+     *              - "insightUserOrganizationId" (Long or String) representing the organization's ID.
+     *              - "insightUserOrganizationName" (String) representing the organization's name.
+     *              - "insightUserOrganizationFormDataId" (Long or String) representing the form data ID.
+     *              - "insightUserOrganizationParentOrganizationId" (Long or String) representing the parent organization ID.
+     *              - "insightUserOrganizationFormName" (String) representing the organization's form name.
+     * @param user  the User object to which the Insight User Organization will be assigned.
+     * The method creates an Organization object using the data from the row map, including setting the ID,
+     * name, form data ID, parent organization ID, and form name. If the "insightUserOrganizationId" is present
+     * in the row, the newly created organization is added to the User's Insight User Organization list. If the ID
+     * is absent, an empty list is assigned instead.
+     */
+    private static void setInsightUserOrganizations(Map<String, Object> row, User user) {
+        List<Organization> insightUserOrganizationList = new ArrayList<>();
+        Organization insightUserOrganization = new Organization();
+        insightUserOrganization.setId(Objects.nonNull(row.get(Constants.INSIGHT_USER_ORGANIZATION_ID)) ? Long.parseLong(String.valueOf(row.get(Constants.INSIGHT_USER_ORGANIZATION_ID))) : null);
+        insightUserOrganization.setName(String.valueOf(row.get(Constants.INSIGHT_USER_ORGANIZATION_NAME)));
+        insightUserOrganization.setFormDataId(Objects.nonNull(row.get(Constants.INSIGHT_USER_ORGANIZATION_FORM_DATA_ID)) ? Long.parseLong(String.valueOf(row.get(Constants.INSIGHT_USER_ORGANIZATION_FORM_DATA_ID))) : null);
+        insightUserOrganization.setParentOrganizationId(Objects.nonNull(row.get(Constants.INSIGHT_USER_ORGANIZATION_PARENT_ORGANIZATION_ID)) ? Long.parseLong(String.valueOf(row.get(Constants.INSIGHT_USER_ORGANIZATION_PARENT_ORGANIZATION_ID))) : null);
+        insightUserOrganization.setFormName(String.valueOf(row.get(Constants.INSIGHT_USER_ORGANIZATION_FORM_NAME)));
+        insightUserOrganizationList.add(insightUserOrganization);
+        user.setInsightUserOrganization(Objects.nonNull(row.get(Constants.INSIGHT_USER_ORGANIZATION_ID)) ? insightUserOrganizationList : new ArrayList<>());
+    }
+
+    /**
+     * <p>
+     * Assigns roles to a User object based on the roles specified in the provided row map.
+     * </p>
+     *
+     * @param rolesMap a Map where the key is a role name (String) and the value is a Role object.
+     *                 This map is used to look up Role objects corresponding to the roles defined for the user.
+     * @param row      a Map containing user data, including a "roles" key that holds a comma-separated list
+     *                 of role names (String).
+     * @param user     the User object to which the roles will be assigned.
+     *
+     * The method extracts the "roles" string from the row map, splits it into a list of role names,
+     * and looks up the corresponding Role objects in the rolesMap. These Role objects are then added
+     * to a Set, which is subsequently assigned to the User object's roles field.
+     * - The roles are stored in a Set to ensure uniqueness and eliminate duplicates.
+     */
+    private static void setRoles(Map<String, Role> rolesMap, Map<String, Object> row, User user) {
+        String rolesString = (String) row.get(Constants.ROLE_REDIS_KEY);
+        List<String> userRoles = Arrays.asList(rolesString.split(Constants.COMMA));
+        Set<Role> roleSet = new HashSet<>();
+        userRoles.forEach(role -> {
+            roleSet.add(rolesMap.get(role));
+        });
+        user.setRoles(roleSet);
+    }
+
+    /**
+     * <p>
+     * Populates the organizations associated with a User object based on data from a provided row map.
+     * </p>
+     *
+     * @param row  a Map containing organization-related data. Expected keys vary
+     * @param user the User object to which organizations will be added. Any existing organizations
+     *             associated with the user will remain and be augmented with new ones.
+     *
+     * The method identifies the type of organization data to process based on the "formName" field:
+     * - For "chiefdom" forms, a single district-level organization is created and added.
+     * - For "health facility" forms, both district-level and chiefdom-level organizations are created and added.
+     *
+     * Existing organizations in the User object are retained, and the new organizations are merged into the set.
+     * - Each new organization is assigned an ID, form data ID, parent organization ID, name, and form type.
+     */
+    private static void setOrganization(Map<String, Object> row, User user) {
+        Set<Organization> organizations = new HashSet<>();
+        if (Constants.FORM_NAME_DISTRICT.equals(String.valueOf(row.get(Constants.FORM_NAME)))) {
+            Organization districtOrganization = new Organization();
+            districtOrganization.setId(Long.parseLong(String.valueOf(row.get(Constants.DISTRICT_TENANT_ID))));
+            districtOrganization.setFormDataId(Long.parseLong(String.valueOf(row.get(Constants.DISTRICT_ID))));
+            districtOrganization.setParentOrganizationId(Long.parseLong(String.valueOf(row.get(Constants.DISTRICT_PARENT_ORGANIZATION_ID))));
+            districtOrganization.setName(String.valueOf(row.get(Constants.DISTRICT_NAME)));
+            districtOrganization.setFormName(Constants.FORM_NAME_DISTRICT);
+            organizations.add(districtOrganization);
+        }
+        else if (Constants.FORM_NAME_CHIEFDOM.equals(String.valueOf(row.get(Constants.FORM_NAME)))) {
+            Organization districtOrganization = new Organization();
+            districtOrganization.setId(Long.parseLong(String.valueOf(row.get(Constants.CHIEFDOM_DISTRICT_TENANT_ID))));
+            districtOrganization.setFormDataId(Long.parseLong(String.valueOf(row.get(Constants.CHIEFDOM_DISTRICT_ID))));
+            districtOrganization.setParentOrganizationId(Long.parseLong(String.valueOf(row.get(Constants.CHIEFDOM_DISTRICT_PARENT_ORGANIZATION_ID))));
+            districtOrganization.setName(String.valueOf(row.get(Constants.CHIEFDOM_DISTRICT_NAME)));
+            districtOrganization.setFormName(Constants.FORM_NAME_DISTRICT);
+            organizations.add(districtOrganization);
+            Organization chiefdomOrganization = new Organization();
+            chiefdomOrganization.setId(Long.parseLong(String.valueOf(row.get(Constants.CHIEFDOM_TENANT_ID))));
+            chiefdomOrganization.setFormDataId(Long.parseLong(String.valueOf(row.get(Constants.CHIEFDOM_ID))));
+            chiefdomOrganization.setParentOrganizationId(Long.parseLong(String.valueOf(row.get(Constants.CHIEFDOM_PARENT_ORGANIZATION_ID))));
+            chiefdomOrganization.setName(String.valueOf(row.get(Constants.CHIEFDOM_NAME)));
+            chiefdomOrganization.setFormName(Constants.FORM_NAME_CHIEFDOM);
+            organizations.add(chiefdomOrganization);
+        } else if (Constants.FORM_NAME_HEALTH_FACILITY.equals(String.valueOf(row.get(Constants.FORM_NAME)))) {
+            Organization districtOrganization = new Organization();
+            districtOrganization.setId(Long.parseLong(String.valueOf(row.get(Constants.HEALTH_FACILITY_DISTRICT_TENANT_ID))));
+            districtOrganization.setFormDataId(Long.parseLong(String.valueOf(row.get(Constants.HEALTH_FACILITY_DISTRICT_ID))));
+            districtOrganization.setParentOrganizationId(Long.parseLong(String.valueOf(row.get(Constants.HEALTH_FACILITY_DISTRICT_PARENT_ORGANIZATION_ID))));
+            districtOrganization.setName(String.valueOf(row.get(Constants.HEALTH_FACILITY_DISTRICT_NAME)));
+            districtOrganization.setFormName(Constants.FORM_NAME_DISTRICT);
+            Organization chiefdomOrganization = new Organization();
+            chiefdomOrganization.setId(Long.parseLong(String.valueOf(row.get(Constants.HEALTH_FACILITY_CHIEFDOM_TENANT_ID))));
+            chiefdomOrganization.setFormDataId(Long.parseLong(String.valueOf(row.get(Constants.HEALTH_FACILITY_CHIEFDOM_ID))));
+            chiefdomOrganization.setParentOrganizationId(Long.parseLong(String.valueOf(row.get(Constants.HEALTH_FACILITY_CHIEFDOM_PARENT_ORGANIZATION_ID))));
+            chiefdomOrganization.setName(String.valueOf(row.get(Constants.HEALTH_FACILITY_CHIEFDOM_NAME)));
+            chiefdomOrganization.setFormName(Constants.FORM_NAME_CHIEFDOM);
+            Organization healthFacilityOrganization = new Organization();
+            healthFacilityOrganization.setId(Long.parseLong(String.valueOf(row.get(Constants.HEALTH_FACILITY_TENANT_ID))));
+            healthFacilityOrganization.setFormDataId(Long.parseLong(String.valueOf(row.get(Constants.HEALTHFACILITY_ID))));
+            healthFacilityOrganization.setParentOrganizationId(Long.parseLong(String.valueOf(row.get(Constants.HEALTH_FACILITY_PARENT_ORGANIZATION_ID))));
+            healthFacilityOrganization.setName(String.valueOf(row.get(Constants.HEALTH_FACILITY_NAME)));
+            healthFacilityOrganization.setFormName(Constants.FORM_NAME_HEALTH_FACILITY);
+            organizations.add(districtOrganization);
+            organizations.add(chiefdomOrganization);
+            organizations.add(healthFacilityOrganization);
+        }
+        organizations.addAll(user.getOrganizations());
+        user.setOrganizations(organizations);
+    }
+
+    /**
+     * <p>
+     * Populates the properties of a User object using data from a provided row map.
+     * </p>
+     *
+     * @param row  a Map containing user data with keys corresponding to User fields.
+     * @param user the User object to populate with data from the row map.
+     *
+     * The method converts and maps values from the row map to the corresponding
+     * fields in the User object, applying necessary parsing or transformation.
+     * If certain keys are missing or null, the corresponding User fields will
+     * be set to null (e.g., "suiteAccess", "tenantId").
+     */
+    private static void setData(Map<String, Object> row, User user) {
+        user.setId(Long.parseLong(String.valueOf(row.get(Constants.ID))));
+        user.setFirstName(String.valueOf(row.get(Constants.PARAM_FIRST_NAME)));
+        user.setUsername(String.valueOf(row.get(Constants.USERNAME)));
+        user.setPhoneNumber(String.valueOf(row.get(Constants.PARAM_PHONE_NUMBER)));
+        user.setLastName(String.valueOf(row.get(Constants.PARAM_LAST_NAME)));
+        user.setCountryCode(String.valueOf(row.get(Constants.COUNTRY_CODE)));
+        user.setFhirId(String.valueOf(row.get(Constants.FHIR_ID)));
+        String suiteAccessString = Objects.nonNull(row.get(Constants.SUITE_ACCESS)) ? (String) row.get(Constants.SUITE_ACCESS) : null;
+        Set<String> suiteAccessSet = suiteAccessString == null ? null : Arrays.stream(suiteAccessString.split(Constants.COMMA)).map(String::trim).collect(Collectors.toSet());
+        user.setSuiteAccess(suiteAccessSet);
+        user.setTenantId(Objects.nonNull(row.get(Constants.TENANT_PARAMETER_NAME)) ? Long.parseLong(String.valueOf(row.get(Constants.TENANT_PARAMETER_NAME))) : null);
+    }
+
+    /**
+     * <p>
+     * Converts a row from a Map representation into a Timezone object.
+     * </p>
+     *
+     * @param row a Map containing key-value pairs representing timezone attributes.
+     *            Expected keys:
+     *            - "timezoneId" (optional): The unique identifier for the timezone, expected as a numeric value.
+     *            - "offset": The offset value for the timezone, typically a string representation of the UTC offset.
+     *            - "description": A textual description of the timezone.
+     *
+     * @return a Timezone object populated with the values from the row.
+     *         If "timezoneId" is missing or invalid, the ID will be set to null.
+     *         The "offset" and "description" fields will be set to their string representations.
+     */
+    private static Timezone getTimezone(Map<String, Object> row) {
+        Timezone timezone = new Timezone();
+        timezone.setId(Objects.nonNull(row.get(Constants.TIMEZONE_ID)) ? Long.parseLong(String.valueOf(row.get(Constants.TIMEZONE_ID))) : null);
+        timezone.setOffset(String.valueOf(row.get(Constants.OFFSET)));
+        timezone.setDescription(String.valueOf(row.get(Constants.DESCRIPTION)));
+        return timezone;
+    }
+
+    /**
+     * <p>
+     * Converts a row from a Map representation into a Designation object.
+     * </p>
+     *
+     * @param row a Map containing key-value pairs representing designation attributes.
+     *            Expected keys:
+     *            - "designationId" (optional): The unique identifier for the designation, expected as a numeric value.
+     *            - "designationName": The name of the designation.
+     *
+     * @return a Designation object populated with the values from the row.
+     *         If "designationId" is missing or invalid, the ID will be set to null.
+     *         The "designationName" field will be set to its string representation.
+     */
+    private static Designation getDesignation(Map<String, Object> row) {
+        Designation designation = new Designation();
+        designation.setId(Objects.nonNull(row.get(Constants.DESIGNATION_ID)) ? Long.parseLong(String.valueOf(row.get(Constants.DESIGNATION_ID))) : null);
+        designation.setName(String.valueOf(row.get(Constants.DESIGNATION_NAME)));
+        return Objects.nonNull(row.get(Constants.DESIGNATION_ID)) ? designation : new Designation();
+    }
+
+    /**
+     * <p>
+     * Converts a row from a Map representation into a Culture object.
+     * </p>
+     *
+     * @param row a Map containing key-value pairs representing culture attributes.
+     *            Expected keys:
+     *            - "cultureId" (optional): The unique identifier for the culture, expected as a numeric value.
+     *            - "cultureName": The name of the culture.
+     *            - "cultureCode": The code associated with the culture.
+     *
+     * @return a Culture object populated with the values from the row. If "cultureId" is missing or invalid,
+     *         the ID will be set to null. Other fields are set to their string representations.
+     */
+    private static Culture getCulture(Map<String, Object> row) {
+        Culture culture = new Culture();
+        culture.setId(Objects.nonNull(row.get(Constants.CULTURE_ID)) ? Long.parseLong(String.valueOf(row.get(Constants.CULTURE_ID))) : null);
+        culture.setName(String.valueOf(row.get(Constants.CULTURE_NAME)));
+        culture.setCode(String.valueOf(row.get(Constants.CULTURE_CODE)));
+        return culture;
+    }
+
+    /**
+     * <p>
+     * Converts a map of row data into a Country object.
+     * </p>
+     *
+     * This method takes a map containing key-value pairs representing attributes of a Country
+     * and populates a Country object with the respective values. It handles null checks
+     * and type conversions where necessary.
+     *
+     * @param row a map where keys are column names and values are the corresponding data
+     *            retrieved from a database or another source.
+     * @return a Country object populated with the values from the map. If certain keys are missing
+     *         or have null values, the corresponding fields in the Country object will be null.
+     */
+    private static Country getCountry(Map<String, Object> row) {
+        Country country = new Country();
+        country.setId(Objects.nonNull(row.get(Constants.COUNTRY_ID)) ? Long.parseLong(String.valueOf(row.get(Constants.COUNTRY_ID))) : null);
+        country.setName(String.valueOf(row.get(Constants.COUNTRY_NAME)));
+        country.setPhoneNumberCode(String.valueOf(row.get(Constants.PHONE_NUMBER_CODE)));
+        country.setTenantId(Objects.nonNull(row.get(Constants.COUNTRY_TENANT_ID)) ? Long.parseLong(String.valueOf(row.get(Constants.COUNTRY_TENANT_ID))) : null);
+        country.setUnitMeasurement(String.valueOf(row.get(Constants.UNIT_MEASUREMENT)));
+        country.setRegionCode(String.valueOf(row.get(Constants.REGION_CODE)));
+        String appTypesString = (String) row.get(Constants.APP_TYPES);
+        country.setAppTypes(appTypesString!= null ?  Arrays.asList(appTypesString.split(Constants.COMMA)) : null);
+        return country;
     }
 
     /**
