@@ -594,7 +594,13 @@ VALUES
 (62, 35, 'Hydrocele', 5, 'hydrocele', 1, 1),
 (63, 35, 'Lymphedema', 6, 'lymphodema', 1, 1),
 (64, 35, 'Oral and dental conditions', 7, 'oralAndDentalConditions', 1, 1),
-(65, 57, 'Mental disorder (all types)', 11, 'allTypesOfMentalDisorder', 1, 1);
+(65, 57, 'Mental disorder (all types)', 11, 'allTypesOfMentalDisorder', 1, 1),
+(66, 31, 'Uncomplicated Malaria', 2, 'uncomplicatedMalaria', 1, 1),
+(67, 35, 'Ear nose and throat (ENT) disorder', 3, 'earNoseAndThroatDisorder', 1, 1),
+(68, 35, 'PUD (Peptic Ulcer Disease)', 8, 'pepticUlcerDisease', 1, 1),
+(69, 35, 'RTA Wounds/Trauma', 9, 'rtaWoundsOrTrauma', 1, 1),
+(70, 35, 'Non RTA Wounds/Trauma', 10, 'nonRtaWoundsOrTrauma', 1, 1),
+(71, 35, 'Other surgical conditions (Fistula can be captured here)', 11, 'fistulaAndOtherSurgicalConditions', 1, 1);
 
 -- email_template
 INSERT INTO public.email_template ("type",vm_content,body,title,app_url,app_type,subject,created_by,updated_by) VALUES
@@ -1348,7 +1354,7 @@ INSERT INTO public.symptom (name,"type",disease_type,value,categories,category,d
 	 ('Other','ncd',NULL,'other',NULL,NULL,4,NULL,'{COMMUNITY}',0,0,true,false),
 	 ('No symptoms','general symptoms',NULL,'noSymptoms',NULL,NULL,3,NULL,'{COMMUNITY}',0,0,true,false),
 	 ('No symptoms','ncd',NULL,'noSymptoms',NULL,NULL,3,NULL,'{COMMUNITY}',0,0,true,false),
-	 ('Sunken eyes','diarrhoeaSigns',NULL,'sunkenEyes',NULL,NULL,1,NULL,'{COMMUNITY}',0,0,true,false),
+	 ('Sunken eyes','diarrhoeaSigns',NULL,'sunkenEyes',NULL,'UNDER_FIVE_YEARS',1,NULL,'{COMMUNITY}',0,0,true,false),
 	 ('Convulsions','ancSigns',NULL,'convulsions',NULL,NULL,2,NULL,'{COMMUNITY}',0,0,true,false),
 	 ('Headache','pncMotherSigns',NULL,'headache',NULL,NULL,3,NULL,'{COMMUNITY}',0,0,true,false),
 	 ('No tears when crying','diarrhoeaSigns',NULL,'noTearsWhenCrying',NULL,NULL,2,NULL,'{COMMUNITY}',0,0,true,false);
@@ -1357,7 +1363,7 @@ INSERT INTO public.symptom (name,"type",disease_type,value,categories,category,d
 	 ('Little or no urine','diarrhoeaSigns',NULL,'littleOrNoUrine',NULL,NULL,3,NULL,'{COMMUNITY}',0,0,true,false),
 	 ('Very thirsty','diarrhoeaSigns',NULL,'veryThirsty',NULL,NULL,7,NULL,'{COMMUNITY}',0,0,true,false),
 	 ('Unusually sleepy or unconscious','diarrhoeaSigns',NULL,'unusuallySleepyOrUnconscious',NULL,NULL,4,NULL,'{COMMUNITY}',0,0,true,false),
-	 ('Skin pinch going back very slowly','diarrhoeaSigns',NULL,'skinPinchGoingBackVerySlowly',NULL,NULL,6,NULL,'{COMMUNITY}',0,0,true,false),
+	 ('Skin pinch going back very slowly','diarrhoeaSigns',NULL,'skinPinchGoingBackVerySlowly',NULL,'UNDER_FIVE_YEARS',6,NULL,'{COMMUNITY}',0,0,true,false),
 	 ('Abdominal pain','otherSymptoms',NULL,'abdominalPain',NULL,NULL,1,NULL,'{COMMUNITY}',0,0,true,false),
 	 ('Vaginal bleeding','ancSigns',NULL,'vaginalBleeding',NULL,NULL,1,NULL,'{COMMUNITY}',0,0,true,false),
 	 ('Headache','ancSigns',NULL,'headache',NULL,NULL,3,NULL,'{COMMUNITY}',0,0,true,false),
@@ -1444,11 +1450,6 @@ INSERT INTO public.symptom (name,"type",disease_type,value,categories,category,d
 INSERT INTO public.symptom (name,"type",disease_type,value,categories,category,display_order,display_values,app_types,created_by,updated_by,is_active,is_deleted) VALUES
 	 ('Genital pain / Swelling / Discharge / Bleeding','otherSymptoms',NULL,'genitalPainOrSwellingOrDischargeOrBleeding',NULL,NULL,11,NULL,'{COMMUNITY}',0,0,true,false);
 
--- systemic_examinations
-INSERT INTO public.systemic_examinations ("name",display_order,age_condition,value,"type",display_values,created_by,updated_by) VALUES
-	 ('Eye exam',1,NULL,'eyeExam','ABOVE_FIVE_YEARS',NULL,0,0),
-	 ('Oral exam',2,NULL,'oralExam','ABOVE_FIVE_YEARS',NULL,0,0);
-
 -- unit
 INSERT INTO public.unit ("name","type",description,display_order,created_by,updated_by,app_types,display_values) VALUES
 	 ('mg/dL','LABTEST','mg/dL',6,0,0,'{COMMUNITY}',NULL),
@@ -1470,7 +1471,7 @@ INSERT INTO public.user_role(
     user_id, role_id)
     VALUES (2, 2);
 
-UPDATE "user" SET password = PGP_SYM_ENCRYPT('3901e08e724bb73a72137e03e2f03d54d70eaeea39f8a7e0459f15d9e80585ffd2159283b8324d72f7ba8c2aa2f0e82e5c1b685d7ef569e2ebad02d71ba4076e', 'Sp!(Ec0rpL@tf*rM$l');
+UPDATE "user" SET password = PGP_SYM_ENCRYPT('1be35bc75f8316c2b5e48203d93ab3043b4774a7ab4a9e9eebf963c283cde32ddfb95aa843aee3d345f78a551a069200f013cd98904011ea6fb0cd08087d4841', 'Sp!(Ec0rpL@tf*rM$l');
 
 SELECT pg_catalog.setval(pg_get_serial_sequence('user', 'id'), MAX(id)) FROM public.user;
 SELECT pg_catalog.setval(pg_get_serial_sequence('country', 'id'), MAX(id)) FROM country;

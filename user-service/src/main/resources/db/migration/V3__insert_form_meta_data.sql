@@ -3422,105 +3422,6 @@ VALUES
       "viewType": "CardView"
     },
     {
-      "family": "anc",
-      "fieldName": "deathOfMother",
-      "id": "deathOfMother",
-      "orderId": 4,
-      "errorMessage": "Please select a valid option",
-      "isEnabled": true,
-      "isMandatory": true,
-      "isBooleanAnswer": true,
-      "isNeededDefault": true,
-      "isSummary": true,
-      "optionsList": [
-        {
-          "id": true,
-          "name": "Yes"
-        },
-        {
-          "id": false,
-          "name": "No"
-        }
-      ],
-      "condition": [
-        {
-          "eq": "No",
-          "targetId": "lastMenstrualPeriod",
-          "visibility": "gone"
-        },
-        {
-          "eq": "No",
-          "targetId": "ancSigns",
-          "visibility": "visible"
-        },
-        {
-          "eq": "No",
-          "targetId": "otherAncSigns",
-          "visibility": "gone"
-        },
-        {
-          "eq": "No",
-          "targetId": "isMalePartnerPresent",
-          "visibility": "visible"
-        },
-        {
-          "eq": "No",
-          "targetId": "sleepsUnderBedNet",
-          "visibility": "visible"
-        },
-        {
-          "eq": "No",
-          "targetId": "eatsMoreThanBefore",
-          "visibility": "visible"
-        },
-        {
-          "eq": "No",
-          "targetId": "eats4GroupIronVitARichFoods",
-          "visibility": "visible"
-        },
-        {
-          "eq": "No",
-          "targetId": "takesIronFloatTablets",
-          "visibility": "visible"
-        },
-        {
-          "eq": "No",
-          "targetId": "takesFancidarTablets",
-          "visibility": "visible"
-        },
-        {
-          "eq": "No",
-          "targetId": "priorityPregnancy",
-          "visibility": "visible"
-        },
-        {
-          "eq": "No",
-          "targetId": "miscarriage",
-          "visibility": "visible"
-        },
-        {
-          "eq": "No",
-          "targetId": "birthPlanMade",
-          "visibility": "visible"
-        },
-        {
-          "eq": "No",
-          "targetId": "placeOfDelivery",
-          "visibility": "visible"
-        },
-        {
-          "eq": "No",
-          "targetId": "otherPlaceOfDelivery",
-          "visibility": "gone"
-        }
-      ],
-      "optionType": "boolean",
-      "readOnly": true,
-      "viewType": "SingleSelectionView",
-      "title": "Death of mother",
-      "visibility": "visible"
-    },
-    {
       "id": "lastMenstrualPeriod",
       "family": "anc",
       "fieldName": "lastMenstrualPeriod",
@@ -3532,7 +3433,7 @@ VALUES
       "isSummary": true,
       "hint": "Select Date",
       "errorMessage": "Please select a valid option",
-      "visibility": "gone",
+      "visibility": "visible",
       "menstrualPeriod": true
     },
     {
@@ -3548,7 +3449,7 @@ VALUES
       "errorMessage": "Please select a valid option",
       "isEnabled": true,
       "title": "Is the expectant mother experiencing any of these danger signs?",
-      "visibility": "gone",
+      "visibility": "visible",
       "condition": [
         {
           "eq": "Other",
@@ -3601,7 +3502,7 @@ VALUES
       "readOnly": true,
       "viewType": "SingleSelectionView",
       "title": "Male Partner Present?",
-      "visibility": "gone"
+      "visibility": "visible"
     },
     {
       "family": "anc",
@@ -3629,7 +3530,7 @@ VALUES
       "readOnly": true,
       "viewType": "SingleSelectionView",
       "title": "Sleep inside the bednet?",
-      "visibility": "gone"
+      "visibility": "visible"
     },
     {
       "family": "anc",
@@ -3657,7 +3558,7 @@ VALUES
       "readOnly": true,
       "viewType": "SingleSelectionView",
       "title": "Eats more than before?",
-      "visibility": "gone"
+      "visibility": "visible"
     },
     {
       "family": "anc",
@@ -3686,7 +3587,7 @@ VALUES
       "readOnly": true,
       "viewType": "SingleSelectionView",
       "title": "Eats from 4 food groups plus iron-rich and vitamin-A rich foods?",
-      "visibility": "gone"
+      "visibility": "visible"
     },
     {
       "family": "anc",
@@ -3714,7 +3615,7 @@ VALUES
       "readOnly": true,
       "viewType": "SingleSelectionView",
       "title": "Takes iron-folate tablets",
-      "visibility": "gone"
+      "visibility": "visible"
     },
     {
       "family": "anc",
@@ -3742,7 +3643,7 @@ VALUES
       "readOnly": true,
       "viewType": "SingleSelectionView",
       "title": "Takes Fancidar tablets",
-      "visibility": "gone"
+      "visibility": "visible"
     },
     {
       "family": "anc",
@@ -3770,7 +3671,7 @@ VALUES
       "readOnly": true,
       "viewType": "SingleSelectionView",
       "title": "Priority pregnancy",
-      "visibility": "gone"
+      "visibility": "visible"
     },
     {
       "family": "anc",
@@ -3798,7 +3699,35 @@ VALUES
       "readOnly": true,
       "viewType": "SingleSelectionView",
       "title": "Miscarriage/Stillbirth",
-      "visibility": "gone"
+      "visibility": "visible"
+    },
+    {
+      "family": "anc",
+      "fieldName": "deathOfMother",
+      "id": "deathOfMother",
+      "condition": [],
+      "orderId": 4,
+      "errorMessage": "Please select a valid option",
+      "isEnabled": true,
+      "isMandatory": true,
+      "isBooleanAnswer": true,
+      "isNeededDefault": true,
+      "isSummary": true,
+      "optionsList": [
+        {
+          "id": true,
+          "name": "Yes"
+        },
+        {
+          "id": false,
+          "name": "No"
+        }
+      ],
+      "optionType": "boolean",
+      "readOnly": true,
+      "viewType": "SingleSelectionView",
+      "title": "Death of mother",
+      "visibility": "visible"
     },
     {
       "family": "anc",
@@ -3826,7 +3755,7 @@ VALUES
       "readOnly": true,
       "viewType": "SingleSelectionView",
       "title": "Birth plan made",
-      "visibility": "gone"
+      "visibility": "visible"
     },
     {
       "family": "anc",
@@ -3847,8 +3776,7 @@ VALUES
       "isEnabled": true,
       "isMandatory": false,
       "title": "Place of delivery (Intended per birth plan)",
-      "errorMessage": "Please select a valid option",
-      "visibility": "gone"
+      "errorMessage": "Please select a valid option"
     },
     {
       "errorMessage": "Please enter a valid place of delivery",

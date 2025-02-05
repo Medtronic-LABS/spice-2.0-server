@@ -133,7 +133,19 @@ public class GeneralMedicalReviewServiceImpl implements GeneralMedicalReviewServ
                 Constants.FHIR_BASE_URL);
         Observation observation = fhirAssessmentMapper.createNotes(Constants.CLINICAL_NOTES,
                 generalMedicalReviewDTO.getClinicalNotes(), generalMedicalReviewDTO.getEncounter());
-
+        Observation presentingComplains = fhirAssessmentMapper.createSignsObservation(generalMedicalReviewDTO.getPresentingComplaints(), generalMedicalReviewDTO.getEncounter(),
+                Constants.PRESENTING_COMPLAINTS, generalMedicalReviewDTO.getPresentingComplaintsNotes());
+        if (!Objects.isNull(presentingComplains)) {
+            String presentingComplainsRef = fhirAssessmentMapper.addObservationToBundle(presentingComplains, bundle,
+                    generalMedicalReviewDTO.getEncounter().getProvenance());
+        }
+        Observation systemicExamination = fhirAssessmentMapper.createSignsObservation(generalMedicalReviewDTO.getSystemicExaminations(),
+                generalMedicalReviewDTO.getEncounter(),
+                Constants.SYSTEMIC_EXAMINATIONS, generalMedicalReviewDTO.getSystemicExaminationsNotes());
+        if (!Objects.isNull(systemicExamination)) {
+            String systemicExaminationRef = fhirAssessmentMapper.addObservationToBundle(systemicExamination, bundle,
+                    generalMedicalReviewDTO.getEncounter().getProvenance());
+        }
         checkAndCloseRmnchDetails(generalMedicalReviewDTO, bundle);
         fhirUtils.setBundle(urlSign, StringUtil.concatString(Constants.FHIR_BASE_URL),
                 Bundle.HTTPVerb.POST,
