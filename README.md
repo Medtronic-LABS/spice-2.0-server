@@ -176,10 +176,12 @@ APP_VERSION=2.0.0
 SMART_ANC_ENABLED=false
 FORGOT_PASSWORD_TIME_LIMIT_IN_MINUTES=60
 HAPI_IDENTIFIER_URL=http://mdtlabs.com/
+DOMAIN_NAME=
 ENVIRONMENT=dev
+ALLOWED_ORIGINS=
 JOB_USER_NAME=jobuser@test.com
-JOB_USER_PASSWORD=3901e08e724bb73a72137e03e2f03d54d70eaeea39f8a7e0459f15d9e80585ffd2159283b8324d72f7ba8c2aa2f0e82e5c1b685d7ef569e2ebad02d71ba4076e
-SUCCESSFUL_CALL_ATTEMPTS=3
+JOB_USER_PASSWORD=1be35bc75f8316c2b5e48203d93ab3043b4774a7ab4a9e9eebf963c283cde32ddfb95aa843aee3d345f78a551a069200f013cd98904011ea6fb0cd08087d4841
+SUCCESSFUL_CALL_ATTEMPTS=5
 UNSUCCESSFUL_CALL_ATTEMPTS=5
 FOLLOWUP_MALARIA_IN_DAYS=3
 FOLLOWUP_PNEUMONIA_IN_DAYS=5
@@ -368,7 +370,11 @@ timezone set to UTC, with the database name.
 
 `HAPI_IDENTIFIER_URL`: The base URL for the HAPI FHIR server.
 
+`DOMAIN_NAME`: Specifies the current application domain name.
+
 `ENVIRONMENT`: Specifies the current application environment (dev/prod).
+
+`ALLOWED_ORIGINS`: Specifies the origin allowed for the current application.
 
 `JOB_USER_NAME`: The username for automated job execution.
 
@@ -443,7 +449,7 @@ timezone set to UTC, with the database name.
             <version>4.0.1</version>
         </dependency>
 ```
-- Replace the code in the file: spice-server/backend/notification-service/src/main/java/com/mdtlabs/coreplatform/notificationservice/service/impl/EmailServiceImpl.java from the line 105 to 137.
+- Replace the code in the file: spice-server/backend/notification-service/src/main/java/com/mdtlabs/coreplatform/notificationservice/service/impl/EmailServiceImpl.java from the line 102 to 134.
 ```sh
          Mail mail = new Mail();
          mail.setSubject(emailDto.getSubject());
@@ -465,6 +471,9 @@ timezone set to UTC, with the database name.
          request.setBody(mail.build());
          sendGrid.api(request);
 ```
+
+- Comment the existing SMTP test cases.
+
 - Visit the [Sendgrid] official site and create a free account to get the sendgrid api key.
 
 > Note: If you are using the sendgrid service, please enter the corresponding values for the fields `MAIL_FROM` and `SENDGRID_API_KEY` in .env.
@@ -517,7 +526,7 @@ The request body should be in the **form-data** format and include the following
 
 - `username`: superuser@test.com
 - `password`:
-  3901e08e724bb73a72137e03e2f03d54d70eaeea39f8a7e0459f15d9e80585ffd2159283b8324d72f7ba8c2aa2f0e82e5c1b685d7ef569e2ebad02d71ba4076e
+  1be35bc75f8316c2b5e48203d93ab3043b4774a7ab4a9e9eebf963c283cde32ddfb95aa843aee3d345f78a551a069200f013cd98904011ea6fb0cd08087d4841
 
 #### The response contains two values: Authorization and TenantId. You must use these values in the subsequent requests.
 

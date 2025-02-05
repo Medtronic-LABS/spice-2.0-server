@@ -297,7 +297,7 @@ services:
       - MINIO_ACCESS_NAME=${MINIO_ACCESS_NAME}
       - MINO_SECRET_KEY=${MINO_SECRET_KEY}
       - BUCKET_NAME=${BUCKET_NAME}
-      - SERVER_REGION=${SERVER_REGION}
+      - AWS_REGION=${SERVER_REGION}
     networks:
       - spice-app-db-network
 

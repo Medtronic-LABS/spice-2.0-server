@@ -28,7 +28,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
@@ -118,7 +117,7 @@ class HelperServiceTest {
         stringUtil.when(StringUtil :: concatString).thenReturn(null + TestConstants.TEST_PDF);
 
         when(awsS3Config.getS3Client()).thenReturn(amazonS3);
-        when(amazonS3.getUrl(anyString(), anyString())).thenReturn(s3Url);
+        when(awsS3Config.getS3Client().getUrl(null, "consent-forms/test.pdf")).thenReturn(s3Url);
 
         //then
         Assertions.assertNotNull(helperService.uploadConsentFormFileToS3(multipartFile));

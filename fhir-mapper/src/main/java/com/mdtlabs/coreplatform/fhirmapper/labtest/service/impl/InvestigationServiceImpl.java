@@ -327,7 +327,7 @@ public class InvestigationServiceImpl implements InvestigationService {
                 labTestDTO.getId()));
         DiagnosticReport diagnosticReport = (DiagnosticReport) diagnosticReportBundle.getEntryFirstRep().getResource();
         diagnosticReport.setSubject(new Reference(labTestDTO.getPatientId()));
-        diagnosticReport.setEncounter(new Reference(String.format(FhirConstants.ENCOUNTER_ID, encounterId)));
+        diagnosticReport.setEncounter(new Reference(encounterId));
         diagnosticReport.setStatus(DiagnosticReport.DiagnosticReportStatus.FINAL);
         if (Objects.nonNull(labTestDTO.getComments())) {
             diagnosticReport.setConclusion(labTestDTO.getComments());

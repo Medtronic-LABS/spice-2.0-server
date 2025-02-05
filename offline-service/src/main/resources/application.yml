@@ -83,7 +83,7 @@ app:
 cloud:
   aws:
     region:
-      static: ${SERVER_REGION}
+      static: ${AWS_REGION}
     stack:
       auto: false
     sqs:

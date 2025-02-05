@@ -238,7 +238,7 @@ class CommonUtilTest {
     }
 
     @Test
-    void isCultureCodeNull(){
+    void isCultureCodeNull() {
         //given
         CultureDTO cultureDTO = new CultureDTO();
         cultureDTO.setCode("12345");
@@ -260,9 +260,11 @@ class CommonUtilTest {
     void convertMultipartFileToFile() throws IOException {
         //given
         MultipartFile multipartFile = TestDataProvider.getMockedSignatureFile();
+        File convertedFile = CommonUtil.convertMultipartFileToFile(multipartFile);
 
         //then
-        assertNotNull(CommonUtil.convertMultipartFileToFile(multipartFile));
+        assertNotNull(convertedFile);
+        assertTrue(convertedFile.delete());
     }
 
     @Test
@@ -292,7 +294,7 @@ class CommonUtilTest {
         userContextDTO.setTenantId(1L);
 
         //when
-        userContextHolder.when(UserContextHolder :: getUserDto).thenReturn(userContextDTO);
+        userContextHolder.when(UserContextHolder::getUserDto).thenReturn(userContextDTO);
 
         //then
         Long response = CommonUtil.getTenantId();
