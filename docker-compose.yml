@@ -352,8 +352,8 @@ services:
     restart: always
     volumes:
       - ${PROJECT_PATH}/log:/log
-      - cql:/cql
-      - valueset:/valueset
+      - ${PROJECT_PATH}/cql-service/src/main/resources/anc/cql:/cql
+      - ${PROJECT_PATH}/cql-service/src/main/resources/anc/valueset:/valueset
     environment:
       - HAPI_SERVER_URL=${HAPI_SERVER_URL}
       - AUTH_SERVICE=${AUTH_SERVICE}
@@ -393,16 +393,4 @@ networks:
 volumes:
   cache:
     driver: local
-  cql:
-    driver: local
-    driver_opts:
-      type: none
-      device: ${PROJECT_PATH}/cql-service/src/main/resources/anc/cql
-      o: bind
-  valueset:
-    driver: local
-    driver_opts:
-      type: none
-      device: ${PROJECT_PATH}/cql-service/src/main/resources/anc/valueset
-      o: bind
   rabbitmq-data:
