@@ -102,7 +102,7 @@ DATABASE_URL=jdbc:postgresql://{{ip}}:5432/spice_open_source?serverTimezone=UTC
 DATABASE_USERNAME={{username}}
 DATABASE_PASSWORD={{password}}
 DATABASE_NAME=spice_open_source
-DB_MAX_POOL_SIZE=10
+DB_MAX_POOL_SIZE=5
 REDIS_PASSWORD={{password}}
 REDIS_HOST={{ip}}
 REDIS_PORT=6379
@@ -519,6 +519,12 @@ Platform was utilized as an example.
 
 `POST {{ip}}/auth-service/session`
 
+### Request Header
+
+The request header should contain **client** as a header.
+
+`client: web`
+
 ### Request Body
 
 This endpoint allows user to sign-in into the application.
@@ -528,7 +534,7 @@ The request body should be in the **form-data** format and include the following
 - `password`:
   1be35bc75f8316c2b5e48203d93ab3043b4774a7ab4a9e9eebf963c283cde32ddfb95aa843aee3d345f78a551a069200f013cd98904011ea6fb0cd08087d4841
 
-#### The response contains two values: Authorization and TenantId. You must use these values in the subsequent requests.
+#### The response contains two values: Authorization/AuthCookie session and TenantId. You must use these values in the subsequent request headers.
 
 
 [//]: # (These are reference links used in the body of this note and get stripped out when the markdown processor does its job. There is no need to format nicely because it shouldn't be seen. Thanks SO - http://stackoverflow.com/questions/4823468/store-comments-in-markdown-syntax)
