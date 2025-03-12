@@ -2,6 +2,11 @@
 
 This is the backend of the Spice app, which provides healthcare support to patients across a population.
 
+## System requirements
+- Ubuntu 20.04 LTS or newer
+- 4-8 cores (Intel Xeon, AMD Ryzen, or newer)
+- RAM 32 GB or more
+
 ## Prerequisites
 
 - Git
@@ -97,7 +102,7 @@ Please paste the ***.env*** file inside the specified directory.
 ***.env*** **file**
 
 ```properties
-PROJECT_PATH=/home/ubuntu/spice-2.0-server
+PROJECT_PATH=/home/ubuntu/spice-2.0-server/
 DATABASE_URL=jdbc:postgresql://{{ip}}:5432/spice_open_source?serverTimezone=UTC
 DATABASE_USERNAME={{username}}
 DATABASE_PASSWORD={{password}}
